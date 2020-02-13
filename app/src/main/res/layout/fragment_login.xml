@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/colorPrimary"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Ui.LoginFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/top_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/left_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="60dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/right_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="60dp" />
+
+    <EditText
+        android:id="@+id/etxt_email_login"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rectangle_drawable"
+        android:elevation="4dp"
+        android:ems="10"
+        android:hint="@string/email"
+        android:inputType="textEmailAddress"
+        android:textColorHint="@color/colorPrimaryLight"
+        android:padding="8dp"
+        android:textColor="@color/colorPrimaryLight"
+        android:textColorHighlight="@color/colorAccent"
+        app:layout_constraintEnd_toStartOf="@+id/right_guideline"
+        app:layout_constraintStart_toStartOf="@+id/left_guideline"
+        app:layout_constraintTop_toTopOf="@+id/top_guideline" />
+
+    <EditText
+        android:id="@+id/etxt_psswrd_login"
+        android:padding="8dp"
+        android:elevation="4dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rectangle_drawable"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+
+        android:textColor="@color/colorPrimaryLight"
+        android:drawableTint="@color/colorAccent"
+        android:hint="@string/password"
+        android:textColorHint="@color/colorPrimaryLight"
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toStartOf="@+id/right_guideline"
+        app:layout_constraintStart_toStartOf="@+id/left_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/etxt_email_login" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="@string/user_is_not_registered"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/btn_login"
+        app:layout_constraintEnd_toStartOf="@+id/right_guideline"
+        app:layout_constraintStart_toStartOf="@+id/left_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/etxt_psswrd_login" />
+
+    <Button
+        android:id="@+id/btn_login"
+        android:layout_width="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:layout_height="wrap_content"
+        android:elevation="4dp"
+        android:layout_marginTop="64dp"
+        android:textColor="@color/colorPrimaryLight"
+        android:padding="8dp"
+        android:background="@drawable/rectangle_drawable"
+        android:text="@string/login"
+        app:layout_constraintEnd_toEndOf="@+id/etxt_psswrd_login"
+        app:layout_constraintStart_toStartOf="@+id/etxt_psswrd_login"
+        app:layout_constraintTop_toBottomOf="@+id/etxt_psswrd_login" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/colorAccent"
+        android:text="@string/signup"
+        app:layout_constraintEnd_toEndOf="@+id/btn_login"
+        app:layout_constraintStart_toStartOf="@+id/btn_login"
+        app:layout_constraintTop_toBottomOf="@+id/btn_login" />
+
+    <TextView
+        android:id="@+id/txtv_app_name_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/top_guideline"
+        app:layout_constraintEnd_toStartOf="@+id/right_guideline"
+        app:layout_constraintStart_toStartOf="@+id/left_guideline"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
