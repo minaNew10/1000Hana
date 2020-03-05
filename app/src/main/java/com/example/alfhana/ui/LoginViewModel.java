@@ -1,4 +1,4 @@
-package com.example.a1000hana.Ui;
+package com.example.alfhana.ui;
 
 import android.util.Patterns;
 
@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.a1000hana.R;
+import com.example.alfhana.R;
 
 public class LoginViewModel extends ViewModel {
 

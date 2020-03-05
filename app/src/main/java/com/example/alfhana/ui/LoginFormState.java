@@ -1,4 +1,4 @@
-package com.example.a1000hana.Ui;
+package com.example.alfhana.ui;
 
 import androidx.annotation.Nullable;
 

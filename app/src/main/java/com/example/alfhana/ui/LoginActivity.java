@@ -1,7 +1,8 @@
-package com.example.a1000hana.Ui;
+package com.example.alfhana.ui;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -17,7 +18,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.a1000hana.R;
+import com.example.alfhana.R;
+import com.example.alfhana.databinding.ActivityMainBinding;
 import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -37,11 +39,12 @@ public class LoginActivity extends AppCompatActivity {
     LoginViewModel loginViewModel;
 
     private static final String TAG = "LoginActivity";
-
+    ActivityMainBinding mainBinding;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        mainBinding = DataBindingUtil.setContentView(this,R.layout.activity_main);
+        mainBinding.setSubmit(this);
         //Firebase Authentication
         mFirebaseAuth = FirebaseAuth.getInstance();
         loginViewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
@@ -79,12 +82,7 @@ public class LoginActivity extends AppCompatActivity {
         mEtxtLayoutEmail = findViewById(R.id.etxt_layout_email_login);
         mEtxtLayoutPsswrd = findViewById(R.id.etxt_layout_psswrd_login);
         mBtnLogin = findViewById(R.id.btn_login);
-        mBtnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                login();
-            }
-        });
+
         mTxtvRegister = findViewById(R.id.txtv_register);
         mTxtvRegister.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,7 +123,7 @@ public class LoginActivity extends AppCompatActivity {
             Log.d(TAG, "session exist: ");
     }
 
-    void register() {
+    public void register() {
         mFirebaseAuth.createUserWithEmailAndPassword(mEtxtLayoutEmail.getEditText().getText().toString().trim(),
                 mEtxtLayoutPsswrd.getEditText().getText().toString().trim())
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -152,7 +150,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    void login() {
+    public void login() {
         mFirebaseAuth.signInWithEmailAndPassword(mEtxtLayoutEmail.getEditText().getText().toString().trim(),
                 mEtxtLayoutPsswrd.getEditText().getText().toString().trim())
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {

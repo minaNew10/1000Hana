@@ -1,4 +1,4 @@
-package com.example.a1000hana;
+package com.example.alfhana;
 
 import org.junit.Test;
 

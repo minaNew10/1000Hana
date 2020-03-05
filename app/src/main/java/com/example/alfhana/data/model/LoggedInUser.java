@@ -1,4 +1,4 @@
-package com.example.a1000hana.data.model;
+package com.example.alfhana.data.model;
 
 public class LoggedInUser {
     private String userId;
