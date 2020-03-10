@@ -1,16 +1,16 @@
 package com.example.alfhana.data.model;
 
 public class LoggedInUser {
-    private String userId;
-    private String displayName;
 
-    public LoggedInUser(String userId, String displayName) {
-        this.userId = userId;
-        this.displayName = displayName;
+    private String displayName;
+    private String email;
+    //required to prevent error
+    public LoggedInUser() {
     }
 
-    public String getUserId() {
-        return userId;
+    public LoggedInUser(String displayName, String email) {
+        this.displayName = displayName;
+        this.email = email;
     }
 
     public String getDisplayName() {
