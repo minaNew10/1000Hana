@@ -41,10 +41,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class LoginActivity extends AppCompatActivity {
     FirebaseAuth mFirebaseAuth;
-    TextInputLayout mEtxtLayoutEmail;
-    TextInputLayout mEtxtLayoutPsswrd;
-    Button mBtnLogin;
-    TextView mTxtvRegister;
+
     LoginViewModel loginViewModel;
     volatile boolean mIsAdmin;
     private FirebaseDatabase mFirebaseDatabase;
@@ -59,52 +56,37 @@ public class LoginActivity extends AppCompatActivity {
         mainBinding.setSubmit(this);
         //Firebase Authentication
         mFirebaseAuth = FirebaseAuth.getInstance();
-
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mDatabaseReference = mFirebaseDatabase.getReference().getRoot();
         loginViewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
-
         loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
             @Override
             public void onChanged(LoginFormState loginFormState) {
                 if (loginFormState == null)
                     return;
                 if (loginFormState.isDataValid()) {
-                    mBtnLogin.setEnabled(true);
-                    mBtnLogin.setAlpha(1);
-                    mBtnLogin.setElevation(4f);
+                    mainBinding.btnLogin.setEnabled(true);
+                    mainBinding.btnLogin.setAlpha(1);
+                    mainBinding.btnLogin.setElevation(4f);
                 }
 
                 if (loginFormState.getUsernameError() != null) {
-                    mEtxtLayoutEmail.getEditText().setError(getString(loginFormState.getUsernameError()));
+                    mainBinding.etxtEmailLogin.setError(getString(loginFormState.getUsernameError()));
                 }
                 if (loginFormState.getPasswordError() != null) {
                     Integer pssWrdErr = loginFormState.getPasswordError();
                     getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-                    mEtxtLayoutPsswrd.getEditText().setError(getString(pssWrdErr));
+                    mainBinding.etxtPsswrdLogin.setError(getString(pssWrdErr));
 
                 }
 
             }
         });
-        TextView txtvTitle = findViewById(R.id.txtv_app_name_login);
-        TextView btnLogin = findViewById(R.id.btn_login);
+
         Typeface face = Typeface.createFromAsset(this.getAssets(), "fonts/Adore You.ttf");
 
-        txtvTitle.setTypeface(face);
-        btnLogin.setTypeface(face);
-
-        mEtxtLayoutEmail = findViewById(R.id.etxt_layout_email_login);
-        mEtxtLayoutPsswrd = findViewById(R.id.etxt_layout_psswrd_login);
-        mBtnLogin = findViewById(R.id.btn_login);
-
-        mTxtvRegister = findViewById(R.id.txtv_register);
-        mTxtvRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                register();
-            }
-        });
+        mainBinding.txtvAppNameLogin.setTypeface(face);
+        mainBinding.btnLogin.setTypeface(face);
 
         TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override
@@ -119,13 +101,13 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                loginViewModel.loginDataChanged(mEtxtLayoutEmail.getEditText().getText().toString().trim(),
-                        mEtxtLayoutPsswrd.getEditText().getText().toString().trim());
+                loginViewModel.loginDataChanged(mainBinding.etxtEmailLogin.getText().toString().trim(),
+                        mainBinding.etxtPsswrdLogin.getText().toString().trim());
             }
         };
 
-        mEtxtLayoutEmail.getEditText().addTextChangedListener(afterTextChangedListener);
-        mEtxtLayoutPsswrd.getEditText().addTextChangedListener(afterTextChangedListener);
+        mainBinding.etxtEmailLogin.addTextChangedListener(afterTextChangedListener);
+        mainBinding.etxtPsswrdLogin.addTextChangedListener(afterTextChangedListener);
     }
 
     @Override
@@ -139,8 +121,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void register() {
-        mFirebaseAuth.createUserWithEmailAndPassword(mEtxtLayoutEmail.getEditText().getText().toString().trim(),
-                mEtxtLayoutPsswrd.getEditText().getText().toString().trim())
+        mFirebaseAuth.createUserWithEmailAndPassword(mainBinding.etxtEmailLogin.getText().toString().trim(),
+                mainBinding.etxtPsswrdLogin.getText().toString().trim())
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -166,8 +148,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void login() {
-        mFirebaseAuth.signInWithEmailAndPassword(mEtxtLayoutEmail.getEditText().getText().toString().trim(),
-                mEtxtLayoutPsswrd.getEditText().getText().toString().trim())
+
+        mFirebaseAuth.signInWithEmailAndPassword(mainBinding.etxtEmailLogin.getEditableText().toString().trim(),
+                mainBinding.etxtPsswrdLogin.getEditableText().toString().trim())
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
