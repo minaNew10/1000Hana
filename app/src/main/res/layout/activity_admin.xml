@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.alfhana.ui.AdminActivity">
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="left" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mid_guidline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.35279804" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/top_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="24dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/right_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="16dp" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/txtv_name_admin"
+        android:layout_width="wrap_content"
+
+        android:layout_height="wrap_content"
+        android:text="@string/name"
+        app:layout_constraintBaseline_toBaselineOf="@+id/etxt_name_admin_activity"
+        app:layout_constraintLeft_toRightOf="@id/right_guideline"
+        app:layout_constraintVertical_chainStyle="packed"></com.google.android.material.textview.MaterialTextView>
+
+    <TextView
+        android:id="@+id/txtv_desc_admin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/desc"
+        app:layout_constraintBaseline_toBaselineOf="@+id/etxt_desc"
+        app:layout_constraintStart_toStartOf="@+id/right_guideline" />
+
+    <TextView
+        android:id="@+id/txtv_ingredients_admin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/ingredients"
+        app:layout_constraintBaseline_toBaselineOf="@+id/etxt_ingred_admin"
+        app:layout_constraintStart_toStartOf="@+id/right_guideline" />
+
+    <TextView
+        android:id="@+id/txtv_precautions_admin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/precautions"
+        app:layout_constraintBaseline_toBaselineOf="@+id/etxt_precautions"
+        app:layout_constraintStart_toStartOf="@+id/right_guideline" />
+
+    <TextView
+        android:id="@+id/txtv_cost_admin_activity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/image"
+        app:layout_constraintBaseline_toBaselineOf="@+id/etxt_cost"
+        app:layout_constraintStart_toStartOf="@+id/right_guideline" />
+
+    <TextView
+        android:id="@+id/txtv_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/image_btn"
+        app:layout_constraintBaseline_toBaselineOf="@+id/btn_image"
+        app:layout_constraintStart_toStartOf="@+id/right_guideline" />
+
+    <TextView
+        android:id="@+id/txtv_categories_admin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintBaseline_toBaselineOf="@+id/etxt_categories"
+        app:layout_constraintStart_toStartOf="@+id/right_guideline" />
+
+    <EditText
+        android:id="@+id/etxt_name_admin_activity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Name"
+        app:layout_constraintBottom_toTopOf="@+id/etxt_desc"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/mid_guidline"
+        app:layout_constraintTop_toTopOf="@+id/top_guideline"
+        app:layout_constraintVertical_bias="0.00999999"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <EditText
+        android:id="@+id/etxt_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Name"
+        app:layout_constraintBottom_toTopOf="@+id/etxt_ingred_admin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/mid_guidline"
+        app:layout_constraintTop_toBottomOf="@+id/etxt_name_admin_activity" />
+
+    <EditText
+        android:id="@+id/etxt_ingred_admin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Name"
+        app:layout_constraintBottom_toTopOf="@+id/etxt_precautions"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/mid_guidline"
+        app:layout_constraintTop_toBottomOf="@+id/etxt_desc" />
+
+    <EditText
+        android:id="@+id/etxt_precautions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Name"
+        app:layout_constraintBottom_toTopOf="@+id/etxt_cost"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/mid_guidline"
+        app:layout_constraintTop_toBottomOf="@+id/etxt_ingred_admin" />
+
+    <EditText
+        android:id="@+id/etxt_cost"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Name"
+        app:layout_constraintBottom_toTopOf="@+id/btn_image"
+        app:layout_constraintTop_toBottomOf="@+id/etxt_precautions"
+        tools:layout_editor_absoluteX="169dp" />
+
+    <EditText
+        android:id="@+id/etxt_categories"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Name"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/btn_image"
+        app:layout_constraintTop_toBottomOf="@+id/btn_image" />
+
+    <Button
+        android:id="@+id/btn_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button"
+        app:layout_constraintBottom_toTopOf="@+id/etxt_categories"
+        app:layout_constraintStart_toStartOf="@+id/etxt_cost"
+        app:layout_constraintTop_toBottomOf="@+id/etxt_cost" />
+
+    <ImageView
+        android:id="@+id/imgv_admin"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@+id/btn_image"
+        app:layout_constraintTop_toBottomOf="@+id/btn_image"
+        app:srcCompat="@drawable/ic_launcher_background" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

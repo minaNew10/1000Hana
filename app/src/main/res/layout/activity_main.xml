@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
     <data>
         <variable
             name="submit"
             type="com.example.alfhana.ui.LoginActivity" />
     </data>
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorPrimary"
@@ -56,6 +56,7 @@
                 android:hint="@string/email"
                 android:inputType="textEmailAddress"
                 android:padding="8dp"
+                android:text="marian@hotmail.com"
                 android:textColor="@color/colorPrimaryLight"
                 android:textColorHighlight="@color/colorAccent" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -83,6 +84,7 @@
                 android:hint="@string/password"
                 android:inputType="textPassword"
                 android:padding="8dp"
+                android:text="123456"
                 android:textColor="@color/colorPrimaryLight" />
         </com.google.android.material.textfield.TextInputLayout>
 

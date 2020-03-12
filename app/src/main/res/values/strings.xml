@@ -11,4 +11,10 @@
     <string name="password">Password</string>
     <string name="invalid_email">Not a valid Email</string>
     <string name="invalid_password">Password must be at least 6 characters</string>
+    <string name="name">"Name "</string>
+    <string name="desc">Description</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="precautions">Precautions</string>
+    <string name="image">Image</string>
+    <string name="image_btn">Upload</string>
 </resources>

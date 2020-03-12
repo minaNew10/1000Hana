@@ -7,6 +7,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Editable;
@@ -29,6 +30,14 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class LoginActivity extends AppCompatActivity {
     FirebaseAuth mFirebaseAuth;
@@ -37,24 +46,30 @@ public class LoginActivity extends AppCompatActivity {
     Button mBtnLogin;
     TextView mTxtvRegister;
     LoginViewModel loginViewModel;
-
+    volatile boolean mIsAdmin;
+    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference mDatabaseReference;
     private static final String TAG = "LoginActivity";
     ActivityMainBinding mainBinding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mainBinding = DataBindingUtil.setContentView(this,R.layout.activity_main);
+        mainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         mainBinding.setSubmit(this);
         //Firebase Authentication
         mFirebaseAuth = FirebaseAuth.getInstance();
+
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mDatabaseReference = mFirebaseDatabase.getReference().getRoot();
         loginViewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
 
         loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
             @Override
             public void onChanged(LoginFormState loginFormState) {
-                if(loginFormState == null)
+                if (loginFormState == null)
                     return;
-                if(loginFormState.isDataValid()) {
+                if (loginFormState.isDataValid()) {
                     mBtnLogin.setEnabled(true);
                     mBtnLogin.setAlpha(1);
                     mBtnLogin.setElevation(4f);
@@ -157,7 +172,11 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(getApplicationContext(), "login successful", Toast.LENGTH_LONG).show();
+                            final String id = mFirebaseAuth.getUid();
+                            Log.i(TAG, "onComplete: user id " + id);
+                            isAdmin(id);
+
+
                         }
                     }
                 })
@@ -172,5 +191,28 @@ public class LoginActivity extends AppCompatActivity {
                 Log.d(TAG, "onFailure: " + e.getMessage());
             }
         });
+    }
+
+    public boolean isAdmin(String id) {
+
+        mDatabaseReference.child("admins").child(id).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Log.i(TAG, "onDataChange: data snapshot value " + dataSnapshot.getValue());
+                if (dataSnapshot.getValue() != null) {
+                    Intent intent = new Intent(LoginActivity.this, AdminActivity.class);
+                    startActivity(intent);
+
+                } else {
+                    Toast.makeText(LoginActivity.this, "hello user", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        return mIsAdmin;
     }
 }
