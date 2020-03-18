@@ -1,9 +1,17 @@
 package com.example.alfhana.data.model;
 
-public class LoggedInUser {
+import android.os.Parcelable;
 
-    private String displayName;
-    private String email;
+import org.parceler.Parcel;
+
+@Parcel
+public class LoggedInUser{
+
+    public String displayName;
+    public String email;
+    public String phone;
+    public String address;
+
     //required to prevent error
     public LoggedInUser() {
     }

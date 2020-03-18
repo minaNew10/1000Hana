@@ -1,4 +1,4 @@
-package com.example.alfhana.ui;
+package com.example.alfhana.ui.loginactivity;
 
 import android.util.Patterns;
 

@@ -5,13 +5,13 @@
     <data>
         <variable
             name="submit"
-            type="com.example.alfhana.ui.LoginActivity" />
+            type="com.example.alfhana.ui.loginactivity.LoginFragment" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorPrimary"
-        tools:context=".ui.LoginActivity">
+        tools:context=".ui.loginactivity.LoginActivity">
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/top_guideline"

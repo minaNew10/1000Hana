@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="left" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/mid_guidline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.35279804" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/top_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="24dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/right_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="16dp" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/txtv_name_signup"
+            android:layout_width="wrap_content"
+
+            android:layout_height="wrap_content"
+            android:text="@string/name"
+            app:layout_constraintBaseline_toBaselineOf="@+id/etxt_name_signup_activity"
+            app:layout_constraintLeft_toRightOf="@id/right_guideline"
+            app:layout_constraintVertical_chainStyle="packed"></com.google.android.material.textview.MaterialTextView>
+
+        <TextView
+            android:id="@+id/txtv_email_signup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/email"
+            app:layout_constraintBaseline_toBaselineOf="@+id/etxt_email_signup"
+            app:layout_constraintStart_toStartOf="@+id/right_guideline" />
+
+        <TextView
+            android:id="@+id/txtv_phone_signup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/phone"
+            app:layout_constraintBaseline_toBaselineOf="@+id/etxt_ingred_admin"
+            app:layout_constraintStart_toStartOf="@+id/right_guideline" />
+
+        <TextView
+            android:id="@+id/txtv_address_signup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/address"
+            app:layout_constraintBaseline_toBaselineOf="@+id/etxt_address_signup"
+            app:layout_constraintStart_toStartOf="@+id/right_guideline" />
+
+        <EditText
+            android:id="@+id/etxt_name_signup_activity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Name"
+            app:layout_constraintBottom_toTopOf="@+id/etxt_email_signup"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/mid_guidline"
+            app:layout_constraintTop_toTopOf="@+id/top_guideline"
+            app:layout_constraintVertical_bias="0.42000002"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <EditText
+            android:id="@+id/etxt_email_signup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Name"
+            app:layout_constraintBottom_toTopOf="@+id/etxt_ingred_admin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/mid_guidline"
+            app:layout_constraintTop_toBottomOf="@+id/etxt_name_signup_activity" />
+
+        <EditText
+            android:id="@+id/etxt_ingred_admin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Name"
+            app:layout_constraintBottom_toTopOf="@+id/etxt_address_signup"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/mid_guidline"
+            app:layout_constraintTop_toBottomOf="@+id/etxt_email_signup" />
+
+        <EditText
+            android:id="@+id/etxt_address_signup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Name"
+            app:layout_constraintBottom_toTopOf="@+id/btn_image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/mid_guidline"
+            app:layout_constraintTop_toBottomOf="@+id/etxt_ingred_admin" />
+
+        <Button
+            android:id="@+id/btn_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/create_account"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/etxt_address_signup"
+            app:layout_constraintStart_toStartOf="@+id/etxt_address_signup"
+            app:layout_constraintTop_toBottomOf="@+id/etxt_address_signup" />
+
+        <ImageView
+            android:id="@+id/imgv_user"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/circular_drawable"
+            android:src="@drawable/icons8_person_64"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/etxt_name_signup_activity"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/mid_guidline"
+            app:layout_constraintTop_toTopOf="@+id/top_guideline"
+            app:srcCompat="@drawable/ic_launcher_background" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

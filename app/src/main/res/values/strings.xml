@@ -17,4 +17,31 @@
     <string name="precautions">Precautions</string>
     <string name="image">Image</string>
     <string name="image_btn">Upload</string>
+    <string name="table_users_key" translatable="false">users</string>
+    <string name="table_users_name_key" translatable="false">name</string>
+    <string name="table_users_address_key" translatable="false">address</string>
+    <string name="table_users_phone_key" translatable="false">phone</string>
+    <string name="table_users_email_key" translatable="false">email</string>
+    <string name="title_activity_meals">MealsActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+
+    <string name="home_second">Home Second</string>
+    <string name="phone">Phone</string>
+    <string name="address">Address</string>
+    <string name="create_account">Create account</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_user">UserActivity</string>
+    <string name="title_activity_admin_activityy">AdminActivityy</string>
+
 </resources>
