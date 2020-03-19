@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.alfhana.ui.AdminActivity">
+    tools:context="com.example.alfhana.ui.adminactivity.AdminActivity">
 
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/barrier"
@@ -56,7 +56,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/ingredients"
-        app:layout_constraintBaseline_toBaselineOf="@+id/etxt_ingred_admin"
+        app:layout_constraintBaseline_toBaselineOf="@+id/etxt_phone_signup"
         app:layout_constraintStart_toStartOf="@+id/right_guideline" />
 
     <TextView
@@ -80,7 +80,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/image_btn"
-        app:layout_constraintBaseline_toBaselineOf="@+id/btn_image"
+        app:layout_constraintBaseline_toBaselineOf="@+id/btn_create_account"
         app:layout_constraintStart_toStartOf="@+id/right_guideline" />
 
     <TextView
@@ -112,14 +112,14 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:text="Name"
-        app:layout_constraintBottom_toTopOf="@+id/etxt_ingred_admin"
+        app:layout_constraintBottom_toTopOf="@+id/etxt_phone_signup"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/mid_guidline"
         app:layout_constraintTop_toBottomOf="@+id/etxt_name_signup_activity" />
 
     <EditText
-        android:id="@+id/etxt_ingred_admin"
+        android:id="@+id/etxt_phone_signup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -142,7 +142,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/mid_guidline"
-        app:layout_constraintTop_toBottomOf="@+id/etxt_ingred_admin" />
+        app:layout_constraintTop_toBottomOf="@+id/etxt_phone_signup" />
 
     <EditText
         android:id="@+id/etxt_cost"
@@ -151,7 +151,7 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:text="Name"
-        app:layout_constraintBottom_toTopOf="@+id/btn_image"
+        app:layout_constraintBottom_toTopOf="@+id/btn_create_account"
         app:layout_constraintTop_toBottomOf="@+id/etxt_address_signup"
         tools:layout_editor_absoluteX="169dp" />
 
@@ -164,11 +164,11 @@
         android:inputType="textPersonName"
         android:text="Name"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/btn_image"
-        app:layout_constraintTop_toBottomOf="@+id/btn_image" />
+        app:layout_constraintStart_toStartOf="@+id/btn_create_account"
+        app:layout_constraintTop_toBottomOf="@+id/btn_create_account" />
 
     <Button
-        android:id="@+id/btn_image"
+        android:id="@+id/btn_create_account"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Button"
@@ -181,8 +181,8 @@
         android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@+id/btn_image"
-        app:layout_constraintTop_toBottomOf="@+id/btn_image"
+        app:layout_constraintStart_toStartOf="@+id/btn_create_account"
+        app:layout_constraintTop_toBottomOf="@+id/btn_create_account"
         app:srcCompat="@drawable/ic_launcher_background" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

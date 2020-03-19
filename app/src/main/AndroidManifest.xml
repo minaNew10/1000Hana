@@ -3,7 +3,8 @@
     package="com.example.alfhana">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -12,14 +13,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.adminactivity.AdminActivityy"
+            android:name=".ui.adminactivity.AdminActivity"
             android:label="@string/title_activity_admin_activityy"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".ui.useracivity.UserActivity"
             android:label="@string/title_activity_user"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ui.AdminActivity" />
         <activity
             android:name=".ui.loginactivity.LoginActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">

@@ -22,14 +22,12 @@ import android.widget.Toast;
 
 import com.example.alfhana.R;
 import com.example.alfhana.databinding.FragmentLoginBinding;
-import com.example.alfhana.ui.AdminActivity;
 import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -224,8 +222,7 @@ public class LoginFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 if (dataSnapshot.getValue() != null) {
-                    Intent intent = new Intent(getActivity(), AdminActivity.class);
-                    startActivity(intent);
+
 
                 } else {
                     Toast.makeText(getActivity(), "hello user", Toast.LENGTH_LONG).show();
