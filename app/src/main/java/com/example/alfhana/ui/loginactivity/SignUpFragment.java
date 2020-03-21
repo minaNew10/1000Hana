@@ -1,19 +1,12 @@
 package com.example.alfhana.ui.loginactivity;
 
-import androidx.lifecycle.LifecycleOwner;
-
+import android.Manifest;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.util.Size;
-import androidx.camera.core.CameraX;
-import androidx.camera.core.ImageCapture;
-import androidx.camera.core.ImageCaptureConfig;
-import androidx.camera.core.Preview;
-import androidx.camera.core.PreviewConfig;
+import android.net.Uri;
+import android.os.Build;
+
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
@@ -26,25 +19,27 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.util.Rational;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
-import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.alfhana.R;
 import com.example.alfhana.databinding.SignUpFragmentBinding;
 
-import java.io.File;
-
 public class SignUpFragment extends Fragment {
+    private Uri outputFileUri;
+    private static final String TAG = "MainActivityy";
+
+    private static final int RC_PERMESIONS = 101;
+    public static final int RC_CHOOSER_INTENT = 102;
+    private int PC_STORAGE = 103;
 
     private SignUpViewModel mViewModel;
-    private int REQUEST_CODE_PERMISSIONS = 101;
-    private final String[] REQUIRED_PERMISSIONS = new String[]{"android.permission.CAMERA", "android.permission.WRITE_EXTERNAL_STORAGE"};
+    private final String[] REQUIRED_PERMISSIONS = new String[]{"android.permission.CAMERA", "android.permission.READ_EXTERNAL_STORAGE"};
 
     SignUpFragmentBinding signUpFragmentBinding;
+
     public static SignUpFragment newInstance() {
         return new SignUpFragment();
     }
@@ -52,7 +47,7 @@ public class SignUpFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        signUpFragmentBinding = DataBindingUtil.inflate(inflater,R.layout.sign_up_fragment,container,false);
+        signUpFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.sign_up_fragment, container, false);
         signUpFragmentBinding.setCamera(this);
         return signUpFragmentBinding.getRoot();
     }
@@ -64,36 +59,52 @@ public class SignUpFragment extends Fragment {
         // TODO: Use the ViewModel
     }
 
-    public void prepareCamera(){
-        if(allPermissionsGranted()){
+    public void askPermissions() {
+        if (allPermissionsGranted()) {
             //start camera if permission has been granted by user
-            openCamera();
-        } else{
-            ActivityCompat.requestPermissions(getActivity(), REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS);
+            createChooserIntent();
+        } else {
+            ActivityCompat.requestPermissions(getActivity(), REQUIRED_PERMISSIONS, RC_PERMESIONS);
+            if(allPermissionsGranted()){
+                createChooserIntent();
+            }
         }
     }
+    public boolean allPermissionsGranted() {
 
-    private void openCamera() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent,0);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(data.getExtras() != null) {
-            Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-            BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), bitmap);
-            signUpFragmentBinding.imgvUser.setImageDrawable(bitmapDrawable);
-        }
-    }
-
-    private boolean allPermissionsGranted(){
-        for(String permission : REQUIRED_PERMISSIONS){
-            if(ContextCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED){
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return true;
+        for (String permission : REQUIRED_PERMISSIONS) {
+            if (ContextCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
                 return false;
             }
         }
         return true;
     }
+    private void createChooserIntent() {
+        Intent camIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        Intent gallIntent = new Intent(Intent.ACTION_PICK);
+        gallIntent.setType("image/*");
+        final Intent chooserIntent = Intent.createChooser(gallIntent, "Select Source");
+        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS,new Intent[]{camIntent});
+        startActivityForResult(chooserIntent, RC_CHOOSER_INTENT);
+}
+
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == RC_CHOOSER_INTENT) {
+            if (data != null && data.getExtras() != null) {
+                Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+                BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), bitmap);
+                signUpFragmentBinding.imgvUser.setImageDrawable(bitmapDrawable);
+            } else if (data != null) {
+                Uri uri = data.getData();
+
+                signUpFragmentBinding.imgvUser.setImageURI(uri);
+            }
+        }
+    }
+
 }

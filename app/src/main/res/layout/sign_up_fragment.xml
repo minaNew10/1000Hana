@@ -145,7 +145,7 @@
             android:layout_marginTop="16dp"
             android:background="@drawable/circular_drawable"
             android:clickable="true"
-            android:onClick="@{() -> camera.prepareCamera()}"
+            android:onClick="@{() -> camera.askPermissions()}"
             android:src="@drawable/icons8_person_64"
             android:visibility="visible"
             app:layout_constraintBottom_toTopOf="@+id/etxt_name_signup_activity"
