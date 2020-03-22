@@ -97,17 +97,13 @@ public class SignUpFragment extends Fragment {
     public void askPermissions() {
 
         if (allPermissionsGranted()) {
-            //start camera if permission has been granted by user
-//            createChooserIntent();
-//            dispatchTakePictureIntent();
-            openGallery();
+            createChooserIntent();
         } else {
             ActivityCompat.requestPermissions(getActivity(), REQUIRED_PERMISSIONS, RC_PERMESIONS);
         }
     }
 
     public boolean allPermissionsGranted() {
-
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return true;
         for (String permission : REQUIRED_PERMISSIONS) {
             if (ContextCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
@@ -117,70 +113,46 @@ public class SignUpFragment extends Fragment {
         return true;
     }
 
-//    private void createChooserIntent() {
-//        Intent camIntent = getCamIntent();
-//        Intent gallIntent = getGalleryIntent();
-//        final Intent chooserIntent = Intent.createChooser(gallIntent, getString(R.string.user_image_chooser_title));
-//        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{camIntent});
-//        startActivityForResult(chooserIntent, RC_CHOOSER_INTENT);
-//    }
-
-//    private Intent getGalleryIntent() {
-//        Intent gallIntent = new Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//
-//        return gallIntent;
-//    }
-
-    private Intent getCamIntent() {
-        return new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-    }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == RC_CHOOSER_INTENT) {
-//            mImageUri = null;
-//            if (data != null && data.getExtras() != null) {
-//                bitmap = (Bitmap) data.getExtras().get("data");
-//                BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), bitmap);
-//                signUpFragmentBinding.imgvUser.setImageDrawable(bitmapDrawable);
-//            } else if (data != null) {
-//                mImageUri = data.getData();
-//                signUpFragmentBinding.imgvUser.setImageURI(mImageUri);
-//            }
-//
-//            try {
-//                File file = createImageFile();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//
-//            Log.i(TAG, "onActivityResult: imageuri" + mImageUri);
-//
-//
-//        }I
-        if(resultCode == Activity.RESULT_OK) {
+        if (resultCode == Activity.RESULT_OK) {
             if (requestCode == RC_CAMERA_INTENT) {
                 File f = new File(currentPhotoPath);
                 mImageUri = Uri.fromFile(f);
                 signUpFragmentBinding.imgvUser.setImageURI(mImageUri);
                 Log.d("tag", "ABsolute Url of Image is " + Uri.fromFile(f));
             }
-            if(requestCode == RC_GALLERY){
+            if (requestCode == RC_GALLERY) {
                 mImageUri = data.getData();
                 String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                imageFileName = "JPEG_" + timeStamp +"."+getFileExt(mImageUri);
-                Log.d("tag", "onActivityResult: Gallery Image Uri:  " +  imageFileName);
+                imageFileName = "JPEG_" + timeStamp + "." + getFileExt(mImageUri);
+                Log.d("tag", "onActivityResult: Gallery Image Uri:  " + imageFileName);
+                signUpFragmentBinding.imgvUser.setImageURI(mImageUri);
+            }
+            if (requestCode == RC_CHOOSER_INTENT) {
+                if(data != null) {
+                    mImageUri = data.getData();
+                    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                    imageFileName = "JPEG_" + timeStamp + "." + getFileExt(mImageUri);
+                    Log.d("tag", "onActivityResult: Gallery Image Uri:  " + imageFileName);
+                }else {
+                    File f = new File(currentPhotoPath);
+                    mImageUri = Uri.fromFile(f);
+                    Log.d("tag", "ABsolute Url of Image is " + Uri.fromFile(f));
+                }
                 signUpFragmentBinding.imgvUser.setImageURI(mImageUri);
             }
         }
     }
+
     private String getFileExt(Uri contentUri) {
         ContentResolver c = getActivity().getContentResolver();
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(c.getType(contentUri));
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -215,7 +187,7 @@ public class SignUpFragment extends Fragment {
                         // this is a good place to explain the user
                         // why you need the permission and ask if he wants
                         // to accept it (the rationale)
-                        Toast.makeText(getActivity(),getString(R.string.permission_camera_denied_rationale),Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), getString(R.string.permission_camera_denied_rationale), Toast.LENGTH_LONG).show();
 
                     }
 //                    else if ( /* possibly check more permissions...*/) {
@@ -265,11 +237,36 @@ public class SignUpFragment extends Fragment {
                 startActivityForResult(takePictureIntent, RC_CAMERA_INTENT);
             }
         }
+
     }
-    private void openGallery(){
+
+    private void createChooserIntent() {
         Intent gallIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(gallIntent, RC_GALLERY);
+        Intent chooserIntent = Intent.createChooser(gallIntent, getString(R.string.user_image_chooser_title));
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(getActivity(),
+                        "com.example.alfhana.android.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{takePictureIntent});
+            }
+        }
+        startActivityForResult(chooserIntent, RC_CHOOSER_INTENT);
     }
+
+
+
     public void saveUser() {
         mStorageRef = FirebaseStorage.getInstance().getReference().child("UsersPhotos/" + imageFileName);
         mStorageRef.putFile(mImageUri)
