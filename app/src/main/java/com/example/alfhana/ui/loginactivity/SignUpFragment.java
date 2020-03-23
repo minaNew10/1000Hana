@@ -28,6 +28,9 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.os.Environment;
 
@@ -41,9 +44,14 @@ import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
 import com.example.alfhana.R;
+import com.example.alfhana.data.model.User;
 import com.example.alfhana.databinding.SignUpFragmentBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -65,6 +73,7 @@ public class SignUpFragment extends Fragment {
     private static final int RC_PERMESIONS = 101;
     public static final int RC_CHOOSER_INTENT = 102;
     private String currentPhotoPath;
+    Uri userImageUri;
     private StorageReference mStorageRef;
     private SignUpViewModel mViewModel;
     private final String[] REQUIRED_PERMISSIONS = new String[]{"android.permission.CAMERA", "android.permission.READ_EXTERNAL_STORAGE"};
@@ -72,7 +81,8 @@ public class SignUpFragment extends Fragment {
     SignUpFragmentBinding signUpFragmentBinding;
     Uri mImageUri;
     private String imageFileName;
-
+    FirebaseDatabase database;
+    DatabaseReference myRef;
     public static SignUpFragment newInstance() {
         return new SignUpFragment();
     }
@@ -83,6 +93,8 @@ public class SignUpFragment extends Fragment {
         signUpFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.sign_up_fragment, container, false);
         signUpFragmentBinding.setCamera(this);
         mStorageRef = FirebaseStorage.getInstance().getReference().child("UsersPhotos");
+        database = FirebaseDatabase.getInstance();
+        myRef  = database.getReference(getString(R.string.user_table));
         return signUpFragmentBinding.getRoot();
     }
 
@@ -268,6 +280,41 @@ public class SignUpFragment extends Fragment {
 
 
     public void saveUser() {
+        User user = createUser();
+        myRef   .push()
+                .setValue(user)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful())
+                            Log.d(TAG, "  onComplete: ");
+                        else
+                            Log.d(TAG, "un sucess: ");
+                    }
+                });
+        SignUpFragmentDirections.ActionSignUpFragmentToLoginFragment action =
+                SignUpFragmentDirections.actionSignUpFragmentToLoginFragment();
+        action.setStringEmail(user.getEmail());
+        //TODO adjust the state of textboxes in this screen and use repo and view models
+        NavController navController = Navigation.findNavController(this.getView());
+        navController.navigate(action);
+    }
+
+    private User createUser() {
+        String name = signUpFragmentBinding.etxtNameSignupActivity.getText().toString();
+        String email = signUpFragmentBinding.etxtEmailSignup.getText().toString();
+        String address = signUpFragmentBinding.etxtAddressSignup.getText().toString();
+        String phone = signUpFragmentBinding.etxtPhoneSignup.getText().toString();
+        User user = new User(name,email,phone,address);
+        if(userImageUri != null) {
+            storeImage();
+            user.setImage(userImageUri.toString());
+        }
+        return user;
+    }
+
+    private void storeImage() {
+
         mStorageRef = FirebaseStorage.getInstance().getReference().child("UsersPhotos/" + imageFileName);
         mStorageRef.putFile(mImageUri)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -276,7 +323,7 @@ public class SignUpFragment extends Fragment {
                                               mStorageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                   @Override
                                                   public void onSuccess(Uri uri) {
-                                                      Log.i(TAG, "onSuccess: " + uri);
+                                                      userImageUri = uri;
                                                   }
                                               });
                                           }

@@ -14,6 +14,11 @@
         <action
             android:id="@+id/action_loginFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
+        <argument
+            android:name="@string/email"
+            app:argType="string"
+            android:defaultValue="@null"
+            app:nullable="true"></argument>
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
@@ -22,7 +27,9 @@
         tools:layout="@layout/sign_up_fragment" >
         <action
             android:id="@+id/action_signUpFragment_to_loginFragment"
-            app:destination="@id/loginFragment" />
+            app:destination="@+id/loginFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/homeFragment"

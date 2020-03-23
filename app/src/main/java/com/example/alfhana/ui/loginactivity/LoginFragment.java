@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -148,6 +149,7 @@ public class LoginFragment extends Fragment {
         loginBinding.etxtEmailLogin.addTextChangedListener(afterTextChangedListener);
         loginBinding.etxtPsswrdLogin.addTextChangedListener(afterTextChangedListener);
 
+
         return v;
     }
     @Override
@@ -158,7 +160,27 @@ public class LoginFragment extends Fragment {
             Log.d(TAG, "register now: ");
         else
             Log.d(TAG, "session exist: ");
+        if(getArguments()!= null){
+            LoginFragmentArgs args = LoginFragmentArgs.fromBundle(getArguments());
+            if(args.getStringEmail()!= null) {
+                loginBinding.etxtEmailLogin.setText(args.getStringEmail());
+
+            }
+        }
     }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+
+
+
+
+
+
+    }
+
     public void register() {
         NavHostFragment.findNavController(LoginFragment.this).navigate(R.id.action_loginFragment_to_signUpFragment);
 //        mFirebaseAuth.createUserWithEmailAndPassword(loginBinding.etxtEmailLogin.getText().toString().trim(),
