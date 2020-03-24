@@ -1,39 +1,28 @@
 package com.example.alfhana.ui.loginactivity;
 
 import android.Manifest;
-
 import androidx.appcompat.app.AlertDialog;
-
 import android.app.Activity;
-import android.app.Instrumentation;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
-
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
-
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
-
 import android.os.Environment;
-
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
@@ -42,29 +31,30 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.Toast;
-
 import com.example.alfhana.R;
 import com.example.alfhana.data.model.User;
 import com.example.alfhana.databinding.SignUpFragmentBinding;
+import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class SignUpFragment extends Fragment {
-
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseDatabase mFirebaseDatabase;
     private static final String TAG = "SignUpFragment";
     public static final int RC_CAMERA_INTENT = 103;
     public static final int RC_PERMISSIONSETTINGS = 104;
@@ -92,6 +82,8 @@ public class SignUpFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         signUpFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.sign_up_fragment, container, false);
         signUpFragmentBinding.setCamera(this);
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
         mStorageRef = FirebaseStorage.getInstance().getReference().child("UsersPhotos");
         database = FirebaseDatabase.getInstance();
         myRef  = database.getReference(getString(R.string.user_table));
@@ -286,20 +278,50 @@ public class SignUpFragment extends Fragment {
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful())
-                            Log.d(TAG, "  onComplete: ");
-                        else
-                            Log.d(TAG, "un sucess: ");
+                        if (task.isSuccessful()) {
+                            Toast.makeText(getActivity(), getString(R.string.registeration_successful), Toast.LENGTH_LONG).show();
+                            NavHostFragment.findNavController(SignUpFragment.this).navigate(R.id.action_signUpFragment_to_mealsActivity);
+                        } else {
+                            Toast.makeText(getActivity(), getString(R.string.registeration_failed), Toast.LENGTH_LONG).show();
+                            NavHostFragment.findNavController(SignUpFragment.this).navigate(R.id.action_signUpFragment_to_loginFragment);
+                        }
                     }
                 });
-        SignUpFragmentDirections.ActionSignUpFragmentToLoginFragment action =
-                SignUpFragmentDirections.actionSignUpFragmentToLoginFragment();
-        action.setStringEmail(user.getEmail());
-        //TODO adjust the state of textboxes in this screen and use repo and view models
-        NavController navController = Navigation.findNavController(this.getView());
-        navController.navigate(action);
-    }
 
+
+    }
+    public void register() {
+
+        mFirebaseAuth.createUserWithEmailAndPassword(signUpFragmentBinding.etxtEmailSignup.getText().toString().trim(),
+                signUpFragmentBinding.etxtPsswrd.getText().toString().trim())
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            saveUser();
+                        }else {
+                            Toast.makeText(getActivity(), getString(R.string.registeration_failed), Toast.LENGTH_LONG).show();
+                            NavHostFragment.findNavController(SignUpFragment.this).navigate(R.id.action_signUpFragment_to_loginFragment);
+                        }
+                    }
+                })
+                .addOnCanceledListener(new OnCanceledListener() {
+                    @Override
+                    public void onCanceled() {
+                        Log.d(TAG, "onCanceled: ");
+                        Toast.makeText(getActivity(), getString(R.string.registeration_failed), Toast.LENGTH_LONG).show();
+                        NavHostFragment.findNavController(SignUpFragment.this).navigate(R.id.action_signUpFragment_to_loginFragment);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                if (e instanceof FirebaseAuthWeakPasswordException) {
+
+                    Log.d(TAG, "onFailure: " + e.getMessage());
+                }
+            }
+        });
+    }
     private User createUser() {
         String name = signUpFragmentBinding.etxtNameSignupActivity.getText().toString();
         String email = signUpFragmentBinding.etxtEmailSignup.getText().toString();

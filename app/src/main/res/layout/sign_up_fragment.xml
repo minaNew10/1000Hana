@@ -7,15 +7,19 @@
             name="camera"
             type="com.example.alfhana.ui.loginactivity.SignUpFragment" />
     </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="@+id/etxt_phone_signup"
+        app:layout_constraintTop_toBottomOf="@+id/etxt_phone_signup">
 
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/barrier"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:barrierDirection="left" />
+            app:barrierDirection="left"
+            tools:layout_editor_absoluteX="411dp" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/mid_guidline"
@@ -45,8 +49,8 @@
             android:layout_height="wrap_content"
             android:text="@string/name"
             app:layout_constraintBaseline_toBaselineOf="@+id/etxt_name_signup_activity"
-            app:layout_constraintLeft_toRightOf="@id/right_guideline"
-            app:layout_constraintVertical_chainStyle="packed"></com.google.android.material.textview.MaterialTextView>
+            app:layout_constraintTop_toTopOf="@+id/top_guideline"
+            tools:layout_editor_absoluteX="16dp"></com.google.android.material.textview.MaterialTextView>
 
         <TextView
             android:id="@+id/txtv_email_signup"
@@ -54,15 +58,16 @@
             android:layout_height="wrap_content"
             android:text="@string/email"
             app:layout_constraintBaseline_toBaselineOf="@+id/etxt_email_signup"
-            app:layout_constraintStart_toStartOf="@+id/right_guideline" />
+            tools:layout_editor_absoluteX="16dp" />
 
         <TextView
             android:id="@+id/txtv_phone_signup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/phone"
-            app:layout_constraintBaseline_toBaselineOf="@+id/etxt_phone_signup"
-            app:layout_constraintStart_toStartOf="@+id/right_guideline" />
+            app:layout_constraintBottom_toTopOf="@+id/txtv_address_signup"
+            app:layout_constraintTop_toBottomOf="@+id/txtv_email_signup"
+            tools:layout_editor_absoluteX="16dp" />
 
         <TextView
             android:id="@+id/txtv_address_signup"
@@ -76,26 +81,21 @@
             android:id="@+id/etxt_name_signup_activity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
             android:ems="10"
             android:inputType="textPersonName"
             app:layout_constraintBottom_toTopOf="@+id/etxt_email_signup"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/mid_guidline"
-            app:layout_constraintTop_toTopOf="@+id/top_guideline"
-            app:layout_constraintVertical_bias="0.48000002"
-            app:layout_constraintVertical_chainStyle="packed" />
+            app:layout_constraintTop_toBottomOf="@+id/imgv_user" />
 
         <EditText
             android:id="@+id/etxt_email_signup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
             android:ems="10"
             android:inputType="textPersonName"
             app:layout_constraintBottom_toTopOf="@+id/etxt_phone_signup"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="@+id/mid_guidline"
             app:layout_constraintTop_toBottomOf="@+id/etxt_name_signup_activity" />
 
@@ -103,47 +103,43 @@
             android:id="@+id/etxt_phone_signup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
             android:ems="10"
             android:inputType="textPersonName"
             android:text="Name"
             app:layout_constraintBottom_toTopOf="@+id/etxt_address_signup"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="@+id/mid_guidline"
+            app:layout_constraintEnd_toEndOf="@+id/etxt_email_signup"
+            app:layout_constraintStart_toStartOf="@+id/etxt_email_signup"
             app:layout_constraintTop_toBottomOf="@+id/etxt_email_signup" />
 
         <EditText
             android:id="@+id/etxt_address_signup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="188dp"
             android:ems="10"
             android:inputType="textPersonName"
             android:text="Name"
-            app:layout_constraintBottom_toTopOf="@+id/btn_create_account"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="@+id/mid_guidline"
+            app:layout_constraintBottom_toTopOf="@+id/etxt_psswrd"
+            app:layout_constraintEnd_toEndOf="@+id/etxt_phone_signup"
+            app:layout_constraintStart_toStartOf="@+id/etxt_phone_signup"
             app:layout_constraintTop_toBottomOf="@+id/etxt_phone_signup" />
 
         <Button
             android:id="@+id/btn_create_account"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:onClick="@{() -> camera.saveUser()}"
+            android:layout_marginBottom="32dp"
+            android:onClick="@{() -> camera.register()}"
             android:text="@string/create_account"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/etxt_address_signup"
-            app:layout_constraintStart_toStartOf="@+id/etxt_address_signup"
-            app:layout_constraintTop_toBottomOf="@+id/etxt_address_signup" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/mid_guidline"
+            app:layout_constraintTop_toBottomOf="@+id/etxt_psswrd" />
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/imgv_user"
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:layout_margin="16dp"
-            android:layout_marginTop="16dp"
             android:background="@drawable/circular_drawable"
             android:clickable="true"
             android:onClick="@{() -> camera.askPermissions()}"
@@ -153,7 +149,27 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/mid_guidline"
             app:layout_constraintTop_toTopOf="@+id/top_guideline"
+            app:layout_constraintVertical_bias="0.43"
+            app:layout_constraintVertical_chainStyle="spread_inside"
             app:srcCompat="@drawable/icons8_person_64" />
+
+        <EditText
+            android:id="@+id/etxt_psswrd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPassword"
+            app:layout_constraintEnd_toEndOf="@+id/etxt_address_signup"
+            app:layout_constraintStart_toStartOf="@+id/etxt_address_signup"
+            app:layout_constraintTop_toBottomOf="@+id/etxt_address_signup" />
+
+        <TextView
+            android:id="@+id/txtv_psswrd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/password"
+            app:layout_constraintBaseline_toBaselineOf="@+id/etxt_psswrd"
+            app:layout_constraintStart_toStartOf="@+id/right_guideline" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

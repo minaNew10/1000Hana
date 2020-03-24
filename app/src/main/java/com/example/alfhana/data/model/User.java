@@ -1,14 +1,32 @@
 package com.example.alfhana.data.model;
-
+import android.os.Parcel;
 import android.os.Parcelable;
 
-import org.parceler.Parcel;
 
-@Parcel
-public class User {
+public class User implements Parcelable{
 
     public String displayName;
     public String email;
+
+    protected User(Parcel in) {
+        displayName = in.readString();
+        email = in.readString();
+        phone = in.readString();
+        address = in.readString();
+        image = in.readString();
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
@@ -72,4 +90,17 @@ public class User {
         this.image = image;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(displayName);
+        parcel.writeString(email);
+        parcel.writeString(phone);
+        parcel.writeString(address);
+        parcel.writeString(image);
+    }
 }

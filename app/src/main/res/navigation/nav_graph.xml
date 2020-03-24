@@ -11,14 +11,17 @@
         <action
             android:id="@+id/action_loginFragment_to_signUpFragment"
             app:destination="@id/signUpFragment" />
-        <action
-            android:id="@+id/action_loginFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
         <argument
-            android:name="@string/email"
-            app:argType="string"
-            android:defaultValue="@null"
-            app:nullable="true"></argument>
+            android:name="user"
+            app:argType="com.example.alfhana.data.model.User"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <action
+            android:id="@+id/action_loginFragment_to_mobile_navigation"
+            app:destination="@id/mobile_navigation" />
+        <action
+            android:id="@+id/action_loginFragment_to_mealsActivity"
+            app:destination="@id/mealsActivity" />
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
@@ -26,14 +29,24 @@
         android:label="sign_up_fragment"
         tools:layout="@layout/sign_up_fragment" >
         <action
+            android:id="@+id/action_signUpFragment_to_mealsActivity"
+            app:destination="@id/mealsActivity" />
+        <action
             android:id="@+id/action_signUpFragment_to_loginFragment"
-            app:destination="@+id/loginFragment"
+            app:destination="@id/loginFragment"
             app:popUpTo="@id/loginFragment"
             app:popUpToInclusive="false" />
     </fragment>
-    <fragment
-        android:id="@+id/homeFragment"
-        android:name="com.example.alfhana.ui.useracivity.ui.home.HomeFragment"
-        android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+    <activity
+        android:id="@+id/mealsActivity"
+        android:name="com.example.alfhana.ui.mealsactivity.MealsActivity"
+        android:label="app_bar_meals"
+        tools:layout="@layout/activity_meals" >
+        <argument
+            android:name="loggedin_user"
+            app:argType="com.example.alfhana.data.model.User"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </activity>
+
 </navigation>

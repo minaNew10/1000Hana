@@ -1,17 +1,15 @@
 package com.example.alfhana.ui.loginactivity;
 
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -20,8 +18,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Toast;
-
 import com.example.alfhana.R;
+import com.example.alfhana.data.model.User;
 import com.example.alfhana.databinding.FragmentLoginBinding;
 import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -36,6 +34,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link LoginFragment#newInstance} factory method to
@@ -47,8 +46,11 @@ public class LoginFragment extends Fragment {
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabaseReference;
     private static final int RC_START_SIGN_UP = 1;
+    User LoggedInUser;
     LoginViewModel loginViewModel;
     FragmentLoginBinding loginBinding;
+    FirebaseDatabase database;
+    DatabaseReference myRef;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -57,7 +59,7 @@ public class LoginFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    User loggedInUser;
     public LoginFragment() {
         // Required empty public constructor
     }
@@ -162,51 +164,18 @@ public class LoginFragment extends Fragment {
             Log.d(TAG, "session exist: ");
         if(getArguments()!= null){
             LoginFragmentArgs args = LoginFragmentArgs.fromBundle(getArguments());
-            if(args.getStringEmail()!= null) {
-                loginBinding.etxtEmailLogin.setText(args.getStringEmail());
+            if(args.getUser()!= null) {
+                loggedInUser = args.getUser();
+                loginBinding.etxtEmailLogin.setText(loggedInUser.getEmail());
 
             }
         }
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
 
 
-
-
-
-
-
-    }
-
-    public void register() {
+    public void goToSignUp() {
         NavHostFragment.findNavController(LoginFragment.this).navigate(R.id.action_loginFragment_to_signUpFragment);
-//        mFirebaseAuth.createUserWithEmailAndPassword(loginBinding.etxtEmailLogin.getText().toString().trim(),
-//                loginBinding.etxtPsswrdLogin.getText().toString().trim())
-//                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<AuthResult> task) {
-//                        if (task.isSuccessful()) {
-//                            Toast.makeText(getActivity(), "register successful", Toast.LENGTH_LONG).show();
-//                        }
-//                    }
-//                })
-//                .addOnCanceledListener(new OnCanceledListener() {
-//                    @Override
-//                    public void onCanceled() {
-//                        Log.d(TAG, "onCanceled: ");
-//                    }
-//                }).addOnFailureListener(new OnFailureListener() {
-//            @Override
-//            public void onFailure(@NonNull Exception e) {
-//                if (e instanceof FirebaseAuthWeakPasswordException) {
-//
-//                    Log.d(TAG, "onFailure: " + e.getMessage());
-//                }
-//            }
-//        });
     }
     public void login() {
 
@@ -217,10 +186,11 @@ public class LoginFragment extends Fragment {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             final String id = mFirebaseAuth.getUid();
-                            Log.i(TAG, "onComplete: user id " + id);
+                            retrieveUser(id);
+
+
+
                             isAdmin(id);
-
-
                         }
                     }
                 })
@@ -237,17 +207,39 @@ public class LoginFragment extends Fragment {
         });
     }
 
+    private void retrieveUser(final String id) {
+
+        mDatabaseReference
+                .child("users")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        //Log.d(TAG, "onDataChange: "+dataSnapshot.getValue(User.class).toString());
+                        if(dataSnapshot.hasChild(id)){
+                            loggedInUser = (User) dataSnapshot.child(id).getValue(User.class);
+                            LoginFragmentDirections.ActionLoginFragmentToMealsActivity action = LoginFragmentDirections.actionLoginFragmentToMealsActivity();
+                            action.setLoggedinUser(loggedInUser);
+                            Log.i(TAG, "onComplete: " + loggedInUser);
+                            Navigation.findNavController(getView()).navigate(action);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+    }
+
     public boolean isAdmin(String id) {
 
         mDatabaseReference.child("admins").child(id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
                 if (dataSnapshot.getValue() != null) {
 
 
                 } else {
-                    Toast.makeText(getActivity(), "hello user", Toast.LENGTH_LONG).show();
                 }
             }
 

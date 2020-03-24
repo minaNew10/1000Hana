@@ -48,5 +48,7 @@
     <string name="permission_denied_message">Permission needed</string>
     <string name="enable">Enable</string>
     <string name="user_table">users</string>
-
+    <string name="user">user</string>
+    <string name="registeration_successful">Successful registeration</string>
+    <string name="registeration_failed">"Registeration failed "</string>
 </resources>
