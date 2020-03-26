@@ -2,14 +2,16 @@ package com.example.alfhana.ui.loginactivity;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -17,17 +19,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Toast;
+
 import com.example.alfhana.R;
+import com.example.alfhana.data.UserRepository;
 import com.example.alfhana.data.model.User;
 import com.example.alfhana.databinding.FragmentLoginBinding;
-import com.google.android.gms.tasks.OnCanceledListener;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -41,10 +38,12 @@ import com.google.firebase.database.ValueEventListener;
  * create an instance of this fragment.
  */
 public class LoginFragment extends Fragment {
+
     private static final String TAG = "LoginFragment";
     private FirebaseAuth mFirebaseAuth;
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabaseReference;
+    UserRepository userRepository;
     private static final int RC_START_SIGN_UP = 1;
     User LoggedInUser;
     LoginViewModel loginViewModel;
@@ -60,6 +59,7 @@ public class LoginFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     User loggedInUser;
+
     public LoginFragment() {
         // Required empty public constructor
     }
@@ -95,7 +95,8 @@ public class LoginFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        loginBinding = DataBindingUtil.inflate(inflater,R.layout.fragment_login,container,false);
+        loginBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_login, container, false);
+        userRepository = UserRepository.getInstance(this.getActivity());
         View v = loginBinding.getRoot();
         loginBinding.setSubmit(this);
         mFirebaseAuth = FirebaseAuth.getInstance();
@@ -154,17 +155,18 @@ public class LoginFragment extends Fragment {
 
         return v;
     }
+
     @Override
     public void onStart() {
         super.onStart();
-        FirebaseUser user = mFirebaseAuth.getCurrentUser();
-        if (user == null)
+//        loggedInUser = userRepository.CheckLoginState();
+        if (loggedInUser == null)
             Log.d(TAG, "register now: ");
         else
             Log.d(TAG, "session exist: ");
-        if(getArguments()!= null){
+        if (getArguments() != null) {
             LoginFragmentArgs args = LoginFragmentArgs.fromBundle(getArguments());
-            if(args.getUser()!= null) {
+            if (args.getUser() != null) {
                 loggedInUser = args.getUser();
                 loginBinding.etxtEmailLogin.setText(loggedInUser.getEmail());
 
@@ -173,63 +175,93 @@ public class LoginFragment extends Fragment {
     }
 
 
-
     public void goToSignUp() {
         NavHostFragment.findNavController(LoginFragment.this).navigate(R.id.action_loginFragment_to_signUpFragment);
     }
+
     public void login() {
-
-        mFirebaseAuth.signInWithEmailAndPassword(loginBinding.etxtEmailLogin.getEditableText().toString().trim(),
-                loginBinding.etxtPsswrdLogin.getEditableText().toString().trim())
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            final String id = mFirebaseAuth.getUid();
-                            retrieveUser(id);
-
-
-
-                            isAdmin(id);
-                        }
-                    }
-                })
-                .addOnCanceledListener(new OnCanceledListener() {
-                    @Override
-                    public void onCanceled() {
-                        Log.d(TAG, "onCanceled: ");
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
+        userRepository.login(loginBinding.etxtEmailLogin.getEditableText().toString().trim(),
+                loginBinding.etxtPsswrdLogin.getEditableText().toString());
+        userRepository.getLoggedInUser().observe(this, new Observer<User>() {
             @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d(TAG, "onFailure: " + e.getMessage());
+            public void onChanged(User user) {
+                Log.i(TAG, "onChanged: " + user);
+                if (user != null) {
+                    LoginFragmentDirections.ActionLoginFragmentToMealsActivity action = LoginFragmentDirections.actionLoginFragmentToMealsActivity();
+                    action.setLoggedinUser(user);
+                    Navigation.findNavController(getView()).navigate(action);
+                }
+
             }
         });
+//        userRepository.login(loginBinding.etxtEmailLogin.getEditableText().toString().trim(),
+//                loginBinding.etxtPsswrdLogin.getEditableText().toString()).observe(this, new Observer<Boolean>() {
+//            @Override
+//            public void onChanged(Boolean aBoolean) {
+//                if(aBoolean){
+//                    User user = userRepository.getLoggedInUser();
+//                    Log.i(TAG, "onChanged: " + user);
+//                    if(user != null) {
+//                        LoginFragmentDirections.ActionLoginFragmentToMealsActivity action = LoginFragmentDirections.actionLoginFragmentToMealsActivity();
+//
+//                        action.setLoggedinUser(userRepository.getLoggedInUser());
+//                        Navigation.findNavController(getView()).navigate(action);
+//                    }
+//                }
+//            }
+//        });
+
+//        mFirebaseAuth.signInWithEmailAndPassword(loginBinding.etxtEmailLogin.getEditableText().toString().trim(),
+//                loginBinding.etxtPsswrdLogin.getEditableText().toString().trim())
+//                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<AuthResult> task) {
+//                        if (task.isSuccessful()) {
+//                            final String id = mFirebaseAuth.getUid();
+//                            retrieveUser(id);
+//
+//
+//
+//                            isAdmin(id);
+//                        }
+//                    }
+//                })
+//                .addOnCanceledListener(new OnCanceledListener() {
+//                    @Override
+//                    public void onCanceled() {
+//                        Log.d(TAG, "onCanceled: ");
+//                    }
+//                }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//                Log.d(TAG, "onFailure: " + e.getMessage());
+//            }
+//        });
     }
 
-    private void retrieveUser(final String id) {
-
-        mDatabaseReference
-                .child("users")
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        //Log.d(TAG, "onDataChange: "+dataSnapshot.getValue(User.class).toString());
-                        if(dataSnapshot.hasChild(id)){
-                            loggedInUser = (User) dataSnapshot.child(id).getValue(User.class);
-                            LoginFragmentDirections.ActionLoginFragmentToMealsActivity action = LoginFragmentDirections.actionLoginFragmentToMealsActivity();
-                            action.setLoggedinUser(loggedInUser);
-                            Log.i(TAG, "onComplete: " + loggedInUser);
-                            Navigation.findNavController(getView()).navigate(action);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-    }
+//    private void retrieveUser(final String id) {
+//
+//        mDatabaseReference
+//                .child("users")
+//                .addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                        //Log.d(TAG, "onDataChange: "+dataSnapshot.getValue(User.class).toString());
+//                        if(dataSnapshot.hasChild(id)){
+//                            loggedInUser = (User) dataSnapshot.child(id).getValue(User.class);
+//                            LoginFragmentDirections.ActionLoginFragmentToMealsActivity action = LoginFragmentDirections.actionLoginFragmentToMealsActivity();
+//                            action.setLoggedinUser(loggedInUser);
+//                            Log.i(TAG, "onComplete: " + loggedInUser);
+//                            Navigation.findNavController(getView()).navigate(action);
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                    }
+//                });
+//    }
 
     public boolean isAdmin(String id) {
 

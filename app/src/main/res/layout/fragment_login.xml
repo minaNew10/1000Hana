@@ -56,7 +56,7 @@
                 android:hint="@string/email"
                 android:inputType="textEmailAddress"
                 android:padding="8dp"
-                android:text="mina2011new@gmail.com"
+                android:text="minadevdream@gmail.com"
                 android:textColor="@color/colorPrimaryLight"
                 android:textColorHighlight="@color/colorAccent" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -109,7 +109,7 @@
             android:alpha="0.5"
             android:background="@drawable/rectangle_drawable"
             android:onClick="@{() -> submit.login()}"
-            android:enabled="false"
+
             android:padding="8dp"
             android:text="@string/login"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"

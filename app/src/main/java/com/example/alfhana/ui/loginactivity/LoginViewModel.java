@@ -7,12 +7,13 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.alfhana.R;
+import com.example.alfhana.data.UserRepository;
 
 public class LoginViewModel extends ViewModel {
 
+    private MutableLiveData<Boolean> loginResult = new MutableLiveData<>();
+    private UserRepository userRepository;
     private MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
-//    private MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
-//    private LoginRepository loginRepository;
 
 //    LoginViewModel(LoginRepository loginRepository) {
 //        this.loginRepository = loginRepository;
@@ -26,16 +27,17 @@ public class LoginViewModel extends ViewModel {
 //        return loginResult;
 //    }
 
-//    public void login(FirebaseAuth firebaseAuth,String username, String password) {
+//    public Boolean login(String username, String password) {
 //        // can be launched in a separate asynchronous job
-//        Result<LoggedInUser> result = loginRepository.login(firebaseAuth,username, password);
+//        Boolean result = userRepository.login(username, password);
 //
-//        if (result instanceof Result.Success) {
-//            LoggedInUser data = ((Result.Success<LoggedInUser>) result).getData();
-//            loginResult.setValue(new LoginResult(new LoggedInUserView(data.getDisplayName())));
-//        } else {
-//            loginResult.setValue(new LoginResult(R.string.login_failed));
-//        }
+////        if (result instanceof Result.Success) {
+////            LoggedInUser data = ((Result.Success<LoggedInUser>) result).getData();
+////            loginResult.setValue(new LoginResult(new LoggedInUserView(data.getDisplayName())));
+////        } else {
+////            loginResult.setValue(new LoginResult(R.string.login_failed));
+////        }
+//        return  result;
 //    }
 
     public void loginDataChanged(String email, String password) {

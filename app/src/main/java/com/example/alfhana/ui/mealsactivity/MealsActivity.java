@@ -6,6 +6,7 @@ import android.view.Menu;
 import android.widget.Toast;
 
 import com.example.alfhana.R;
+import com.example.alfhana.data.UserRepository;
 import com.example.alfhana.data.model.User;
 import com.example.alfhana.ui.mealsactivity.ui.home.HomeFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -14,6 +15,7 @@ import com.google.android.material.navigation.NavigationView;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.Observer;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
@@ -26,12 +28,22 @@ import androidx.appcompat.widget.Toolbar;
 public class MealsActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
-
+    private UserRepository userRepository = UserRepository.getInstance(this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meals);
         User user = getIntent().getExtras().getParcelable("loggedin_user");
+        userRepository.getIsAdmin().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if(aBoolean){
+                    Toast.makeText(MealsActivity.this,"hello admin",Toast.LENGTH_LONG);
+                }else {
+                    Toast.makeText(MealsActivity.this,"hello admin",Toast.LENGTH_LONG);
+                }
+            }
+        });
         Toast.makeText(this,user.getEmail(),Toast.LENGTH_LONG).show();
         NavController navController = Navigation.findNavController(this,R.id.nav_host_fragment);
         navController.setGraph(R.navigation.meals_navigation,getIntent().getExtras());
