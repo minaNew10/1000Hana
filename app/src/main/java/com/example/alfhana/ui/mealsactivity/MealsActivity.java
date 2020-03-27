@@ -33,7 +33,7 @@ public class MealsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meals);
-//        User user = getIntent().getExtras().getParcelable("loggedin_user");
+        User user = getIntent().getExtras().getParcelable("loggedin_user");
         userRepository.getIsAdmin().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
@@ -44,7 +44,7 @@ public class MealsActivity extends AppCompatActivity {
                 }
             }
         });
-//        Toast.makeText(this,user.getEmail(),Toast.LENGTH_LONG).show();
+
         NavController navController = Navigation.findNavController(this,R.id.nav_host_fragment);
         navController.setGraph(R.navigation.meals_navigation,getIntent().getExtras());
         Toolbar toolbar = findViewById(R.id.toolbar);

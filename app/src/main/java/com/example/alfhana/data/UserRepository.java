@@ -19,7 +19,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -36,6 +36,8 @@ public class UserRepository {
     private static final String TAG = "UserRepository";
     private static volatile UserRepository instance;
 
+    Context context;
+    public String firebaseUri;
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference = firebaseDatabase.getReference().getRoot();
@@ -43,19 +45,16 @@ public class UserRepository {
 
     private MutableLiveData<User> loggedInUser = new MutableLiveData<>();
     private MutableLiveData<Boolean> loginSuccessful = new MutableLiveData<>();
+    private MutableLiveData<Boolean> registerationSuccessful = new MutableLiveData<>();
+    private MutableLiveData<Boolean> isAdmin = new MutableLiveData<>();
+
+
     public MutableLiveData<Boolean> getRegisterationSuccessful() {
         return registerationSuccessful;
     }
-
-    private MutableLiveData<Boolean> registerationSuccessful = new MutableLiveData<>();
-
-    private MutableLiveData<Boolean> isAdmin = new MutableLiveData<>();
-
     public MutableLiveData<Boolean> getIsAdmin() {
         return isAdmin;
     }
-    Context context;
-    public String firebaseUri;
 
     private UserRepository(Context context) {
         this.context = context;
@@ -79,7 +78,7 @@ public class UserRepository {
                             loginSuccessful.postValue(true);
                             final String id = firebaseAuth.getUid();
                             retrieveUserFromDatabase(id);
-//                            isAdmin(id);
+
                         }
                     }
                 })
@@ -139,7 +138,7 @@ public class UserRepository {
         return null;
     }
 
-    public MutableLiveData<Boolean> isAdmin(String id) {
+    private MutableLiveData<Boolean> isAdmin(String id) {
         databaseReference.child("admins").child(id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -223,8 +222,6 @@ public class UserRepository {
     }
 
     public MutableLiveData<User> saveUser(final User user) {
-
-
         databaseReference.child("users")
                 .child(firebaseAuth.getUid())
                 .setValue(user)
