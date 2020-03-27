@@ -40,9 +40,9 @@ import com.google.firebase.database.ValueEventListener;
 public class LoginFragment extends Fragment {
 
     private static final String TAG = "LoginFragment";
-    private FirebaseAuth mFirebaseAuth;
+
     private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference mDatabaseReference;
+
     UserRepository userRepository;
     private static final int RC_START_SIGN_UP = 1;
     User LoggedInUser;
@@ -50,6 +50,9 @@ public class LoginFragment extends Fragment {
     FragmentLoginBinding loginBinding;
     FirebaseDatabase database;
     DatabaseReference myRef;
+    MutableLiveData<Boolean> loginSuccessful;
+    MutableLiveData<User> userMutableLiveData;
+    MutableLiveData<Boolean> isAdmin;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -99,9 +102,9 @@ public class LoginFragment extends Fragment {
         userRepository = UserRepository.getInstance(this.getActivity());
         View v = loginBinding.getRoot();
         loginBinding.setSubmit(this);
-        mFirebaseAuth = FirebaseAuth.getInstance();
+
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mDatabaseReference = mFirebaseDatabase.getReference().getRoot();
+
         loginViewModel = ViewModelProviders.of(this.getActivity()).get(LoginViewModel.class);
         loginViewModel.getLoginFormState().observe(this.getActivity(), new Observer<LoginFormState>() {
             @Override
@@ -180,106 +183,31 @@ public class LoginFragment extends Fragment {
     }
 
     public void login() {
-        userRepository.login(loginBinding.etxtEmailLogin.getEditableText().toString().trim(),
-                loginBinding.etxtPsswrdLogin.getEditableText().toString());
-        userRepository.getLoggedInUser().observe(this, new Observer<User>() {
+        userMutableLiveData =
+                userRepository.login(loginBinding.etxtEmailLogin.getEditableText().toString().trim(),
+                        loginBinding.etxtPsswrdLogin.getEditableText().toString());
+
+        userMutableLiveData.observe(this, new Observer<User>() {
             @Override
             public void onChanged(User user) {
-                Log.i(TAG, "onChanged: " + user);
                 if (user != null) {
                     LoginFragmentDirections.ActionLoginFragmentToMealsActivity action = LoginFragmentDirections.actionLoginFragmentToMealsActivity();
                     action.setLoggedinUser(user);
                     Navigation.findNavController(getView()).navigate(action);
                 }
-
             }
         });
-//        userRepository.login(loginBinding.etxtEmailLogin.getEditableText().toString().trim(),
-//                loginBinding.etxtPsswrdLogin.getEditableText().toString()).observe(this, new Observer<Boolean>() {
+//        isAdmin.observe(this, new Observer<Boolean>() {
 //            @Override
 //            public void onChanged(Boolean aBoolean) {
 //                if(aBoolean){
-//                    User user = userRepository.getLoggedInUser();
-//                    Log.i(TAG, "onChanged: " + user);
-//                    if(user != null) {
-//                        LoginFragmentDirections.ActionLoginFragmentToMealsActivity action = LoginFragmentDirections.actionLoginFragmentToMealsActivity();
-//
-//                        action.setLoggedinUser(userRepository.getLoggedInUser());
-//                        Navigation.findNavController(getView()).navigate(action);
-//                    }
+//                    LoginFragmentDirections.ActionLoginFragmentToMealsActivity action = LoginFragmentDirections.actionLoginFragmentToMealsActivity();
+//                    action.setLoggedinUser(null);
+//                    Navigation.findNavController(getView()).navigate(action);
 //                }
+//
 //            }
 //        });
 
-//        mFirebaseAuth.signInWithEmailAndPassword(loginBinding.etxtEmailLogin.getEditableText().toString().trim(),
-//                loginBinding.etxtPsswrdLogin.getEditableText().toString().trim())
-//                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<AuthResult> task) {
-//                        if (task.isSuccessful()) {
-//                            final String id = mFirebaseAuth.getUid();
-//                            retrieveUser(id);
-//
-//
-//
-//                            isAdmin(id);
-//                        }
-//                    }
-//                })
-//                .addOnCanceledListener(new OnCanceledListener() {
-//                    @Override
-//                    public void onCanceled() {
-//                        Log.d(TAG, "onCanceled: ");
-//                    }
-//                }).addOnFailureListener(new OnFailureListener() {
-//            @Override
-//            public void onFailure(@NonNull Exception e) {
-//                Log.d(TAG, "onFailure: " + e.getMessage());
-//            }
-//        });
-    }
-
-//    private void retrieveUser(final String id) {
-//
-//        mDatabaseReference
-//                .child("users")
-//                .addValueEventListener(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                        //Log.d(TAG, "onDataChange: "+dataSnapshot.getValue(User.class).toString());
-//                        if(dataSnapshot.hasChild(id)){
-//                            loggedInUser = (User) dataSnapshot.child(id).getValue(User.class);
-//                            LoginFragmentDirections.ActionLoginFragmentToMealsActivity action = LoginFragmentDirections.actionLoginFragmentToMealsActivity();
-//                            action.setLoggedinUser(loggedInUser);
-//                            Log.i(TAG, "onComplete: " + loggedInUser);
-//                            Navigation.findNavController(getView()).navigate(action);
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                    }
-//                });
-//    }
-
-    public boolean isAdmin(String id) {
-
-        mDatabaseReference.child("admins").child(id).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getValue() != null) {
-
-
-                } else {
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-        return true;
     }
 }

@@ -14,6 +14,8 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -56,7 +58,7 @@ import java.util.Date;
 
 public class SignUpFragment extends Fragment {
     private FirebaseAuth mFirebaseAuth;
-    private FirebaseDatabase mFirebaseDatabase;
+
     private static final String TAG = "SignUpFragment";
     public static final int RC_CAMERA_INTENT = 103;
     public static final int RC_PERMISSIONSETTINGS = 104;
@@ -84,10 +86,9 @@ public class SignUpFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         signUpFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.sign_up_fragment, container, false);
         signUpFragmentBinding.setCamera(this);
-        mFirebaseAuth = FirebaseAuth.getInstance();
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
+
         userRepository = UserRepository.getInstance(getActivity());
-        mStorageRef = FirebaseStorage.getInstance().getReference().child("UsersPhotos");
+
         database = FirebaseDatabase.getInstance();
         myRef  = database.getReference(getString(R.string.user_table));
         return signUpFragmentBinding.getRoot();
@@ -272,65 +273,29 @@ public class SignUpFragment extends Fragment {
         startActivityForResult(chooserIntent, RC_CHOOSER_INTENT);
     }
 
-
-
-    public void saveUser() {
-        final User user = createUser();
-        myRef   .child(mFirebaseAuth.getUid())
-                .setValue(user)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(getActivity(), getString(R.string.registeration_successful), Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(getActivity(), getString(R.string.registeration_failed), Toast.LENGTH_LONG).show();
-
-                        }
-                    }
-                });
-        SignUpFragmentDirections.ActionSignUpFragmentToMealsActivity action = SignUpFragmentDirections.actionSignUpFragmentToMealsActivity();
-        action.setLoggedinUser(user);
-        Navigation.findNavController(getView()).navigate(action);
-    }
     public void register() {
         LiveData<Boolean> isRegistered =
         userRepository.register(signUpFragmentBinding.etxtEmailSignup.getText().toString().trim(),
                 signUpFragmentBinding.etxtPsswrd.getText().toString().trim());
-        if(isRegistered.getValue()){
-            User user = createUser();
-            userRepository.saveUser(user);
-        }
-//        mFirebaseAuth.createUserWithEmailAndPassword(signUpFragmentBinding.etxtEmailSignup.getText().toString().trim(),
-//                signUpFragmentBinding.etxtPsswrd.getText().toString().trim())
-//                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<AuthResult> task) {
-//                        if (task.isSuccessful()) {
-//                            saveUser();
-//                        }else {
-//                            Toast.makeText(getActivity(), getString(R.string.registeration_failed), Toast.LENGTH_LONG).show();
-//                            NavHostFragment.findNavController(SignUpFragment.this).navigate(R.id.action_signUpFragment_to_loginFragment);
-//                        }
-//                    }
-//                })
-//                .addOnCanceledListener(new OnCanceledListener() {
-//                    @Override
-//                    public void onCanceled() {
-//                        Log.d(TAG, "onCanceled: ");
-//                        Toast.makeText(getActivity(), getString(R.string.registeration_failed) + " why " , Toast.LENGTH_LONG).show();
-//                        NavHostFragment.findNavController(SignUpFragment.this).navigate(R.id.action_signUpFragment_to_loginFragment);
-//                    }
-//                }).addOnFailureListener(new OnFailureListener() {
-//            @Override
-//            public void onFailure(@NonNull Exception e) {
-//                if (e instanceof FirebaseAuthWeakPasswordException) {
+        isRegistered.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if(aBoolean){
+                    User user = createUser();
+                    userRepository.saveUser(user);
+                }
+            }
+        });
+        userRepository.getLoggedInUser().observe(this, new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                SignUpFragmentDirections.ActionSignUpFragmentToMealsActivity action =
+                        SignUpFragmentDirections.actionSignUpFragmentToMealsActivity();
+                action.setLoggedinUser(user);
+                Navigation.findNavController(getView()).navigate(action);
+            }
+        });
 //
-//                    Log.d(TAG, "onFailure: " + e.getMessage());
-//                }
-//                Toast.makeText(getActivity(), getString(R.string.registeration_failed) + e.getMessage() , Toast.LENGTH_LONG).show();
-//            }
-//        });
     }
     private User createUser() {
         String name = signUpFragmentBinding.etxtNameSignupActivity.getText().toString();
@@ -338,34 +303,13 @@ public class SignUpFragment extends Fragment {
         String address = signUpFragmentBinding.etxtAddressSignup.getText().toString();
         String phone = signUpFragmentBinding.etxtPhoneSignup.getText().toString();
         User user = new User(name,email,phone,address);
-//        userRepository.setLoggedInUser(user);
+
         if(mImageUri != null) {
-            userRepository.storeImage(imageFileName, mImageUri);
+            String firebaseUri = userRepository.storeImage(imageFileName, mImageUri);
+            user.setImage(firebaseUri);
         }
-//        return userRepository.getLoggedInUser();
+
         return user;
     }
 
-    private void storeImage() {
-
-        mStorageRef = FirebaseStorage.getInstance().getReference().child("UsersPhotos/" + imageFileName);
-        mStorageRef.putFile(mImageUri)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                          @Override
-                                          public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                              mStorageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                                  @Override
-                                                  public void onSuccess(Uri uri) {
-                                                      userImageUri = uri;
-                                                  }
-                                              });
-                                          }
-                                      }
-                ).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.i(TAG, "onFailure: " + e.getMessage());
-            }
-        });
-    }
 }

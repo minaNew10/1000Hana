@@ -21,7 +21,9 @@
             app:destination="@id/mobile_navigation" />
         <action
             android:id="@+id/action_loginFragment_to_mealsActivity"
-            app:destination="@id/mealsActivity" />
+            app:destination="@id/mealsActivity"
+            app:popUpTo="@id/mealsActivity"
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"

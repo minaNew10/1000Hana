@@ -42,7 +42,7 @@ public class UserRepository {
     private StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("UsersPhotos");;
 
     private MutableLiveData<User> loggedInUser = new MutableLiveData<>();
-
+    private MutableLiveData<Boolean> loginSuccessful = new MutableLiveData<>();
     public MutableLiveData<Boolean> getRegisterationSuccessful() {
         return registerationSuccessful;
     }
@@ -55,6 +55,7 @@ public class UserRepository {
         return isAdmin;
     }
     Context context;
+    public String firebaseUri;
 
     private UserRepository(Context context) {
         this.context = context;
@@ -67,39 +68,7 @@ public class UserRepository {
         return instance;
     }
 
-    public boolean CheckLoginState() {
-        FirebaseUser user = firebaseAuth.getCurrentUser();
-        if (user != null) {
-            return true;
-        }
-        return false;
-    }
-
-    private void retrieveUserFromDatabase(final String id) {
-        databaseReference
-                .child("users")
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        //Log.d(TAG, "onDataChange: "+dataSnapshot.getValue(User.class).toString());
-                        if (dataSnapshot.hasChild(id)) {
-                            User user = dataSnapshot.child(id).getValue(User.class);
-                            Log.i(TAG, "onDataChange: " + user);
-                            loggedInUser.postValue( dataSnapshot.child(id).getValue(User.class));
-                        }else {
-                            Log.i(TAG, "onDataChange: user is not avaialble");
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-
-    }
-
-    public void login(String email, String password) {
+    public MutableLiveData<User> login(String email, String password) {
         // handle login
         firebaseAuth.signInWithEmailAndPassword(email,
                 password)
@@ -107,6 +76,7 @@ public class UserRepository {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            loginSuccessful.postValue(true);
                             final String id = firebaseAuth.getUid();
                             retrieveUserFromDatabase(id);
 //                            isAdmin(id);
@@ -116,17 +86,60 @@ public class UserRepository {
                 .addOnCanceledListener(new OnCanceledListener() {
                     @Override
                     public void onCanceled() {
-
+                        loginSuccessful.postValue(false);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
+                loginSuccessful.postValue(false);
                 Log.i(TAG, "onFailure: "+ e.getMessage());
+                Toast.makeText(context,e.getMessage(),Toast.LENGTH_LONG).show();
             }
         });
+        return loggedInUser;
     }
 
-    private void isAdmin(String id) {
+    private MutableLiveData<User> retrieveUserFromDatabase(final String id) {
+        databaseReference
+                .child("users")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        //Log.d(TAG, "onDataChange: "+dataSnapshot.getValue(User.class).toString());
+                        if (dataSnapshot.hasChild(id)) {
+                            User user = dataSnapshot.child(id).getValue(User.class);
+                            Log.i(TAG, "onDataChange: " + user);
+                            loggedInUser.postValue(user);
+                            isAdmin(id);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                            loggedInUser.postValue(null);
+                    }
+                });
+        return loggedInUser;
+    }
+
+    public boolean CheckLoginState() {
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        if (user != null) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public String getUserId(){
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        if(user != null){
+            return  user.getUid();
+        }
+        return null;
+    }
+
+    public MutableLiveData<Boolean> isAdmin(String id) {
         databaseReference.child("admins").child(id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -142,10 +155,11 @@ public class UserRepository {
 
             }
         });
+        return isAdmin;
     }
 
 
-    public LiveData<Boolean> register(String email, String psswrd) {
+    public MutableLiveData<Boolean> register(String email, String psswrd) {
         firebaseAuth.createUserWithEmailAndPassword(email,
                 psswrd)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -184,7 +198,7 @@ public class UserRepository {
         return loggedInUser;
     }
 
-    public void storeImage(String imageFileName, Uri imageUri) {
+    public String storeImage(String imageFileName, final Uri imageUri) {
 
         storageRef = FirebaseStorage.getInstance().getReference().child("UsersPhotos/" + imageFileName);
         storageRef.putFile(imageUri)
@@ -194,7 +208,7 @@ public class UserRepository {
                                               storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                   @Override
                                                   public void onSuccess(Uri uri) {
-
+                                                      firebaseUri = uri.toString();
                                                   }
                                               });
                                           }
@@ -205,18 +219,23 @@ public class UserRepository {
 
             }
         });
-
+        return firebaseUri;
     }
 
-    public boolean saveUser(User user) {
-        databaseReference.child(firebaseAuth.getUid())
+    public MutableLiveData<User> saveUser(final User user) {
+
+
+        databaseReference.child("users")
+                .child(firebaseAuth.getUid())
                 .setValue(user)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
+                            loggedInUser.postValue(user);
                             Toast.makeText(context, context.getString(R.string.registeration_successful), Toast.LENGTH_LONG).show();
                         } else {
+                            loggedInUser.postValue(user);
                             Toast.makeText(context, context.getString(R.string.registeration_failed), Toast.LENGTH_LONG).show();
 
                         }
@@ -225,6 +244,6 @@ public class UserRepository {
                 });
 
 
-        return true;
+        return loggedInUser;
     }
 }
