@@ -130,12 +130,9 @@ public class UserRepository {
         return false;
     }
 
-    public String getUserId(){
+    public FirebaseUser getFirebaseUser(){
         FirebaseUser user = firebaseAuth.getCurrentUser();
-        if(user != null){
-            return  user.getUid();
-        }
-        return null;
+        return user;
     }
 
     private MutableLiveData<Boolean> isAdmin(String id) {
@@ -242,5 +239,10 @@ public class UserRepository {
 
 
         return loggedInUser;
+    }
+
+    public void logOut(){
+        firebaseAuth.signOut();
+        loggedInUser.postValue(null);
     }
 }

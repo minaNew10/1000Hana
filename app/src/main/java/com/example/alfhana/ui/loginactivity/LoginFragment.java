@@ -3,13 +3,13 @@ package com.example.alfhana.ui.loginactivity;
 import android.graphics.Typeface;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.navigation.Navigation;
+import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
 import androidx.navigation.fragment.NavHostFragment;
 
 import android.text.Editable;
@@ -24,12 +24,8 @@ import com.example.alfhana.R;
 import com.example.alfhana.data.UserRepository;
 import com.example.alfhana.data.model.User;
 import com.example.alfhana.databinding.FragmentLoginBinding;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 
 /**
@@ -53,6 +49,7 @@ public class LoginFragment extends Fragment {
     MutableLiveData<Boolean> loginSuccessful;
     MutableLiveData<User> userMutableLiveData;
     MutableLiveData<Boolean> isAdmin;
+    NavController navController;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -97,9 +94,25 @@ public class LoginFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        navController = NavHostFragment.findNavController(LoginFragment.this);
+        userRepository = UserRepository.getInstance(this.getActivity());
+        if(userRepository.getFirebaseUser()!= null){
+            userRepository.getLoggedInUser().observe(getViewLifecycleOwner(), new Observer<User>() {
+                @Override
+                public void onChanged(User user) {
+//                    LoginFragmentDirections.ActionLoginFragmentToMealsActivity action = LoginFragmentDirections.actionLoginFragmentToMealsActivity();
+//                    action.setLoggedinUser(user);
+//                    Navigation.findNavController(getView()).navigate(action);
+                    Bundle b = new Bundle();
+                    b.putParcelable("loggedin_user",user);
+                    NavOptions navOptions = new NavOptions.Builder().setPopUpTo(R.id.nav_graph,true).build();
+                    navController.navigate(R.id.action_loginFragment_to_nested_graph,b,navOptions);
+                }
+            });
+        }
         // Inflate the layout for this fragment
         loginBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_login, container, false);
-        userRepository = UserRepository.getInstance(this.getActivity());
+
         View v = loginBinding.getRoot();
         loginBinding.setSubmit(this);
 
@@ -179,7 +192,7 @@ public class LoginFragment extends Fragment {
 
 
     public void goToSignUp() {
-        NavHostFragment.findNavController(LoginFragment.this).navigate(R.id.action_loginFragment_to_signUpFragment);
+        navController.navigate(R.id.action_loginFragment_to_signUpFragment);
     }
 
     public void login() {
@@ -191,23 +204,18 @@ public class LoginFragment extends Fragment {
             @Override
             public void onChanged(User user) {
                 if (user != null) {
-                    LoginFragmentDirections.ActionLoginFragmentToMealsActivity action = LoginFragmentDirections.actionLoginFragmentToMealsActivity();
-                    action.setLoggedinUser(user);
-                    Navigation.findNavController(getView()).navigate(action);
+//                    LoginFragmentDirections.ActionLoginFragmentToMealsActivity action = LoginFragmentDirections.actionLoginFragmentToMealsActivity();
+//                    action.setLoggedinUser(user);
+//                    Navigation.findNavController(getView()).navigate(action);
+                    Bundle b = new Bundle();
+                    b.putParcelable("loggedin_user",user);
+                    NavOptions navOptions = new NavOptions.Builder().setPopUpTo(R.id.nav_graph,true).build();
+//                    Navigation.findNavController(getView()).navigate(R.id.action_loginFragment_to_mobile_navigation,b,navOptions);
+                    navController.setGraph(R.navigation.nav_graph);
+                    navController.navigate(R.id.action_loginFragment_to_nested_graph,b,navOptions);
+
                 }
             }
         });
-//        isAdmin.observe(this, new Observer<Boolean>() {
-//            @Override
-//            public void onChanged(Boolean aBoolean) {
-//                if(aBoolean){
-//                    LoginFragmentDirections.ActionLoginFragmentToMealsActivity action = LoginFragmentDirections.actionLoginFragmentToMealsActivity();
-//                    action.setLoggedinUser(null);
-//                    Navigation.findNavController(getView()).navigate(action);
-//                }
-//
-//            }
-//        });
-
     }
 }

@@ -1,6 +1,9 @@
 package com.example.alfhana.ui.mealsactivity;
 
 import android.os.Bundle;
+import android.provider.Settings;
+import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
 import android.widget.Toast;
@@ -13,6 +16,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Observer;
@@ -26,27 +30,28 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 public class MealsActivity extends AppCompatActivity {
-
+    private static final String TAG = "MealsActivity";
     private AppBarConfiguration mAppBarConfiguration;
     private UserRepository userRepository = UserRepository.getInstance(this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meals);
-        User user = getIntent().getExtras().getParcelable("loggedin_user");
+        Bundle b = getIntent().getExtras();
+        User user = b.getParcelable("loggedin_user");
+        Log.i(TAG, "onCreate: " + user.getEmail());
         userRepository.getIsAdmin().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
                 if(aBoolean){
-                    Toast.makeText(MealsActivity.this,"hello admin",Toast.LENGTH_LONG).show();
+                    Toast.makeText(MealsActivity.this,"hello admin",Toast.LENGTH_SHORT).show();
                 }else {
-                    Toast.makeText(MealsActivity.this,"hello user",Toast.LENGTH_LONG).show();
+                    Toast.makeText(MealsActivity.this,"hello user",Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-        NavController navController = Navigation.findNavController(this,R.id.nav_host_fragment);
-        navController.setGraph(R.navigation.meals_navigation,getIntent().getExtras());
+//        NavController navController = Navigation.findNavController(this,R.id.nav_host_fragment);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -66,7 +71,8 @@ public class MealsActivity extends AppCompatActivity {
                 R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
                 .setDrawerLayout(drawer)
                 .build();
-//        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        navController.setGraph(R.navigation.meals_navigation,b);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
     }
@@ -79,9 +85,27 @@ public class MealsActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        switch (id){
+            case R.id.action_logout:
+                userRepository.logOut();
+
+                break;
+        }
+        return true;
+    }
+
+    @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    @Override
+    public void onBackPressed() {
+//        this.finishAffinity();
+        super.onBackPressed();
     }
 }
