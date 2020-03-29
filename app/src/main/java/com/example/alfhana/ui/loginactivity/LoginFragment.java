@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.NavOptions;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 import android.text.Editable;
@@ -100,13 +101,14 @@ public class LoginFragment extends Fragment {
             userRepository.getLoggedInUser().observe(getViewLifecycleOwner(), new Observer<User>() {
                 @Override
                 public void onChanged(User user) {
-//                    LoginFragmentDirections.ActionLoginFragmentToMealsActivity action = LoginFragmentDirections.actionLoginFragmentToMealsActivity();
-//                    action.setLoggedinUser(user);
-//                    Navigation.findNavController(getView()).navigate(action);
-                    Bundle b = new Bundle();
-                    b.putParcelable("loggedin_user",user);
-                    NavOptions navOptions = new NavOptions.Builder().setPopUpTo(R.id.nav_graph,true).build();
-                    navController.navigate(R.id.action_loginFragment_to_nested_graph,b,navOptions);
+                    LoginFragmentDirections.ActionLoginFragmentToMealsActivity action = LoginFragmentDirections.actionLoginFragmentToMealsActivity();
+                    action.setLoggedinUser(user);
+                    Navigation.findNavController(getView()).navigate(action);
+//                    Bundle b = new Bundle();
+//                    b.putParcelable("loggedin_user",user);
+//                    navController.setGraph(R.navigation.nav_graph,b);
+//                    NavOptions navOptions = new NavOptions.Builder().setPopUpTo(R.id.nav_graph,true).build();
+//                    navController.navigate(R.id.action_loginFragment_to_mealsActivity,b,navOptions);
                 }
             });
         }
@@ -204,15 +206,15 @@ public class LoginFragment extends Fragment {
             @Override
             public void onChanged(User user) {
                 if (user != null) {
-//                    LoginFragmentDirections.ActionLoginFragmentToMealsActivity action = LoginFragmentDirections.actionLoginFragmentToMealsActivity();
-//                    action.setLoggedinUser(user);
-//                    Navigation.findNavController(getView()).navigate(action);
-                    Bundle b = new Bundle();
-                    b.putParcelable("loggedin_user",user);
-                    NavOptions navOptions = new NavOptions.Builder().setPopUpTo(R.id.nav_graph,true).build();
-//                    Navigation.findNavController(getView()).navigate(R.id.action_loginFragment_to_mobile_navigation,b,navOptions);
-                    navController.setGraph(R.navigation.nav_graph);
-                    navController.navigate(R.id.action_loginFragment_to_nested_graph,b,navOptions);
+                    LoginFragmentDirections.ActionLoginFragmentToMealsActivity action = LoginFragmentDirections.actionLoginFragmentToMealsActivity();
+                    action.setLoggedinUser(user);
+                    Navigation.findNavController(getView()).navigate(action);
+//                    Bundle b = new Bundle();
+//                    b.putParcelable("loggedin_user",user);
+//                    NavOptions navOptions = new NavOptions.Builder().setPopUpTo(R.id.nav_graph,true).build();
+////                    Navigation.findNavController(getView()).navigate(R.id.action_loginFragment_to_mobile_navigation,b,navOptions);
+//                    navController.setGraph(R.navigation.nav_graph);
+//                    navController.navigate(R.id.action_loginFragment_to_mealsActivity,b,navOptions);
 
                 }
             }

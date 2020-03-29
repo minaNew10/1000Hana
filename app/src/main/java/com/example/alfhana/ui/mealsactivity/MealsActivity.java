@@ -105,7 +105,7 @@ public class MealsActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-//        this.finishAffinity();
+        this.finishAffinity();
         super.onBackPressed();
     }
 }

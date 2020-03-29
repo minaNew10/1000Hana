@@ -17,8 +17,8 @@
             app:nullable="true"
             android:defaultValue="@null" />
         <action
-            android:id="@+id/action_loginFragment_to_nested_graph"
-            app:destination="@id/mobile_navigation" />
+            android:id="@+id/action_loginFragment_to_mealsActivity"
+            app:destination="@id/mealsActivity" />
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
@@ -28,21 +28,6 @@
         <action
             android:id="@+id/action_signUpFragment_to_mealsActivity"
             app:destination="@id/mealsActivity" />
-        <action
-            android:id="@+id/action_signUpFragment_to_loginFragment"
-            app:destination="@id/loginFragment"
-            app:popUpTo="@id/loginFragment"
-            app:popUpToInclusive="false" />
-        <action
-            android:id="@+id/action_signUpFragment_to_mobile_navigation"
-            app:destination="@id/mobile_navigation" >
-            <argument
-                android:name="loggedin_user"
-                app:argType="com.example.alfhana.data.model.User"
-                app:nullable="true"
-                android:defaultValue="@null" />
-
-        </action>
     </fragment>
     <activity
         android:id="@+id/mealsActivity"
@@ -55,6 +40,5 @@
             app:nullable="true"
             android:defaultValue="@null" />
     </activity>
-    <include app:graph="@navigation/meals_navigation" />
 
 </navigation>
