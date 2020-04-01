@@ -8,38 +8,40 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.alfhana.R;
 import com.example.alfhana.data.UserRepository;
+import com.example.alfhana.data.model.User;
 
 public class LoginViewModel extends ViewModel {
+    private MutableLiveData<User> userMutableLiveData;
+    private MutableLiveData<Boolean> loginResult;
 
-    private MutableLiveData<Boolean> loginResult = new MutableLiveData<>();
-    private UserRepository userRepository;
+    private UserRepository userRepository = UserRepository.getInstance();
     private MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
 
-//    LoginViewModel(LoginRepository loginRepository) {
-//        this.loginRepository = loginRepository;
-//    }
+    LoginViewModel() {
+
+    }
 
     LiveData<LoginFormState> getLoginFormState() {
         return loginFormState;
     }
 
-//    LiveData<LoginResult> getLoginResult() {
-//        return loginResult;
-//    }
-
-//    public Boolean login(String username, String password) {
-//        // can be launched in a separate asynchronous job
-//        Boolean result = userRepository.login(username, password);
-//
-////        if (result instanceof Result.Success) {
-////            LoggedInUser data = ((Result.Success<LoggedInUser>) result).getData();
-////            loginResult.setValue(new LoginResult(new LoggedInUserView(data.getDisplayName())));
-////        } else {
-////            loginResult.setValue(new LoginResult(R.string.login_failed));
-////        }
-//        return  result;
-//    }
-
+    MutableLiveData<Boolean> login(String email,String psswrd){
+        if(loginResult == null)
+            loginResult = userRepository.login(email,psswrd);
+        return loginResult;
+    }
+    MutableLiveData<User> getUserMutableLiveData(){
+        if(userMutableLiveData == null){
+            userMutableLiveData = userRepository.getUser();
+        }
+        return userMutableLiveData;
+    }
+    void logout(){
+        userRepository.logOut();
+    }
+    public void setUserMutableLiveData(User user){
+        userMutableLiveData.setValue(user);
+    }
     public void loginDataChanged(String email, String password) {
         if (!isEmailValid(email)) {
             loginFormState.setValue(new LoginFormState(R.string.invalid_email, null));

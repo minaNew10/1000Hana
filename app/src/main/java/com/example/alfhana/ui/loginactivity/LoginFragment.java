@@ -29,98 +29,84 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link LoginFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class LoginFragment extends Fragment {
 
     private static final String TAG = "LoginFragment";
-
-    private FirebaseDatabase mFirebaseDatabase;
-
-    UserRepository userRepository;
-    private static final int RC_START_SIGN_UP = 1;
-    User LoggedInUser;
     LoginViewModel loginViewModel;
     FragmentLoginBinding loginBinding;
-    FirebaseDatabase database;
-    DatabaseReference myRef;
     MutableLiveData<Boolean> loginSuccessful;
     MutableLiveData<User> userMutableLiveData;
-    MutableLiveData<Boolean> isAdmin;
     NavController navController;
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
     User loggedInUser;
-
-    public LoginFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment LoginFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static LoginFragment newInstance(String param1, String param2) {
-        LoginFragment fragment = new LoginFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         navController = NavHostFragment.findNavController(LoginFragment.this);
-        userRepository = UserRepository.getInstance(this.getActivity());
-        if(userRepository.getFirebaseUser()!= null){
-            userRepository.getLoggedInUser().observe(getViewLifecycleOwner(), new Observer<User>() {
-                @Override
-                public void onChanged(User user) {
-                    LoginFragmentDirections.ActionLoginFragmentToMealsActivity action = LoginFragmentDirections.actionLoginFragmentToMealsActivity();
-                    action.setLoggedinUser(user);
-                    Navigation.findNavController(getView()).navigate(action);
-//                    Bundle b = new Bundle();
-//                    b.putParcelable("loggedin_user",user);
-//                    navController.setGraph(R.navigation.nav_graph,b);
-//                    NavOptions navOptions = new NavOptions.Builder().setPopUpTo(R.id.nav_graph,true).build();
-//                    navController.navigate(R.id.action_loginFragment_to_mealsActivity,b,navOptions);
-                }
-            });
-        }
+
+        setupViewModel();
         // Inflate the layout for this fragment
         loginBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_login, container, false);
 
         View v = loginBinding.getRoot();
         loginBinding.setSubmit(this);
 
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        TextWatcher afterTextChangedListener = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // ignore
+            }
 
-        loginViewModel = ViewModelProviders.of(this.getActivity()).get(LoginViewModel.class);
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // ignore
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                loginViewModel.loginDataChanged(loginBinding.etxtEmailLogin.getText().toString().trim(),
+                        loginBinding.etxtPsswrdLogin.getText().toString().trim());
+            }
+        };
+        loginBinding.etxtEmailLogin.addTextChangedListener(afterTextChangedListener);
+        loginBinding.etxtPsswrdLogin.addTextChangedListener(afterTextChangedListener);
+
+        return v;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+//        loggedInUser = userRepository.CheckLoginState();
+        if (loggedInUser == null)
+            Log.d(TAG, "register now: ");
+        else
+            Log.d(TAG, "session exist: ");
+        if (getArguments() != null) {
+            LoginFragmentArgs args = LoginFragmentArgs.fromBundle(getArguments());
+            if (args.getUser() != null) {
+                loggedInUser = args.getUser();
+                loginBinding.etxtEmailLogin.setText(loggedInUser.getEmail());
+
+            }
+        }
+        loginViewModel.getUserMutableLiveData().observe(this, new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                loggedInUser = user;
+            }
+        });
+    }
+
+
+    public void goToSignUp() {
+        navController.navigate(R.id.action_loginFragment_to_signUpFragment);
+    }
+
+    private void setupViewModel() {
+        loginViewModel = ViewModelProviders.of(this, new LoginViewModelFactory())
+                .get(LoginViewModel.class);
         loginViewModel.getLoginFormState().observe(this.getActivity(), new Observer<LoginFormState>() {
             @Override
             public void onChanged(LoginFormState loginFormState) {
@@ -145,77 +131,19 @@ public class LoginFragment extends Fragment {
             }
         });
 
-        Typeface face = Typeface.createFromAsset(this.getActivity().getAssets(), "fonts/Adore You.ttf");
-
-        loginBinding.txtvAppNameLogin.setTypeface(face);
-        loginBinding.btnLogin.setTypeface(face);
-
-        TextWatcher afterTextChangedListener = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // ignore
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // ignore
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                loginViewModel.loginDataChanged(loginBinding.etxtEmailLogin.getText().toString().trim(),
-                        loginBinding.etxtPsswrdLogin.getText().toString().trim());
-            }
-        };
-        loginBinding.etxtEmailLogin.addTextChangedListener(afterTextChangedListener);
-        loginBinding.etxtPsswrdLogin.addTextChangedListener(afterTextChangedListener);
-
-
-        return v;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-//        loggedInUser = userRepository.CheckLoginState();
-        if (loggedInUser == null)
-            Log.d(TAG, "register now: ");
-        else
-            Log.d(TAG, "session exist: ");
-        if (getArguments() != null) {
-            LoginFragmentArgs args = LoginFragmentArgs.fromBundle(getArguments());
-            if (args.getUser() != null) {
-                loggedInUser = args.getUser();
-                loginBinding.etxtEmailLogin.setText(loggedInUser.getEmail());
-
-            }
-        }
-    }
-
-
-    public void goToSignUp() {
-        navController.navigate(R.id.action_loginFragment_to_signUpFragment);
     }
 
     public void login() {
-        userMutableLiveData =
-                userRepository.login(loginBinding.etxtEmailLogin.getEditableText().toString().trim(),
-                        loginBinding.etxtPsswrdLogin.getEditableText().toString());
-
-        userMutableLiveData.observe(this, new Observer<User>() {
+        loginSuccessful =
+        loginViewModel.login(loginBinding.etxtEmailLogin.getEditableText().toString().trim(),
+                loginBinding.etxtLayoutPsswrdLogin.getEditText().getText().toString());
+        loginSuccessful.observe(this, new Observer<Boolean>() {
             @Override
-            public void onChanged(User user) {
-                if (user != null) {
+            public void onChanged(Boolean aBoolean) {
+                if(aBoolean){
                     LoginFragmentDirections.ActionLoginFragmentToMealsActivity action = LoginFragmentDirections.actionLoginFragmentToMealsActivity();
-                    action.setLoggedinUser(user);
+                    action.setLoggedinUser(loggedInUser);
                     Navigation.findNavController(getView()).navigate(action);
-//                    Bundle b = new Bundle();
-//                    b.putParcelable("loggedin_user",user);
-//                    NavOptions navOptions = new NavOptions.Builder().setPopUpTo(R.id.nav_graph,true).build();
-////                    Navigation.findNavController(getView()).navigate(R.id.action_loginFragment_to_mobile_navigation,b,navOptions);
-//                    navController.setGraph(R.navigation.nav_graph);
-//                    navController.navigate(R.id.action_loginFragment_to_mealsActivity,b,navOptions);
-
                 }
             }
         });

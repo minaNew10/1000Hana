@@ -43,31 +43,20 @@ public class UserRepository {
     private DatabaseReference databaseReference = firebaseDatabase.getReference().getRoot();
     private StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("UsersPhotos");;
 
-    private MutableLiveData<User> loggedInUser = new MutableLiveData<>();
-    private MutableLiveData<Boolean> loginSuccessful = new MutableLiveData<>();
-    private MutableLiveData<Boolean> registerationSuccessful = new MutableLiveData<>();
-    private MutableLiveData<Boolean> isAdmin = new MutableLiveData<>();
 
+    private UserRepository() {
 
-    public MutableLiveData<Boolean> getRegisterationSuccessful() {
-        return registerationSuccessful;
-    }
-    public MutableLiveData<Boolean> getIsAdmin() {
-        return isAdmin;
     }
 
-    private UserRepository(Context context) {
-        this.context = context;
-    }
-
-    public static UserRepository getInstance(Context context) {
+    public static UserRepository getInstance() {
         if (instance == null) {
-            instance = new UserRepository(context);
+            instance = new UserRepository();
         }
         return instance;
     }
 
-    public MutableLiveData<User> login(String email, String password) {
+    public MutableLiveData<Boolean> login(String email, String password) {
+        final MutableLiveData<Boolean> loginSuccessful = new MutableLiveData<>();
         // handle login
         firebaseAuth.signInWithEmailAndPassword(email,
                 password)
@@ -76,9 +65,6 @@ public class UserRepository {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             loginSuccessful.postValue(true);
-                            final String id = firebaseAuth.getUid();
-                            retrieveUserFromDatabase(id);
-
                         }
                     }
                 })
@@ -91,14 +77,26 @@ public class UserRepository {
             @Override
             public void onFailure(@NonNull Exception e) {
                 loginSuccessful.postValue(false);
-                Log.i(TAG, "onFailure: "+ e.getMessage());
-                Toast.makeText(context,e.getMessage(),Toast.LENGTH_LONG).show();
             }
         });
+        return loginSuccessful;
+    }
+    public MutableLiveData<User> getUser() {
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        MutableLiveData<User> loggedInUser = new MutableLiveData<>();
+        if (user != null) {
+            loggedInUser = retrieveUserFromDatabase(user.getUid());
+        }else {
+            loggedInUser.setValue(null);
+        }
         return loggedInUser;
     }
-
+    public FirebaseUser getFirebaseUser(){
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        return user;
+    }
     private MutableLiveData<User> retrieveUserFromDatabase(final String id) {
+        final MutableLiveData<User> loggedInUser = new MutableLiveData<>();
         databaseReference
                 .child("users")
                 .addValueEventListener(new ValueEventListener() {
@@ -109,7 +107,6 @@ public class UserRepository {
                             User user = dataSnapshot.child(id).getValue(User.class);
                             Log.i(TAG, "onDataChange: " + user);
                             loggedInUser.postValue(user);
-                            isAdmin(id);
                         }
                     }
 
@@ -120,22 +117,8 @@ public class UserRepository {
                 });
         return loggedInUser;
     }
-
-    public boolean CheckLoginState() {
-        FirebaseUser user = firebaseAuth.getCurrentUser();
-        if (user != null) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public FirebaseUser getFirebaseUser(){
-        FirebaseUser user = firebaseAuth.getCurrentUser();
-        return user;
-    }
-
     private MutableLiveData<Boolean> isAdmin(String id) {
+        final MutableLiveData<Boolean> isAdmin = new MutableLiveData<>();
         databaseReference.child("admins").child(id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -153,9 +136,8 @@ public class UserRepository {
         });
         return isAdmin;
     }
-
-
     public MutableLiveData<Boolean> register(String email, String psswrd) {
+        final MutableLiveData<Boolean> registerationSuccessful = new MutableLiveData<>();
         firebaseAuth.createUserWithEmailAndPassword(email,
                 psswrd)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -187,14 +169,7 @@ public class UserRepository {
         });
         return registerationSuccessful;
     }
-
-
-
-    public MutableLiveData<User> getLoggedInUser() {
-        return loggedInUser;
-    }
-
-    public String storeImage(String imageFileName, final Uri imageUri) {
+    private String storeImage(String imageFileName, final Uri imageUri) {
 
         storageRef = FirebaseStorage.getInstance().getReference().child("UsersPhotos/" + imageFileName);
         storageRef.putFile(imageUri)
@@ -218,7 +193,8 @@ public class UserRepository {
         return firebaseUri;
     }
 
-    public MutableLiveData<User> saveUser(final User user) {
+    private MutableLiveData<User> saveUserInDatabase(final User user) {
+        final MutableLiveData<User> userMutableLiveData = new MutableLiveData<>();
         databaseReference.child("users")
                 .child(firebaseAuth.getUid())
                 .setValue(user)
@@ -226,10 +202,10 @@ public class UserRepository {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            loggedInUser.postValue(user);
+                            userMutableLiveData.setValue(user);
                             Toast.makeText(context, context.getString(R.string.registeration_successful), Toast.LENGTH_LONG).show();
                         } else {
-                            loggedInUser.postValue(user);
+                            userMutableLiveData.setValue(user);
                             Toast.makeText(context, context.getString(R.string.registeration_failed), Toast.LENGTH_LONG).show();
 
                         }
@@ -238,11 +214,10 @@ public class UserRepository {
                 });
 
 
-        return loggedInUser;
+        return userMutableLiveData;
     }
 
     public void logOut(){
         firebaseAuth.signOut();
-        loggedInUser.postValue(null);
     }
 }

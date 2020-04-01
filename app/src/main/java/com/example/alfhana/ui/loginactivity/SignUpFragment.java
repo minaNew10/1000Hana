@@ -78,7 +78,7 @@ public class SignUpFragment extends Fragment {
         signUpFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.sign_up_fragment, container, false);
         signUpFragmentBinding.setCamera(this);
 
-        userRepository = UserRepository.getInstance(getActivity());
+//        userRepository = UserRepository.getInstance(getActivity());
 
         database = FirebaseDatabase.getInstance();
         myRef  = database.getReference(getString(R.string.user_table));
@@ -264,43 +264,43 @@ public class SignUpFragment extends Fragment {
         startActivityForResult(chooserIntent, RC_CHOOSER_INTENT);
     }
 
-    public void register() {
-        LiveData<Boolean> isRegistered =
-        userRepository.register(signUpFragmentBinding.etxtEmailSignup.getText().toString().trim(),
-                signUpFragmentBinding.etxtPsswrd.getText().toString().trim());
-        isRegistered.observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-                if(aBoolean){
-                    User user = createUser();
-                    userRepository.saveUser(user);
-                }
-            }
-        });
-        userRepository.getLoggedInUser().observe(this, new Observer<User>() {
-            @Override
-            public void onChanged(User user) {
-                SignUpFragmentDirections.ActionSignUpFragmentToMealsActivity action =
-                        SignUpFragmentDirections.actionSignUpFragmentToMealsActivity();
-                action.setLoggedinUser(user);
-                Navigation.findNavController(getView()).navigate(action);
-            }
-        });
+//    public void register() {
+//        LiveData<Boolean> isRegistered =
+//        userRepository.register(signUpFragmentBinding.etxtEmailSignup.getText().toString().trim(),
+//                signUpFragmentBinding.etxtPsswrd.getText().toString().trim());
+//        isRegistered.observe(this, new Observer<Boolean>() {
+//            @Override
+//            public void onChanged(Boolean aBoolean) {
+//                if(aBoolean){
+//                    User user = createUser();
+//                    userRepository.saveUser(user);
+//                }
+//            }
+//        });
+//        userRepository.getLoggedInUser().observe(this, new Observer<User>() {
+//            @Override
+//            public void onChanged(User user) {
+//                SignUpFragmentDirections.ActionSignUpFragmentToMealsActivity action =
+//                        SignUpFragmentDirections.actionSignUpFragmentToMealsActivity();
+//                action.setLoggedinUser(user);
+//                Navigation.findNavController(getView()).navigate(action);
+//            }
+//        });
+////
+//    }
+//    private User createUser() {
+//        String name = signUpFragmentBinding.etxtNameSignupActivity.getText().toString();
+//        String email = signUpFragmentBinding.etxtEmailSignup.getText().toString();
+//        String address = signUpFragmentBinding.etxtAddressSignup.getText().toString();
+//        String phone = signUpFragmentBinding.etxtPhoneSignup.getText().toString();
+//        User user = new User(name,email,phone,address);
 //
-    }
-    private User createUser() {
-        String name = signUpFragmentBinding.etxtNameSignupActivity.getText().toString();
-        String email = signUpFragmentBinding.etxtEmailSignup.getText().toString();
-        String address = signUpFragmentBinding.etxtAddressSignup.getText().toString();
-        String phone = signUpFragmentBinding.etxtPhoneSignup.getText().toString();
-        User user = new User(name,email,phone,address);
-
-        if(mImageUri != null) {
-            String firebaseUri = userRepository.storeImage(imageFileName, mImageUri);
-            user.setImage(firebaseUri);
-        }
-
-        return user;
-    }
+//        if(mImageUri != null) {
+//            String firebaseUri = userRepository.storeImage(imageFileName, mImageUri);
+//            user.setImage(firebaseUri);
+//        }
+//
+//        return user;
+//    }
 
 }

@@ -32,7 +32,7 @@ import androidx.appcompat.widget.Toolbar;
 public class MealsActivity extends AppCompatActivity {
     private static final String TAG = "MealsActivity";
     private AppBarConfiguration mAppBarConfiguration;
-    private UserRepository userRepository = UserRepository.getInstance(this);
+    private UserRepository userRepository = UserRepository.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,16 +40,16 @@ public class MealsActivity extends AppCompatActivity {
         Bundle b = getIntent().getExtras();
         User user = b.getParcelable("loggedin_user");
         Log.i(TAG, "onCreate: " + user.getEmail());
-        userRepository.getIsAdmin().observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-                if(aBoolean){
-                    Toast.makeText(MealsActivity.this,"hello admin",Toast.LENGTH_SHORT).show();
-                }else {
-                    Toast.makeText(MealsActivity.this,"hello user",Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+//        userRepository.getIsAdmin().observe(this, new Observer<Boolean>() {
+//            @Override
+//            public void onChanged(Boolean aBoolean) {
+//                if(aBoolean){
+//                    Toast.makeText(MealsActivity.this,"hello admin",Toast.LENGTH_SHORT).show();
+//                }else {
+//                    Toast.makeText(MealsActivity.this,"hello user",Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
 
 //        NavController navController = Navigation.findNavController(this,R.id.nav_host_fragment);
         Toolbar toolbar = findViewById(R.id.toolbar);
