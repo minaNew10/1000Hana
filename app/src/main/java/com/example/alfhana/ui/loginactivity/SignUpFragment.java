@@ -284,30 +284,7 @@ public class SignUpFragment extends Fragment {
             }
         });
     }
-//    public void register() {
-//        LiveData<Boolean> isRegistered =
-//        userRepository.register(signUpFragmentBinding.etxtEmailSignup.getText().toString().trim(),
-//                signUpFragmentBinding.etxtPsswrd.getText().toString().trim());
-//        isRegistered.observe(this, new Observer<Boolean>() {
-//            @Override
-//            public void onChanged(Boolean aBoolean) {
-//                if(aBoolean){
-//                    User user = createUser();
-//                    userRepository.saveUser(user);
-//                }
-//            }
-//        });
-//        userRepository.getLoggedInUser().observe(this, new Observer<User>() {
-//            @Override
-//            public void onChanged(User user) {
-//                SignUpFragmentDirections.ActionSignUpFragmentToMealsActivity action =
-//                        SignUpFragmentDirections.actionSignUpFragmentToMealsActivity();
-//                action.setLoggedinUser(user);
-//                Navigation.findNavController(getView()).navigate(action);
-//            }
-//        });
-////
-//    }
+
     private User createUser() {
         String name = signUpFragmentBinding.etxtNameSignupActivity.getText().toString();
         String email = signUpFragmentBinding.etxtEmailSignup.getText().toString();

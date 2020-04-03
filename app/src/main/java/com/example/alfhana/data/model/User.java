@@ -1,12 +1,37 @@
 package com.example.alfhana.data.model;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.widget.ImageView;
+
+import androidx.databinding.BindingAdapter;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 
 public class User implements Parcelable{
 
     public String displayName;
     public String email;
+    public String phone;
+    public String address;
+    public String image;
+    //required to prevent error
+    public User() {
+    }
+
+    public User(String displayName, String email) {
+        this.displayName = displayName;
+        this.email = email;
+    }
+
+    public User(String displayName, String email, String phone, String address) {
+        this.displayName = displayName;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+        image =null;
+    }
 
     protected User(Parcel in) {
         displayName = in.readString();
@@ -15,7 +40,6 @@ public class User implements Parcelable{
         address = in.readString();
         image = in.readString();
     }
-
     public static final Creator<User> CREATOR = new Creator<User>() {
         @Override
         public User createFromParcel(Parcel in) {
@@ -27,6 +51,7 @@ public class User implements Parcelable{
             return new User[size];
         }
     };
+
 
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
@@ -56,27 +81,11 @@ public class User implements Parcelable{
         this.address = address;
     }
 
-    public String phone;
-    public String address;
-    public String image;
-
-
-
-    //required to prevent error
-    public User() {
-    }
-
-    public User(String displayName, String email) {
-        this.displayName = displayName;
-        this.email = email;
-    }
-
-    public User(String displayName, String email, String phone, String address) {
-        this.displayName = displayName;
-        this.email = email;
-        this.phone = phone;
-        this.address = address;
-        image = null;
+    @BindingAdapter("profileImage")
+    public static void loadImage(ImageView view, String imageUrl) {
+        Glide.with(view.getContext())
+                .load(imageUrl).apply(new RequestOptions().circleCrop())
+                .into(view);
     }
 
     public String getDisplayName() {

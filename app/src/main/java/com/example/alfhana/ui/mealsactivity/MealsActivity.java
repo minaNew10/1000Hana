@@ -41,16 +41,17 @@ public class MealsActivity extends AppCompatActivity {
     private UserRepository userRepository = UserRepository.getInstance();
     MealsActivityViewModel mMealsActivityViewModel;
     private MutableLiveData<Boolean> isUserAdmin = new MutableLiveData<>();
+
     ActivityMealsBinding activityMealsBinding;
     User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meals);
-
         Bundle b = getIntent().getExtras();
         user = b.getParcelable("loggedin_user");
         Log.i(TAG, "onCreate: " + user.getEmail());
+        Log.i(TAG, "onCreate: userImage " + user.getImage());
         setupViewModel();
 
         isUserAdmin.observe(this, new Observer<Boolean>() {
@@ -80,6 +81,7 @@ public class MealsActivity extends AppCompatActivity {
         View header = navigationView.getHeaderView(0);
         NavHeaderMealsBinding navHeaderMealsBinding = NavHeaderMealsBinding.bind(header);
         navHeaderMealsBinding.setUser(user);
+        navHeaderMealsBinding.setImageUrl(user.getImage());
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
