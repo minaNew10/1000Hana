@@ -11,6 +11,8 @@ import android.widget.Toast;
 import com.example.alfhana.R;
 import com.example.alfhana.data.UserRepository;
 import com.example.alfhana.data.model.User;
+import com.example.alfhana.databinding.ActivityMealsBinding;
+import com.example.alfhana.databinding.NavHeaderMealsBinding;
 import com.example.alfhana.ui.loginactivity.LoginViewModel;
 import com.example.alfhana.ui.loginactivity.ViewModelsFactory;
 import com.example.alfhana.ui.mealsactivity.ui.home.HomeFragment;
@@ -39,12 +41,15 @@ public class MealsActivity extends AppCompatActivity {
     private UserRepository userRepository = UserRepository.getInstance();
     MealsActivityViewModel mMealsActivityViewModel;
     private MutableLiveData<Boolean> isUserAdmin = new MutableLiveData<>();
+    ActivityMealsBinding activityMealsBinding;
+    User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meals);
+
         Bundle b = getIntent().getExtras();
-        User user = b.getParcelable("loggedin_user");
+        user = b.getParcelable("loggedin_user");
         Log.i(TAG, "onCreate: " + user.getEmail());
         setupViewModel();
 
@@ -72,12 +77,16 @@ public class MealsActivity extends AppCompatActivity {
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
+        View header = navigationView.getHeaderView(0);
+        NavHeaderMealsBinding navHeaderMealsBinding = NavHeaderMealsBinding.bind(header);
+        navHeaderMealsBinding.setUser(user);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
                 .setDrawerLayout(drawer)
                 .build();
+
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         navController.setGraph(R.navigation.meals_navigation,b);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
@@ -111,7 +120,7 @@ public class MealsActivity extends AppCompatActivity {
                 finish();
                 break;
         }
-        return true;
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

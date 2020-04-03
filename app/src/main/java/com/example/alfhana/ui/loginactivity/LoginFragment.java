@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -113,9 +114,13 @@ public class LoginFragment extends Fragment {
             public void onChanged(User user) {
                 Log.i(TAG, "onChanged: " + user);
                 if (user != null) {
-                    LoginFragmentDirections.ActionLoginFragmentToMealsActivity action = LoginFragmentDirections.actionLoginFragmentToMealsActivity();
-                    action.setLoggedinUser(user);
-                    Navigation.findNavController(getView()).navigate(action);
+//                    LoginFragmentDirections.ActionLoginFragmentToMealsActivity action = LoginFragmentDirections.actionLoginFragmentToMealsActivity();
+//                    action.setLoggedinUser(user);
+//                    Navigation.findNavController(getView()).navigate(action);
+                    Bundle b = new Bundle();
+                    b.putParcelable("loggedin_user",user);
+                    NavOptions navOptions = new NavOptions.Builder().setPopUpTo(R.id.nav_graph,true).build();
+                    Navigation.findNavController(getView()).navigate(R.id.mealsActivity,b,navOptions);
                 }
             }
         });

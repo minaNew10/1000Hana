@@ -25,8 +25,8 @@ public class HomeFragment extends Fragment {
                 ViewModelProviders.of(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         final TextView textView = root.findViewById(R.id.text_home);
-        HomeFragmentArgs args = HomeFragmentArgs.fromBundle(getArguments());
-        textView.setText(args.getLoggedinUser().getEmail());
+//        HomeFragmentArgs args = HomeFragmentArgs.fromBundle(getArguments());
+//        textView.setText(args.getLoggedinUser().getEmail());
 
 //        homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
 //            @Override
