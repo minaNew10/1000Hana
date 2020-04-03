@@ -48,8 +48,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class SignUpFragment extends Fragment {
-    private FirebaseAuth mFirebaseAuth;
-
     private static final String TAG = "SignUpFragment";
     public static final int RC_CAMERA_INTENT = 103;
     public static final int RC_PERMISSIONSETTINGS = 104;
@@ -62,12 +60,13 @@ public class SignUpFragment extends Fragment {
     private StorageReference mStorageRef;
     private SignUpViewModel mViewModel;
     private final String[] REQUIRED_PERMISSIONS = new String[]{"android.permission.CAMERA", "android.permission.READ_EXTERNAL_STORAGE"};
-    UserRepository userRepository;
+    MutableLiveData<Boolean> registerationSuccessful;
     SignUpFragmentBinding signUpFragmentBinding;
     Uri mImageUri;
     private String imageFileName;
     FirebaseDatabase database;
     DatabaseReference myRef;
+    MutableLiveData<User> userMutableLiveData = new MutableLiveData<>();
     public static SignUpFragment newInstance() {
         return new SignUpFragment();
     }
@@ -78,7 +77,7 @@ public class SignUpFragment extends Fragment {
         signUpFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.sign_up_fragment, container, false);
         signUpFragmentBinding.setCamera(this);
 
-//        userRepository = UserRepository.getInstance(getActivity());
+
 
         database = FirebaseDatabase.getInstance();
         myRef  = database.getReference(getString(R.string.user_table));
@@ -89,7 +88,15 @@ public class SignUpFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = ViewModelProviders.of(this).get(SignUpViewModel.class);
-        // TODO: Use the ViewModel
+        userMutableLiveData.observe(getViewLifecycleOwner(), new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                SignUpFragmentDirections.ActionSignUpFragmentToMealsActivity action =
+                        SignUpFragmentDirections.actionSignUpFragmentToMealsActivity();
+                action.setLoggedinUser(user);
+                Navigation.findNavController(getView()).navigate(action);
+            }
+        });        // TODO: Use the ViewModel
     }
 
     //when the user clicks on the userImage
@@ -263,7 +270,20 @@ public class SignUpFragment extends Fragment {
         }
         startActivityForResult(chooserIntent, RC_CHOOSER_INTENT);
     }
-
+    public void register(){
+        registerationSuccessful = mViewModel.register(signUpFragmentBinding.etxtEmailSignup.getText().toString().trim(),
+                signUpFragmentBinding.etxtPsswrd.getText().toString().trim());
+        registerationSuccessful.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if(aBoolean){
+                    User user = createUser();
+                    mViewModel.saveUser(user);
+                    userMutableLiveData.setValue(user);
+                }
+            }
+        });
+    }
 //    public void register() {
 //        LiveData<Boolean> isRegistered =
 //        userRepository.register(signUpFragmentBinding.etxtEmailSignup.getText().toString().trim(),
@@ -288,19 +308,19 @@ public class SignUpFragment extends Fragment {
 //        });
 ////
 //    }
-//    private User createUser() {
-//        String name = signUpFragmentBinding.etxtNameSignupActivity.getText().toString();
-//        String email = signUpFragmentBinding.etxtEmailSignup.getText().toString();
-//        String address = signUpFragmentBinding.etxtAddressSignup.getText().toString();
-//        String phone = signUpFragmentBinding.etxtPhoneSignup.getText().toString();
-//        User user = new User(name,email,phone,address);
-//
-//        if(mImageUri != null) {
-//            String firebaseUri = userRepository.storeImage(imageFileName, mImageUri);
-//            user.setImage(firebaseUri);
-//        }
-//
-//        return user;
-//    }
+    private User createUser() {
+        String name = signUpFragmentBinding.etxtNameSignupActivity.getText().toString();
+        String email = signUpFragmentBinding.etxtEmailSignup.getText().toString();
+        String address = signUpFragmentBinding.etxtAddressSignup.getText().toString();
+        String phone = signUpFragmentBinding.etxtPhoneSignup.getText().toString();
+        User user = new User(name,email,phone,address);
+
+        if(mImageUri != null) {
+            String firebaseUri = mViewModel.storeImage(imageFileName, mImageUri);
+            user.setImage(firebaseUri);
+        }
+
+        return user;
+    }
 
 }

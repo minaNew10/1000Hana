@@ -166,7 +166,7 @@ public class UserRepository {
         });
         return registerationSuccessful;
     }
-    private String storeImage(String imageFileName, final Uri imageUri) {
+    public String storeImage(String imageFileName, final Uri imageUri) {
 
         storageRef = FirebaseStorage.getInstance().getReference().child("UsersPhotos/" + imageFileName);
         storageRef.putFile(imageUri)
@@ -190,8 +190,8 @@ public class UserRepository {
         return firebaseUri;
     }
 
-    private MutableLiveData<User> saveUserInDatabase(final User user) {
-        final MutableLiveData<User> userMutableLiveData = new MutableLiveData<>();
+    public MutableLiveData<Boolean> saveUserInDatabase(final User user) {
+        final MutableLiveData<Boolean> savedSuccessfully = new MutableLiveData<>();
         databaseReference.child("users")
                 .child(firebaseAuth.getUid())
                 .setValue(user)
@@ -199,11 +199,9 @@ public class UserRepository {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            userMutableLiveData.setValue(user);
-                            Toast.makeText(context, context.getString(R.string.registeration_successful), Toast.LENGTH_LONG).show();
+                          savedSuccessfully.postValue(true);
                         } else {
-                            userMutableLiveData.setValue(user);
-                            Toast.makeText(context, context.getString(R.string.registeration_failed), Toast.LENGTH_LONG).show();
+                            savedSuccessfully.setValue(false);
 
                         }
 
@@ -211,7 +209,7 @@ public class UserRepository {
                 });
 
 
-        return userMutableLiveData;
+        return savedSuccessfully;
     }
 
     public void logOut(){

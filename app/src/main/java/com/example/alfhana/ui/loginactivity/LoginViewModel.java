@@ -31,6 +31,7 @@ public class LoginViewModel extends ViewModel {
     MutableLiveData<Boolean> login(String email,String psswrd){
         loginResult = userRepository.login(email, psswrd);
         return loginResult;
+
     }
     MutableLiveData<User> getUserMutableLiveData(){
         FirebaseUser user = firebaseAuth.getCurrentUser();

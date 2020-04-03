@@ -27,7 +27,9 @@
         tools:layout="@layout/sign_up_fragment" >
         <action
             android:id="@+id/action_signUpFragment_to_mealsActivity"
-            app:destination="@id/mealsActivity" />
+            app:destination="@id/mealsActivity"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <activity
         android:id="@+id/mealsActivity"
