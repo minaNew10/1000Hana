@@ -11,6 +11,8 @@ import android.widget.Toast;
 import com.example.alfhana.R;
 import com.example.alfhana.data.UserRepository;
 import com.example.alfhana.data.model.User;
+import com.example.alfhana.ui.loginactivity.LoginViewModel;
+import com.example.alfhana.ui.loginactivity.ViewModelsFactory;
 import com.example.alfhana.ui.mealsactivity.ui.home.HomeFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -19,7 +21,9 @@ import com.google.android.material.navigation.NavigationView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
@@ -33,6 +37,8 @@ public class MealsActivity extends AppCompatActivity {
     private static final String TAG = "MealsActivity";
     private AppBarConfiguration mAppBarConfiguration;
     private UserRepository userRepository = UserRepository.getInstance();
+    MealsActivityViewModel mMealsActivityViewModel;
+    private MutableLiveData<Boolean> isUserAdmin = new MutableLiveData<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,17 +46,18 @@ public class MealsActivity extends AppCompatActivity {
         Bundle b = getIntent().getExtras();
         User user = b.getParcelable("loggedin_user");
         Log.i(TAG, "onCreate: " + user.getEmail());
-//        userRepository.getIsAdmin().observe(this, new Observer<Boolean>() {
-//            @Override
-//            public void onChanged(Boolean aBoolean) {
-//                if(aBoolean){
-//                    Toast.makeText(MealsActivity.this,"hello admin",Toast.LENGTH_SHORT).show();
-//                }else {
-//                    Toast.makeText(MealsActivity.this,"hello user",Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        });
+        setupViewModel();
 
+        isUserAdmin.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+              if(aBoolean){
+                    Toast.makeText(MealsActivity.this,"hello admin",Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(MealsActivity.this,"hello user",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 //        NavController navController = Navigation.findNavController(this,R.id.nav_host_fragment);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -75,6 +82,17 @@ public class MealsActivity extends AppCompatActivity {
         navController.setGraph(R.navigation.meals_navigation,b);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+    }
+
+    private void setupViewModel() {
+        mMealsActivityViewModel = ViewModelProviders.of(this, new ViewModelsFactory())
+                .get(MealsActivityViewModel.class);
+        mMealsActivityViewModel.checkUser().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                isUserAdmin.setValue(aBoolean);
+            }
+        });
     }
 
     @Override

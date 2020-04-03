@@ -5,13 +5,14 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.alfhana.data.UserRepository;
+import com.example.alfhana.ui.mealsactivity.MealsActivityViewModel;
 
 
 /**
  * ViewModel provider factory to instantiate LoginViewModel.
  * Required given LoginViewModel has a non-empty constructor
  */
-public class LoginViewModelFactory implements ViewModelProvider.Factory {
+public class ViewModelsFactory implements ViewModelProvider.Factory {
 
     @NonNull
     @Override
@@ -19,7 +20,10 @@ public class LoginViewModelFactory implements ViewModelProvider.Factory {
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass.isAssignableFrom(LoginViewModel.class)) {
             return (T) new LoginViewModel();
-        } else {
+        } else if(modelClass.isAssignableFrom(MealsActivityViewModel.class)){
+            return (T) new MealsActivityViewModel();
+        }
+        else {
             throw new IllegalArgumentException("Unknown ViewModel class");
         }
     }

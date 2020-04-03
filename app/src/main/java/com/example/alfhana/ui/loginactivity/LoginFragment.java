@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -23,7 +22,6 @@ import android.view.WindowManager;
 import com.example.alfhana.R;
 import com.example.alfhana.data.model.User;
 import com.example.alfhana.databinding.FragmentLoginBinding;
-import com.google.firebase.auth.FirebaseAuth;
 
 
 public class LoginFragment extends Fragment {
@@ -83,7 +81,7 @@ public class LoginFragment extends Fragment {
     }
 
     private void setupViewModel() {
-        mLoginViewModel = ViewModelProviders.of(this, new LoginViewModelFactory())
+        mLoginViewModel = ViewModelProviders.of(this, new ViewModelsFactory())
                 .get(LoginViewModel.class);
         mLoginViewModel.getLoginFormState().observe(this.getActivity(), new Observer<LoginFormState>() {
             @Override
