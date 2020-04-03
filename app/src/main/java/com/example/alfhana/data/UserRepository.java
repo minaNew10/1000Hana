@@ -166,8 +166,8 @@ public class UserRepository {
         });
         return registerationSuccessful;
     }
-    public String storeImage(String imageFileName, final Uri imageUri) {
-
+    public MutableLiveData<String> storeImage(String imageFileName, final Uri imageUri) {
+        final MutableLiveData<String> mutableLiveData = new MutableLiveData<>();
         storageRef = FirebaseStorage.getInstance().getReference().child("UsersPhotos/" + imageFileName);
         storageRef.putFile(imageUri)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -176,7 +176,7 @@ public class UserRepository {
                                               storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                   @Override
                                                   public void onSuccess(Uri uri) {
-                                                      firebaseUri = uri.toString();
+                                                      mutableLiveData.postValue(uri.toString());
                                                   }
                                               });
                                           }
@@ -187,7 +187,7 @@ public class UserRepository {
 
             }
         });
-        return firebaseUri;
+        return mutableLiveData;
     }
 
     public MutableLiveData<Boolean> saveUserInDatabase(final User user) {

@@ -10,24 +10,25 @@ import com.example.alfhana.data.model.User;
 
 public class SignUpViewModel extends ViewModel {
     private UserRepository userRepository = UserRepository.getInstance();
-
+    private MutableLiveData<Boolean> isRegistered;
+    private MutableLiveData<Boolean> isSaved;
+    private MutableLiveData<String> storedUri;
     public SignUpViewModel() {
 
     }
 
     public MutableLiveData<Boolean> register(String name,String psswrd) {
-        MutableLiveData<Boolean> isRegistered =
-                userRepository.register(name,psswrd);
+        isRegistered = userRepository.register(name,psswrd);
         return isRegistered;
     }
     public MutableLiveData<Boolean> saveUser(User user) {
-        MutableLiveData<Boolean> isSaved =
-                userRepository.saveUserInDatabase(user);
+        isSaved = userRepository.saveUserInDatabase(user);
         return isSaved;
     }
 
 
-    public String storeImage(String imageFileName, Uri mImageUri) {
-        return userRepository.storeImage(imageFileName,mImageUri);
+    public MutableLiveData<String> storeImage(String imageFileName, Uri mImageUri) {
+        storedUri = userRepository.storeImage(imageFileName,mImageUri);
+        return storedUri;
     }
 }

@@ -61,6 +61,7 @@ public class SignUpFragment extends Fragment {
     private SignUpViewModel mViewModel;
     private final String[] REQUIRED_PERMISSIONS = new String[]{"android.permission.CAMERA", "android.permission.READ_EXTERNAL_STORAGE"};
     MutableLiveData<Boolean> registerationSuccessful;
+    MutableLiveData<Boolean> savingSuccessful;
     SignUpFragmentBinding signUpFragmentBinding;
     Uri mImageUri;
     private String imageFileName;
@@ -277,9 +278,18 @@ public class SignUpFragment extends Fragment {
             @Override
             public void onChanged(Boolean aBoolean) {
                 if(aBoolean){
-                    User user = createUser();
-                    mViewModel.saveUser(user);
-                    userMutableLiveData.setValue(user);
+                     mViewModel.storeImage(imageFileName,mImageUri).observe(getViewLifecycleOwner(), new Observer<String>() {
+                         @Override
+                         public void onChanged(String s) {
+                             User user = createUser();
+                             user.setImage(s);
+                             mViewModel.saveUser(user);
+                             SignUpFragmentDirections.ActionSignUpFragmentToMealsActivity action =
+                                     SignUpFragmentDirections.actionSignUpFragmentToMealsActivity();
+                             action.setLoggedinUser(user);
+                             Navigation.findNavController(getView()).navigate(action);
+                         }
+                     });
                 }
             }
         });
@@ -291,11 +301,6 @@ public class SignUpFragment extends Fragment {
         String address = signUpFragmentBinding.etxtAddressSignup.getText().toString();
         String phone = signUpFragmentBinding.etxtPhoneSignup.getText().toString();
         User user = new User(name,email,phone,address);
-
-        if(mImageUri != null) {
-            String firebaseUri = mViewModel.storeImage(imageFileName, mImageUri);
-            user.setImage(firebaseUri);
-        }
 
         return user;
     }
