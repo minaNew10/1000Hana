@@ -1,5 +1,6 @@
 package com.example.alfhana.ui.loginactivity;
 
+import android.util.Log;
 import android.util.Patterns;
 
 import androidx.lifecycle.LiveData;
@@ -9,14 +10,16 @@ import androidx.lifecycle.ViewModel;
 import com.example.alfhana.R;
 import com.example.alfhana.data.UserRepository;
 import com.example.alfhana.data.model.User;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class LoginViewModel extends ViewModel {
     private MutableLiveData<User> userMutableLiveData;
-    private MutableLiveData<Boolean> loginResult;
-
+    MutableLiveData<Boolean> loginResult;
+    private static final String TAG = "login";
     private UserRepository userRepository = UserRepository.getInstance();
     private MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
-
+    private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     LoginViewModel() {
 
     }
@@ -26,14 +29,21 @@ public class LoginViewModel extends ViewModel {
     }
 
     MutableLiveData<Boolean> login(String email,String psswrd){
-        if(loginResult == null)
-            loginResult = userRepository.login(email,psswrd);
+        loginResult = userRepository.login(email, psswrd);
         return loginResult;
     }
     MutableLiveData<User> getUserMutableLiveData(){
-        if(userMutableLiveData == null){
-            userMutableLiveData = userRepository.getUser();
-        }
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+
+            if (user != null) {
+                Log.i(TAG, "getUser: repo " + user);
+                userMutableLiveData = userRepository.retrieveUserFromDatabase(user.getUid());
+            } else {
+                Log.i(TAG, "getUser: repo " + user);
+                userMutableLiveData = new MutableLiveData<>();
+                userMutableLiveData.postValue(null);
+            }
+
         return userMutableLiveData;
     }
     void logout(){

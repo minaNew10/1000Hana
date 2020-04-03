@@ -33,10 +33,11 @@ import com.google.firebase.storage.UploadTask;
 
 
 public class UserRepository {
-    private static final String TAG = "UserRepository";
+    private static final String TAG = "login";
     private static volatile UserRepository instance;
 
     Context context;
+
     public String firebaseUri;
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
@@ -56,46 +57,41 @@ public class UserRepository {
     }
 
     public MutableLiveData<Boolean> login(String email, String password) {
-        final MutableLiveData<Boolean> loginSuccessful = new MutableLiveData<>();
+       final MutableLiveData<Boolean> isLoginSuccessful = new MutableLiveData<>();
         // handle login
         firebaseAuth.signInWithEmailAndPassword(email,
                 password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        Log.i(TAG, "onComplete: repo" + task.isSuccessful());
                         if (task.isSuccessful()) {
-                            loginSuccessful.postValue(true);
+                            isLoginSuccessful.setValue(true);
                         }
                     }
                 })
                 .addOnCanceledListener(new OnCanceledListener() {
                     @Override
                     public void onCanceled() {
-                        loginSuccessful.postValue(false);
+                        Log.i(TAG, "onCanceled: repo");
+                        isLoginSuccessful.setValue(false);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                loginSuccessful.postValue(false);
+                Log.i(TAG, "onFailure: repo" + e.getMessage());
+                isLoginSuccessful.setValue(false);
             }
         });
-        return loginSuccessful;
+        Log.i(TAG, "login: ");
+        return isLoginSuccessful;
     }
-    public MutableLiveData<User> getUser() {
-        FirebaseUser user = firebaseAuth.getCurrentUser();
-        MutableLiveData<User> loggedInUser = new MutableLiveData<>();
-        if (user != null) {
-            loggedInUser = retrieveUserFromDatabase(user.getUid());
-        }else {
-            loggedInUser.setValue(null);
-        }
-        return loggedInUser;
-    }
+
     public FirebaseUser getFirebaseUser(){
         FirebaseUser user = firebaseAuth.getCurrentUser();
         return user;
     }
-    private MutableLiveData<User> retrieveUserFromDatabase(final String id) {
+    public MutableLiveData<User> retrieveUserFromDatabase(final String id) {
         final MutableLiveData<User> loggedInUser = new MutableLiveData<>();
         databaseReference
                 .child("users")
@@ -112,12 +108,13 @@ public class UserRepository {
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Log.i(TAG, "onCancelled: ");
                             loggedInUser.postValue(null);
                     }
                 });
         return loggedInUser;
     }
-    private MutableLiveData<Boolean> isAdmin(String id) {
+    public MutableLiveData<Boolean> isAdmin(String id) {
         final MutableLiveData<Boolean> isAdmin = new MutableLiveData<>();
         databaseReference.child("admins").child(id).addValueEventListener(new ValueEventListener() {
             @Override

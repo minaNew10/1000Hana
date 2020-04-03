@@ -90,7 +90,7 @@ public class MealsActivity extends AppCompatActivity {
         switch (id){
             case R.id.action_logout:
                 userRepository.logOut();
-
+                finish();
                 break;
         }
         return true;

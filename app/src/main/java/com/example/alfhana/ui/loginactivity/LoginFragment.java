@@ -1,15 +1,14 @@
 package com.example.alfhana.ui.loginactivity;
 
-import android.graphics.Typeface;
 import android.os.Bundle;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
-import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -22,36 +21,33 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import com.example.alfhana.R;
-import com.example.alfhana.data.UserRepository;
 import com.example.alfhana.data.model.User;
 import com.example.alfhana.databinding.FragmentLoginBinding;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.auth.FirebaseAuth;
 
 
 public class LoginFragment extends Fragment {
 
-    private static final String TAG = "LoginFragment";
-    LoginViewModel loginViewModel;
+    private static final String TAG = "login";
+    LoginViewModel mLoginViewModel;
     FragmentLoginBinding loginBinding;
     MutableLiveData<Boolean> loginSuccessful;
-    MutableLiveData<User> userMutableLiveData;
+    MutableLiveData<User> userMutableLiveData = new MutableLiveData<>();
     NavController navController;
-
-    User loggedInUser;
+    User mUser;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         navController = NavHostFragment.findNavController(LoginFragment.this);
 
-        setupViewModel();
+
         // Inflate the layout for this fragment
         loginBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_login, container, false);
 
         View v = loginBinding.getRoot();
         loginBinding.setSubmit(this);
-
+        setupViewModel();
         TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -65,38 +61,20 @@ public class LoginFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                loginViewModel.loginDataChanged(loginBinding.etxtEmailLogin.getText().toString().trim(),
+                mLoginViewModel.loginDataChanged(loginBinding.etxtEmailLogin.getText().toString().trim(),
                         loginBinding.etxtPsswrdLogin.getText().toString().trim());
             }
         };
         loginBinding.etxtEmailLogin.addTextChangedListener(afterTextChangedListener);
         loginBinding.etxtPsswrdLogin.addTextChangedListener(afterTextChangedListener);
-
         return v;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-//        loggedInUser = userRepository.CheckLoginState();
-        if (loggedInUser == null)
-            Log.d(TAG, "register now: ");
-        else
-            Log.d(TAG, "session exist: ");
-        if (getArguments() != null) {
-            LoginFragmentArgs args = LoginFragmentArgs.fromBundle(getArguments());
-            if (args.getUser() != null) {
-                loggedInUser = args.getUser();
-                loginBinding.etxtEmailLogin.setText(loggedInUser.getEmail());
 
-            }
-        }
-        loginViewModel.getUserMutableLiveData().observe(this, new Observer<User>() {
-            @Override
-            public void onChanged(User user) {
-                loggedInUser = user;
-            }
-        });
+
     }
 
 
@@ -105,9 +83,9 @@ public class LoginFragment extends Fragment {
     }
 
     private void setupViewModel() {
-        loginViewModel = ViewModelProviders.of(this, new LoginViewModelFactory())
+        mLoginViewModel = ViewModelProviders.of(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
-        loginViewModel.getLoginFormState().observe(this.getActivity(), new Observer<LoginFormState>() {
+        mLoginViewModel.getLoginFormState().observe(this.getActivity(), new Observer<LoginFormState>() {
             @Override
             public void onChanged(LoginFormState loginFormState) {
                 if (loginFormState == null)
@@ -131,21 +109,44 @@ public class LoginFragment extends Fragment {
             }
         });
 
-    }
 
-    public void login() {
-        loginSuccessful =
-        loginViewModel.login(loginBinding.etxtEmailLogin.getEditableText().toString().trim(),
-                loginBinding.etxtLayoutPsswrdLogin.getEditText().getText().toString());
-        loginSuccessful.observe(this, new Observer<Boolean>() {
+        userMutableLiveData.observe(getViewLifecycleOwner(), new Observer<User>() {
             @Override
-            public void onChanged(Boolean aBoolean) {
-                if(aBoolean){
+            public void onChanged(User user) {
+                Log.i(TAG, "onChanged: " + user);
+                if (user != null) {
                     LoginFragmentDirections.ActionLoginFragmentToMealsActivity action = LoginFragmentDirections.actionLoginFragmentToMealsActivity();
-                    action.setLoggedinUser(loggedInUser);
+                    action.setLoggedinUser(user);
                     Navigation.findNavController(getView()).navigate(action);
                 }
             }
         });
+
+
+    }
+
+    public void login() {
+        loginSuccessful =
+                mLoginViewModel.login(loginBinding.etxtEmailLogin.getEditableText().toString().trim(),
+                        loginBinding.etxtLayoutPsswrdLogin.getEditText().getText().toString());
+
+        loginSuccessful.observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                Log.i(TAG, "onChanged: " + aBoolean);
+                if (aBoolean) {
+                    mLoginViewModel.getUserMutableLiveData().observe(getViewLifecycleOwner(), new Observer<User>() {
+                        @Override
+                        public void onChanged(User user) {
+                            Log.i(TAG, "onChanged: nested"+ user);
+                            userMutableLiveData.setValue(user);
+                        }
+                    });
+
+                }
+            }
+        });
+
+
     }
 }
