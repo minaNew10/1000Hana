@@ -52,4 +52,9 @@
     <string name="registeration_successful">Successful registeration</string>
     <string name="registeration_failed">"Registeration failed "</string>
     <string name="action_logout">Logout</string>
+    <string name="menu_add_meal">Add meal</string>
+    <string name="menu_add_Category">Add Category</string>
+    <string name="Add_meal">Save meal</string>
+    <string name="dialog_fragment_title">Add Category</string>
+    <string name="save">Save</string>
 </resources>

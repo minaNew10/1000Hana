@@ -1,4 +1,4 @@
-package com.example.alfhana.ui.loginactivity;
+package com.example.alfhana.ui.loginactivity.loginfragment;
 
 import android.util.Log;
 import android.util.Patterns;
@@ -8,7 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.alfhana.R;
-import com.example.alfhana.data.UserRepository;
+import com.example.alfhana.data.repository.UserRepository;
 import com.example.alfhana.data.model.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -20,7 +20,7 @@ public class LoginViewModel extends ViewModel {
     private UserRepository userRepository = UserRepository.getInstance();
     private MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-    LoginViewModel() {
+    public LoginViewModel() {
 
     }
 

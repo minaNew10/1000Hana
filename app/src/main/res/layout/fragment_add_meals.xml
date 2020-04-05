@@ -1,0 +1,168 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.alfhana.ui.mealsactivity.adminfragments.AddMealsFragment">
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="left"
+        tools:layout_editor_absoluteX="411dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mid_guidline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.35279804" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/top_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="24dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/right_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="16dp" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/txtv_name_signup"
+        android:layout_width="wrap_content"
+
+        android:layout_height="wrap_content"
+        android:text="@string/name"
+        app:layout_constraintBaseline_toBaselineOf="@+id/etxt_name_add_meal_fragment"
+        app:layout_constraintTop_toTopOf="@+id/top_guideline"
+        tools:layout_editor_absoluteX="16dp"></com.google.android.material.textview.MaterialTextView>
+
+    <TextView
+        android:id="@+id/txtv_email_signup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/email"
+        app:layout_constraintBaseline_toBaselineOf="@+id/etxt_description_add_meal"
+        tools:layout_editor_absoluteX="16dp" />
+
+    <TextView
+        android:id="@+id/txtv_phone_signup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/phone"
+        app:layout_constraintBottom_toTopOf="@+id/txtv_address_signup"
+        app:layout_constraintTop_toBottomOf="@+id/txtv_email_signup"
+        tools:layout_editor_absoluteX="16dp" />
+
+    <TextView
+        android:id="@+id/txtv_address_signup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/address"
+        app:layout_constraintBaseline_toBaselineOf="@+id/etxt_calories_add_meal_fragment"
+        app:layout_constraintStart_toStartOf="@+id/right_guideline" />
+
+    <EditText
+        android:id="@+id/etxt_name_add_meal_fragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/etxt_description_add_meal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/mid_guidline"
+        app:layout_constraintTop_toBottomOf="@+id/imgv_meal" />
+
+    <EditText
+        android:id="@+id/etxt_description_add_meal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/etxt_phone_signup"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/mid_guidline"
+        app:layout_constraintTop_toBottomOf="@+id/etxt_name_add_meal_fragment" />
+
+    <EditText
+        android:id="@+id/etxt_phone_signup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Name"
+        app:layout_constraintBottom_toTopOf="@+id/etxt_calories_add_meal_fragment"
+        app:layout_constraintEnd_toEndOf="@+id/etxt_description_add_meal"
+        app:layout_constraintStart_toStartOf="@+id/etxt_description_add_meal"
+        app:layout_constraintTop_toBottomOf="@+id/etxt_description_add_meal" />
+
+    <EditText
+        android:id="@+id/etxt_calories_add_meal_fragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="188dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Name"
+        app:layout_constraintBottom_toTopOf="@+id/etxt_wuantity_add_meal_fragmetn"
+        app:layout_constraintEnd_toEndOf="@+id/etxt_phone_signup"
+        app:layout_constraintStart_toStartOf="@+id/etxt_phone_signup"
+        app:layout_constraintTop_toBottomOf="@+id/etxt_phone_signup" />
+
+    <Button
+        android:id="@+id/btn_create_account"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:onClick="@{() -> camera.register()}"
+        android:text="@string/Add_meal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/mid_guidline"
+        app:layout_constraintTop_toBottomOf="@+id/etxt_wuantity_add_meal_fragmetn" />
+
+
+
+
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/imgv_meal"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:background="@drawable/circular_drawable"
+        android:clickable="true"
+        android:onClick="@{() -> camera.askPermissions()}"
+        android:src="@drawable/icons8_person_64"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/etxt_name_add_meal_fragment"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/mid_guidline"
+        app:layout_constraintTop_toTopOf="@+id/top_guideline"
+        app:layout_constraintVertical_bias="0.43"
+        app:layout_constraintVertical_chainStyle="spread_inside"
+        app:srcCompat="@drawable/icons8_person_64" />
+
+    <EditText
+        android:id="@+id/etxt_wuantity_add_meal_fragmetn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="@+id/etxt_calories_add_meal_fragment"
+        app:layout_constraintStart_toStartOf="@+id/etxt_calories_add_meal_fragment"
+        app:layout_constraintTop_toBottomOf="@+id/etxt_calories_add_meal_fragment" />
+
+    <TextView
+        android:id="@+id/txtv_psswrd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/password"
+        app:layout_constraintBaseline_toBaselineOf="@+id/etxt_wuantity_add_meal_fragmetn"
+        app:layout_constraintStart_toStartOf="@+id/right_guideline" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

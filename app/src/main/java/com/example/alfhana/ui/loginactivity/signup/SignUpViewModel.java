@@ -1,11 +1,11 @@
-package com.example.alfhana.ui.loginactivity;
+package com.example.alfhana.ui.loginactivity.signup;
 
 import android.net.Uri;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.alfhana.data.UserRepository;
+import com.example.alfhana.data.repository.UserRepository;
 import com.example.alfhana.data.model.User;
 
 public class SignUpViewModel extends ViewModel {

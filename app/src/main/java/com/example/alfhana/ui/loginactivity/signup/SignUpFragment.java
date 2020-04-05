@@ -1,4 +1,4 @@
-package com.example.alfhana.ui.loginactivity;
+package com.example.alfhana.ui.loginactivity.signup;
 
 import android.Manifest;
 import androidx.appcompat.app.AlertDialog;
@@ -13,7 +13,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -22,9 +21,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
+
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
@@ -35,10 +33,9 @@ import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 import com.example.alfhana.R;
-import com.example.alfhana.data.UserRepository;
 import com.example.alfhana.data.model.User;
 import com.example.alfhana.databinding.SignUpFragmentBinding;
-import com.google.firebase.auth.FirebaseAuth;
+import com.example.alfhana.ui.loginactivity.SignUpFragmentDirections;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.StorageReference;

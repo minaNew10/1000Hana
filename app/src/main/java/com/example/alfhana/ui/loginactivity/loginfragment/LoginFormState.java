@@ -1,4 +1,4 @@
-package com.example.alfhana.ui.loginactivity;
+package com.example.alfhana.ui.loginactivity.loginfragment;
 
 import androidx.annotation.Nullable;
 

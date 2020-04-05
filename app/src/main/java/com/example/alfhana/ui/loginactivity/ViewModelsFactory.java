@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.alfhana.data.UserRepository;
+import com.example.alfhana.ui.loginactivity.loginfragment.LoginViewModel;
 import com.example.alfhana.ui.mealsactivity.MealsActivityViewModel;
 
 

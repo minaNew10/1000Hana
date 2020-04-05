@@ -17,8 +17,14 @@
             android:icon="@drawable/ic_menu_slideshow"
             android:title="@string/menu_slideshow" />
         <item
+            android:id="@+id/nav_addCategory"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:visible="false"
+            android:title="@string/menu_add_Category" />
+        <item
             android:id="@+id/nav_addMeals"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="@string/menu_slideshow" />
+            android:visible="false"
+            android:title="@string/menu_add_meal" />
     </group>
 </menu>

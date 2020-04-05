@@ -1,10 +1,9 @@
 package com.example.alfhana.ui.mealsactivity;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.alfhana.data.UserRepository;
+import com.example.alfhana.data.repository.UserRepository;
 
 public class MealsActivityViewModel extends ViewModel {
     private UserRepository userRepository = UserRepository.getInstance();

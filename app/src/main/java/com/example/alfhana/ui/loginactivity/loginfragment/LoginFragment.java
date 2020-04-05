@@ -1,4 +1,4 @@
-package com.example.alfhana.ui.loginactivity;
+package com.example.alfhana.ui.loginactivity.loginfragment;
 
 import android.os.Bundle;
 
@@ -23,6 +23,7 @@ import android.view.WindowManager;
 import com.example.alfhana.R;
 import com.example.alfhana.data.model.User;
 import com.example.alfhana.databinding.FragmentLoginBinding;
+import com.example.alfhana.ui.loginactivity.ViewModelsFactory;
 
 
 public class LoginFragment extends Fragment {

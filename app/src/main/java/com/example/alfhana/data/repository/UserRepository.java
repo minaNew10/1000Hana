@@ -1,4 +1,4 @@
-package com.example.alfhana.data;
+package com.example.alfhana.data.repository;
 
 import android.content.Context;
 import android.net.Uri;
@@ -6,12 +6,10 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.alfhana.R;
 import com.example.alfhana.data.model.User;
-import com.example.alfhana.ui.loginactivity.LoginFragmentDirections;
 import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;

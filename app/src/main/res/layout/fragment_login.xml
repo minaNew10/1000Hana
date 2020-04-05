@@ -5,7 +5,7 @@
     <data>
         <variable
             name="submit"
-            type="com.example.alfhana.ui.loginactivity.LoginFragment" />
+            type="com.example.alfhana.ui.loginactivity.loginfragment.LoginFragment" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
