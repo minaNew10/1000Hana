@@ -35,7 +35,7 @@ import android.widget.Toast;
 import com.example.alfhana.R;
 import com.example.alfhana.data.model.User;
 import com.example.alfhana.databinding.SignUpFragmentBinding;
-import com.example.alfhana.ui.loginactivity.SignUpFragmentDirections;
+
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.StorageReference;
@@ -45,40 +45,26 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class SignUpFragment extends Fragment {
-    private static final String TAG = "SignUpFragment";
+
     public static final int RC_CAMERA_INTENT = 103;
     public static final int RC_PERMISSIONSETTINGS = 104;
     public static final int RC_GALLERY = 107;
-    private Bitmap bitmap;
     private static final int RC_PERMESIONS = 101;
     public static final int RC_CHOOSER_INTENT = 102;
-    private String currentPhotoPath;
-    Uri userImageUri;
-    private StorageReference mStorageRef;
     private SignUpViewModel mViewModel;
     private final String[] REQUIRED_PERMISSIONS = new String[]{"android.permission.CAMERA", "android.permission.READ_EXTERNAL_STORAGE"};
     MutableLiveData<Boolean> registerationSuccessful;
-    MutableLiveData<Boolean> savingSuccessful;
     SignUpFragmentBinding signUpFragmentBinding;
+    private String currentPhotoPath;
     Uri mImageUri;
     private String imageFileName;
-    FirebaseDatabase database;
-    DatabaseReference myRef;
     MutableLiveData<User> userMutableLiveData = new MutableLiveData<>();
-    public static SignUpFragment newInstance() {
-        return new SignUpFragment();
-    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         signUpFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.sign_up_fragment, container, false);
         signUpFragmentBinding.setCamera(this);
-
-
-
-        database = FirebaseDatabase.getInstance();
-        myRef  = database.getReference(getString(R.string.user_table));
         return signUpFragmentBinding.getRoot();
     }
 

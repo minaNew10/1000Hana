@@ -2,6 +2,7 @@ package com.example.alfhana.ui.loginactivity.loginfragment;
 
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
@@ -39,15 +40,16 @@ public class LoginFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         navController = NavHostFragment.findNavController(LoginFragment.this);
 
 
         // Inflate the layout for this fragment
         loginBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_login, container, false);
-
+        loginBinding.btnLogin.setEnabled(true);
         View v = loginBinding.getRoot();
         loginBinding.setSubmit(this);
-        setupViewModel();
+
         TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -68,6 +70,12 @@ public class LoginFragment extends Fragment {
         loginBinding.etxtEmailLogin.addTextChangedListener(afterTextChangedListener);
         loginBinding.etxtPsswrdLogin.addTextChangedListener(afterTextChangedListener);
         return v;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setupViewModel();
     }
 
     @Override

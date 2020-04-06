@@ -76,7 +76,7 @@ public class MealsActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow,R.id.nav_addCategory,R.id.nav_addMeals)
+                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow,R.id.nav_addMeals)
                 .setDrawerLayout(drawer)
 
                 .build();
@@ -89,7 +89,6 @@ public class MealsActivity extends AppCompatActivity {
     private void arrangeNavigationViewItems(NavigationView navigationView,boolean isAdmin){
         Menu menu = navigationView.getMenu();
         if(isAdmin) {
-            menu.findItem(R.id.nav_addCategory).setVisible(true);
             menu.findItem(R.id.nav_addMeals).setVisible(true);
             navigationView.setCheckedItem(R.id.nav_home);
         }

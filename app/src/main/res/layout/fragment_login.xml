@@ -50,13 +50,11 @@
                 android:id="@+id/etxt_email_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
-
                 android:ems="10"
                 android:hint="@string/email"
                 android:inputType="textEmailAddress"
                 android:padding="8dp"
-                android:text="minadevdream@gmail.com"
+                android:text="marian@hotmail.com"
                 android:textColor="@color/colorPrimaryLight"
                 android:textColorHighlight="@color/colorAccent" />
         </com.google.android.material.textfield.TextInputLayout>

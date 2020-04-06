@@ -57,4 +57,18 @@
     <string name="Add_meal">Save meal</string>
     <string name="dialog_fragment_title">Add Category</string>
     <string name="save">Save</string>
+    <string name="firebase_store_meals_photos" translatable="false">MealsPhotos/</string>
+    <string name="firebase_store_user_photos" translatable="false">UsersPhotos/</string>
+    <string name="description">Description</string>
+    <string name="category">Category</string>
+    <string name="price">Price</string>
+    <string name="calories">Calories</string>
+    <string-array name="categories">
+        <item>Poultry</item>
+        <item>Meat</item>
+        <item>Dessert</item>
+        <item>Pasta</item>
+        <item>Fish</item>
+        <item>Vegetarian</item>
+    </string-array>
 </resources>

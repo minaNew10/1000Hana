@@ -36,11 +36,11 @@ public class UserRepository {
 
     Context context;
 
-    public String firebaseUri;
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference = firebaseDatabase.getReference().getRoot();
-    private StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("UsersPhotos");;
+    private StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("UsersPhotos/");;
+
 
 
     private UserRepository() {
@@ -86,6 +86,7 @@ public class UserRepository {
     }
 
     public FirebaseUser getFirebaseUser(){
+
         FirebaseUser user = firebaseAuth.getCurrentUser();
         return user;
     }
