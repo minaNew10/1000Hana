@@ -7,6 +7,7 @@
             name="submit"
             type="com.example.alfhana.ui.loginactivity.loginfragment.LoginFragment" />
     </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -106,8 +107,8 @@
             android:layout_marginTop="64dp"
             android:alpha="0.5"
             android:background="@drawable/rectangle_drawable"
+            android:fontFamily="cursive"
             android:onClick="@{() -> submit.login()}"
-
             android:padding="8dp"
             android:text="@string/login"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -121,9 +122,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:onClick="@{() -> submit.goToSignUp()}"
             android:clickable="true"
             android:focusable="true"
+            android:onClick="@{() -> submit.goToSignUp()}"
             android:text="@string/signup"
             android:textColor="@color/colorAccent"
             app:layout_constraintEnd_toEndOf="@+id/btn_login"
@@ -134,18 +135,66 @@
             android:id="@+id/txtv_app_name_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/akronim"
+            android:fontFamily="cursive"
             android:gravity="center"
             android:lineSpacingMultiplier="0.5"
-            android:text="1000\nHana"
+            android:text="@string/app_name_first_part"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="@color/colorPrimaryDark"
-            android:textSize="130sp"
+            android:textSize="60sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/top_guideline"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView3"
+            app:layout_constraintEnd_toStartOf="@+id/imageView3"
+            app:layout_constraintTop_toTopOf="@+id/imageView3" />
+
+        <ProgressBar
+            android:id="@+id/progressBar_login"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/txtv_register"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/etxt_layout_psswrd_login" />
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="90dp"
             app:layout_constraintEnd_toStartOf="@+id/right_guideline"
             app:layout_constraintStart_toStartOf="@+id/left_guideline"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/icons_ok_hand" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimaryDark"
+            android:fontFamily="cursive"
+            android:text="@string/app_name_third_part"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textSize="60sp"
+            app:layout_constraintEnd_toStartOf="@+id/right_guideline"
+            app:layout_constraintStart_toStartOf="@+id/left_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="cursive"
+            android:text="@string/app_name_second_part"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="60sp"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView3"
+            app:layout_constraintEnd_toEndOf="@+id/textView3"
+            app:layout_constraintStart_toEndOf="@+id/imageView3"
+            app:layout_constraintTop_toTopOf="@+id/imageView3" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

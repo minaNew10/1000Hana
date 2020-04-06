@@ -1,8 +1,9 @@
 <resources>
-    <string name="app_name">1000Hana</string>
-
+    <string name="app_name_complete">Bon Appetit</string>
+    <string name="app_name_first_part">B</string>
+    <string name="app_name_second_part">n</string>
+    <string name="app_name_third_part">Appetit</string>
     <!-- TODO: Remove or change this placeholder text -->
-
     <string name="user_is_not_registered">It seems that it is your first visit..\n please sign up first</string>
     <string name="login">Let\'s go to the Kitchen</string>
     <string name="signup">First Visit</string>
