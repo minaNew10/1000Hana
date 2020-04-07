@@ -1,7 +1,12 @@
 package com.example.alfhana.data.model;
 
-import androidx.annotation.StringDef;
+import android.widget.ImageView;
 
+import androidx.annotation.StringDef;
+import androidx.databinding.BindingAdapter;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.database.Exclude;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -22,6 +27,22 @@ public class Meal {
 
     public String getDescription() {
         return description;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setCalories(int calories) {
+        this.calories = calories;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
     }
 
     public int getCalories() {
@@ -61,7 +82,12 @@ public class Meal {
     }
 
 
-
+//    @BindingAdapter({"imageUrl"})
+//    public static void loadImage(ImageView view, String imageUrl) {
+//        Glide.with(view.getContext())
+//                .load(imageUrl).apply(new RequestOptions().circleCrop())
+//                .into(view);
+//    }
 
     @StringDef
     @Retention(RetentionPolicy.SOURCE)

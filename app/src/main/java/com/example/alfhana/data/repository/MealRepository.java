@@ -2,28 +2,38 @@ package com.example.alfhana.data.repository;
 
 
 import android.net.Uri;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.alfhana.data.model.Meal;
+import com.example.alfhana.data.model.User;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.List;
+
 public class MealRepository {
     private static volatile MealRepository instance;
+    private static final String TAG = "MealRepository";
 
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-    private DatabaseReference databaseReference = firebaseDatabase.getReference();
+    private DatabaseReference databaseReference = firebaseDatabase.getReference().getRoot();
     private MutableLiveData<String> saveMealErr =new MutableLiveData<>();
     private MutableLiveData<String> saveMealPhotoErr =new MutableLiveData<>();
+
     private StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("MealsPhotos/");;
     private MealRepository(){
 
@@ -35,7 +45,28 @@ public class MealRepository {
         }
         return instance;
     }
+    public MutableLiveData<List<Meal>> getMeals(@Meal.Category String category){
+        Log.i(TAG, "getMeals: ");
+        final MutableLiveData<List<Meal>> mealsList  = new MutableLiveData<>();
+        databaseReference
+                .child("meals")
+                .child(category)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                       for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
+                           Log.i(TAG, "onDataChange: " + dataSnapshot1.getValue());
+                       }
+                    }
 
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+
+                    }
+                });
+        return mealsList;
+    }
     public MutableLiveData<Boolean> saveMeal(Meal meal) {
         final MutableLiveData<Boolean> savedSuccessfully = new MutableLiveData<>();
         databaseReference.child("meals")

@@ -13,6 +13,13 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+    <style name="txtv_Recycler_item">
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:background">@color/overlaybackground</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">@dimen/txtv_menu_item_text_size</item>
+    </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
