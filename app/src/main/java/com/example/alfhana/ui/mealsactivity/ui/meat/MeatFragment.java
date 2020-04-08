@@ -1,12 +1,10 @@
 package com.example.alfhana.ui.mealsactivity.ui.meat;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,66 +22,52 @@ import com.example.alfhana.data.repository.MealRepository;
 import com.example.alfhana.ui.mealsactivity.FoodViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
+import java.util.ArrayList;
+
 
 public class MeatFragment extends Fragment {
-    private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-    private DatabaseReference databaseReference = firebaseDatabase.getReference().getRoot();
-    FirebaseRecyclerAdapter adapter;
-    private static final String TAG = "MeatFragment";
+
+    MeatAdapter mAdapter;
+    private static final String TAG = "MealRepository";
+    MeatViewModel mViewModel;
+    RecyclerView mRecyclerView;
+    RecyclerView.LayoutManager mLayoutManager;
+    private ArrayList<Meal> meals = new ArrayList<>();
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
         View root = inflater.inflate(R.layout.fragment_meat, container, false);
-        RecyclerView recyclerView = root.findViewById(R.id.recycler_view_meat);
+        mRecyclerView = root.findViewById(R.id.recycler_view_meat);
+        mLayoutManager = new LinearLayoutManager(getActivity(),RecyclerView.VERTICAL,false);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setHasFixedSize(true);
+        mViewModel = ViewModelProviders.of(this).get(MeatViewModel.class);
+        mAdapter = new MeatAdapter(getActivity());
+        mRecyclerView.setAdapter(mAdapter);
+        mViewModel.getMeals().observe(getViewLifecycleOwner(), new Observer<DataSnapshot>() {
+                    @Override
+                    public void onChanged(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot != null) {
+                            meals.clear();
 
-        Query q = databaseReference.child("meals").child("Meat");
-        FirebaseRecyclerOptions<Meal> options =
-                new FirebaseRecyclerOptions.Builder<Meal>()
-                        .setQuery(q, Meal.class)
-                        .setLifecycleOwner(getViewLifecycleOwner())
-                        .build();
-        adapter = new FirebaseRecyclerAdapter<Meal, FoodViewHolder>(options) {
-            @Override
-            public FoodViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                // Create a new instance of the ViewHolder, in this case we are using a custom
-                // layout called R.layout.message for each item
-                View view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.meal_item, parent, false);
+                            Meal meal;
+                            for (DataSnapshot child : dataSnapshot.getChildren()) {
+                                meal = child.getValue(Meal.class);
+                                Log.i(TAG, "onDataChange fragment: " + meal.getName());
 
-                return new FoodViewHolder(view);
-            }
+                                meals.add(meal);
+                            }
+                            mAdapter.setItems(meals);
+                        }
 
-            @Override
-            protected void onBindViewHolder(FoodViewHolder holder, int position, Meal model) {
-                // Bind the Chat object to the ChatHolder
-                // ...
-                Glide.with(getContext())
-                        .load(model.getImageUri()).apply(new RequestOptions())
-                        .into(holder.imgFood);
-                holder.txtvFood.setText(model.getName());
-                Log.i(TAG, "onBindViewHolder: " + model.getName());
-            }
-        };
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(adapter);
-
+                    }
+                }
+        );
         return root;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
     }
 }

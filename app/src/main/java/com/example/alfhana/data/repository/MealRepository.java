@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.alfhana.data.model.Meal;
 import com.example.alfhana.data.model.User;
+import com.example.alfhana.utils.FirebaseQueryLiveData;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -18,6 +19,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -45,18 +47,27 @@ public class MealRepository {
         }
         return instance;
     }
-    public MutableLiveData<List<Meal>> getMeals(@Meal.Category String category){
+    public FirebaseQueryLiveData getMeals(@Meal.Category String category){
         Log.i(TAG, "getMeals: ");
-        final MutableLiveData<List<Meal>> mealsList  = new MutableLiveData<>();
+        Query query = databaseReference
+                .child("meals")
+                .child(category)
+                ;
+        final FirebaseQueryLiveData mealsList  = new FirebaseQueryLiveData(query);
+        return mealsList;
+    }
+    public void getMeals2(@Meal.Category String category){
+        Log.i(TAG, "getMeals: ");
+//        final MutableLiveData<List<Meal>> mealsList  = new MutableLiveData<>();
         databaseReference
                 .child("meals")
                 .child(category)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                       for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
-                           Log.i(TAG, "onDataChange: " + dataSnapshot1.getValue());
-                       }
+                        for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
+                            Log.i(TAG, "onDataChange: " + dataSnapshot1.getValue());
+                        }
                     }
 
                     @Override
@@ -65,7 +76,7 @@ public class MealRepository {
 
                     }
                 });
-        return mealsList;
+//        return mealsList;
     }
     public MutableLiveData<Boolean> saveMeal(Meal meal) {
         final MutableLiveData<Boolean> savedSuccessfully = new MutableLiveData<>();
