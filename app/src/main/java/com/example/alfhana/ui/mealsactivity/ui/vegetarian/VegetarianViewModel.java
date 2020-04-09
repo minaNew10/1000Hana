@@ -4,16 +4,19 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.alfhana.data.model.Meal;
+import com.example.alfhana.data.repository.MealRepository;
+import com.example.alfhana.utils.FirebaseQueryLiveData;
+
 public class VegetarianViewModel extends ViewModel {
-
-    private MutableLiveData<String> mText;
-
+    MealRepository mealRepository ;
+    FirebaseQueryLiveData mealsList;
     public VegetarianViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is slideshow fragment");
+        mealRepository = MealRepository.getInstance();
+        mealsList = mealRepository.getMeals(Meal.Category.VEGETARIAN);
+    }
+    public FirebaseQueryLiveData getMeals() {
+        return mealsList;
     }
 
-    public LiveData<String> getText() {
-        return mText;
-    }
 }

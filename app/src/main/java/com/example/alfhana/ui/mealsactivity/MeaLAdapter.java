@@ -67,7 +67,5 @@ public class MeaLAdapter extends RecyclerView.Adapter<MeaLAdapter.MealViewHolder
             super(mealItemBinding.getRoot());
             this.mealItemBinding = mealItemBinding;
         }
-
-
     }
 }

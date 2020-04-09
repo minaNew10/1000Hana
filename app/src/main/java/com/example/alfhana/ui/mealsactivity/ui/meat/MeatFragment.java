@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.alfhana.R;
 import com.example.alfhana.data.model.Meal;
 import com.example.alfhana.ui.mealsactivity.MeaLAdapter;
+import com.example.alfhana.ui.mealsactivity.ui.vegetarian.VegetarianViewModel;
 import com.google.firebase.database.DataSnapshot;
 
 import java.util.ArrayList;
