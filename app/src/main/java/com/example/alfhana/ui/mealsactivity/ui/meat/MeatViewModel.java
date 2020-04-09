@@ -8,18 +8,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.alfhana.data.model.Meal;
 import com.example.alfhana.data.repository.MealRepository;
+import com.example.alfhana.utils.FirebaseQueryLiveData;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
 public class MeatViewModel extends ViewModel {
-
-    private MutableLiveData<String> mText;
-    private RecyclerView.LayoutManager layoutManager;
+    MealRepository mealRepository ;
+    FirebaseQueryLiveData mealsList;
     public MeatViewModel() {
-
+        mealRepository = MealRepository.getInstance();
+        mealsList = mealRepository.getMeals(Meal.Category.MEAT);
     }
 
-    public LiveData<DataSnapshot> getMeals() {
-        return MealRepository.getInstance().getMeals(Meal.Category.MEAT);
+    public FirebaseQueryLiveData getMeals() {
+        return mealsList;
     }
+
 
 }
