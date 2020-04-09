@@ -9,7 +9,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.alfhana.data.model.Meal;
 import com.example.alfhana.data.model.User;
-import com.example.alfhana.utils.FirebaseQueryLiveData;
+
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -47,15 +47,7 @@ public class MealRepository {
         }
         return instance;
     }
-    public FirebaseQueryLiveData getMeals(@Meal.Category String category){
-        Log.i(TAG, "getMeals: ");
-        Query query = databaseReference
-                .child("meals")
-                .child(category)
-                ;
-        final FirebaseQueryLiveData mealsList  = new FirebaseQueryLiveData(query);
-        return mealsList;
-    }
+
     public void getMeals2(@Meal.Category String category){
         Log.i(TAG, "getMeals: ");
 //        final MutableLiveData<List<Meal>> mealsList  = new MutableLiveData<>();

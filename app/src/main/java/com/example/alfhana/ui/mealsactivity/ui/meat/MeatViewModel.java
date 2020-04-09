@@ -18,8 +18,8 @@ public class MeatViewModel extends ViewModel {
 
     }
 
-    public LiveData<DataSnapshot> getMeals() {
-        return MealRepository.getInstance().getMeals(Meal.Category.MEAT);
-    }
+//    public LiveData<DataSnapshot> getMeals() {
+//        return MealRepository.getInstance().getMeals(Meal.Category.MEAT);
+//    }
 
 }
