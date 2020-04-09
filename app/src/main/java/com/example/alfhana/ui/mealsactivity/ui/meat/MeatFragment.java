@@ -7,32 +7,23 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.example.alfhana.R;
 import com.example.alfhana.data.model.Meal;
-import com.example.alfhana.data.repository.MealRepository;
-import com.example.alfhana.ui.mealsactivity.FoodViewHolder;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.example.alfhana.ui.mealsactivity.MeaLAdapter;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 
 import java.util.ArrayList;
 
 
 public class MeatFragment extends Fragment {
 
-    MeatAdapter mAdapter;
+    MeaLAdapter mAdapter;
     private static final String TAG = "MealRepository";
     MeatViewModel mViewModel;
     RecyclerView mRecyclerView;
@@ -47,7 +38,7 @@ public class MeatFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setHasFixedSize(true);
         mViewModel = ViewModelProviders.of(this).get(MeatViewModel.class);
-        mAdapter = new MeatAdapter(getActivity());
+        mAdapter = new MeaLAdapter(getActivity());
         mRecyclerView.setAdapter(mAdapter);
         mViewModel.getMeals().observe(getViewLifecycleOwner(), new Observer<DataSnapshot>() {
                     @Override

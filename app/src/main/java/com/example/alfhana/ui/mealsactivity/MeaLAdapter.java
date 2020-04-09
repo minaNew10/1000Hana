@@ -1,4 +1,4 @@
-package com.example.alfhana.ui.mealsactivity.ui.meat;
+package com.example.alfhana.ui.mealsactivity;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,23 +8,25 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.alfhana.R;
 import com.example.alfhana.data.model.Meal;
+import com.example.alfhana.databinding.MealItemBinding;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class MeatAdapter extends RecyclerView.Adapter<MeatAdapter.MealViewHolder> {
+public class MeaLAdapter extends RecyclerView.Adapter<MeaLAdapter.MealViewHolder> {
     List<Meal> items = new ArrayList<>();
 
     Context context;
 
-    public MeatAdapter() {
+    public MeaLAdapter() {
 
     }
 
@@ -33,26 +35,23 @@ public class MeatAdapter extends RecyclerView.Adapter<MeatAdapter.MealViewHolder
         notifyDataSetChanged();
     }
 
-    public MeatAdapter(Context context) {
+    public MeaLAdapter(Context context) {
         this.context = context;
-
     }
 
     @NonNull
     @Override
     public MealViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.meal_item, parent, false);
-        return new MealViewHolder(v);
+        MealItemBinding mealItemBinding =
+                DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()),
+                        R.layout.meal_item,parent,false);
+        return new MealViewHolder(mealItemBinding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MealViewHolder holder, int position) {
         Meal item = items.get(position);
-        Glide.with(context)
-                .load(item.getImageUri()).apply(new RequestOptions())
-                .into(holder.imgFood);
-        holder.txtvFood.setText(item.getName());
-
+        holder.mealItemBinding.setMeal(item);
     }
 
     @Override
@@ -63,12 +62,10 @@ public class MeatAdapter extends RecyclerView.Adapter<MeatAdapter.MealViewHolder
     }
 
     public class MealViewHolder extends RecyclerView.ViewHolder {
-        public ImageView imgFood;
-        public TextView txtvFood;
-        public MealViewHolder(@NonNull View itemView) {
-            super(itemView);
-            imgFood = itemView.findViewById(R.id.imgv_food);
-            txtvFood= itemView.findViewById(R.id.txtv_food_name);
+        private MealItemBinding mealItemBinding;
+        public MealViewHolder(@NonNull MealItemBinding mealItemBinding) {
+            super(mealItemBinding.getRoot());
+            this.mealItemBinding = mealItemBinding;
         }
 
 

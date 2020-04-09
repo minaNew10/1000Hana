@@ -82,12 +82,12 @@ public class Meal {
     }
 
 
-//    @BindingAdapter({"imageUrl"})
-//    public static void loadImage(ImageView view, String imageUrl) {
-//        Glide.with(view.getContext())
-//                .load(imageUrl).apply(new RequestOptions().circleCrop())
-//                .into(view);
-//    }
+    @BindingAdapter({"imageUrl"})
+    public static void loadImage(ImageView view, String imageUrl) {
+        Glide.with(view.getContext())
+                .load(imageUrl).apply(new RequestOptions())
+                .into(view);
+    }
 
     @StringDef
     @Retention(RetentionPolicy.SOURCE)

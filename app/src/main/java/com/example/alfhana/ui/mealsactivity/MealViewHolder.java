@@ -9,13 +9,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.alfhana.R;
 
-public class FoodViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+public class MealViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
     public ImageView imgFood;
     public TextView txtvFood;
 
     private ItemClickListener itemClickListener;
 
-    public FoodViewHolder(View itemView) {
+    public MealViewHolder(View itemView) {
         super(itemView);
         imgFood = itemView.findViewById(R.id.imgv_food);
         txtvFood= itemView.findViewById(R.id.txtv_food_name);
