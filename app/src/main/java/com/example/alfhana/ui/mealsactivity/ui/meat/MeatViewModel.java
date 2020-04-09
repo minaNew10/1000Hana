@@ -20,10 +20,7 @@ public class MeatViewModel extends ViewModel {
         mealRepository = MealRepository.getInstance();
         mealsList = mealRepository.getMeals(Meal.Category.MEAT);
     }
-
     public FirebaseQueryLiveData getMeals() {
         return mealsList;
     }
-
-
 }

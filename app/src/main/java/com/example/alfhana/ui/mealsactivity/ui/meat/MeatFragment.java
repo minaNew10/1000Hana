@@ -10,6 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.NavOptions;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,10 +25,10 @@ import com.google.firebase.database.DataSnapshot;
 import java.util.ArrayList;
 
 
-public class MeatFragment extends Fragment {
+public class MeatFragment extends Fragment implements MeaLAdapter.OnMealClickListener {
 
     MeaLAdapter mAdapter;
-    private static final String TAG = "MealRepository";
+    private static final String TAG = "Meal";
     MeatViewModel mViewModel;
     RecyclerView mRecyclerView;
     RecyclerView.LayoutManager mLayoutManager;
@@ -39,7 +42,7 @@ public class MeatFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setHasFixedSize(true);
         mViewModel = ViewModelProviders.of(this).get(MeatViewModel.class);
-        mAdapter = new MeaLAdapter(getActivity());
+        mAdapter = new MeaLAdapter(getActivity(),this);
         mRecyclerView.setAdapter(mAdapter);
         mViewModel.getMeals().observe(getViewLifecycleOwner(), new Observer<DataSnapshot>() {
                     @Override
@@ -61,5 +64,14 @@ public class MeatFragment extends Fragment {
                 }
         );
         return root;
+    }
+
+    @Override
+    public void onClick(Meal meal) {
+
+        Bundle b = new Bundle();
+        b.putParcelable("meal",meal);
+        NavOptions navOptions = new NavOptions.Builder().build();
+        Navigation.findNavController(getView()).navigate(R.id.mealDetailFragment,b,navOptions);
     }
 }

@@ -17,22 +17,49 @@
             app:argType="com.example.alfhana.data.model.User"
             app:nullable="true"
             android:defaultValue="@null" />
+        <action
+            android:id="@+id/action_nav_poultry_to_mealDetailFragment"
+            app:destination="@id/mealDetailFragment" >
+            <argument
+                android:name="meal"
+                app:argType="com.example.alfhana.data.model.Meal"
+                app:nullable="true"
+                android:defaultValue="@null" />
+        </action>
     </fragment>
     <fragment
         android:id="@+id/nav_meat"
         android:name="com.example.alfhana.ui.mealsactivity.ui.meat.MeatFragment"
         android:label="@string/menu_meat"
-        tools:layout="@layout/fragment_meat" />
+        tools:layout="@layout/fragment_meat" >
+        <action
+            android:id="@+id/action_nav_meat_to_mealDetailFragment"
+            app:destination="@id/mealDetailFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_vege"
         android:name="com.example.alfhana.ui.mealsactivity.ui.vegetarian.VegetarianFragment"
         android:label="@string/menu_vege"
-        tools:layout="@layout/fragment_vegetarian" />
+        tools:layout="@layout/fragment_vegetarian" >
+        <action
+            android:id="@+id/action_nav_vege_to_mealDetailFragment"
+            app:destination="@id/mealDetailFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_addMeals"
         android:name="com.example.alfhana.ui.mealsactivity.adminfragments.AddMealsFragment"
         android:label="fragment_add_meals"
         tools:layout="@layout/fragment_add_meals" />
+    <fragment
+        android:id="@+id/mealDetailFragment"
+        android:name="com.example.alfhana.ui.mealsactivity.ui.MealDetailFragment"
+        android:label="MealDetailFragment">
+        <argument
+            android:name="meal"
+            app:argType="com.example.alfhana.data.model.Meal"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
 </navigation>

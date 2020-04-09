@@ -1,5 +1,7 @@
 package com.example.alfhana.data.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.widget.ImageView;
 
 import androidx.annotation.StringDef;
@@ -12,14 +14,45 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 
-public class Meal {
-    private String name;
+public class Meal implements Parcelable {
 
+    private String name;
     @Category private String category;
     private String description;
     private int calories;
     private int price;
     private String ImageUri;
+    public Meal() {
+    }
+
+    public Meal(String name,@Category String category, String description, int calories, int price) {
+        this.name = name;
+        this.category = category;
+        this.description = description;
+        this.calories = calories;
+        this.price = price;
+    }
+
+    protected Meal(Parcel in) {
+        name = in.readString();
+        category = in.readString();
+        description = in.readString();
+        calories = in.readInt();
+        price = in.readInt();
+        ImageUri = in.readString();
+    }
+
+    public static final Creator<Meal> CREATOR = new Creator<Meal>() {
+        @Override
+        public Meal createFromParcel(Parcel in) {
+            return new Meal(in);
+        }
+
+        @Override
+        public Meal[] newArray(int size) {
+            return new Meal[size];
+        }
+    };
 
     public String getName() {
         return name;
@@ -66,16 +99,6 @@ public class Meal {
         this.category = category;
     }
 
-    public Meal() {
-    }
-
-    public Meal(String name,@Category String category, String description, int calories, int price) {
-        this.name = name;
-        this.category = category;
-        this.description = description;
-        this.calories = calories;
-        this.price = price;
-    }
 
     public void setImageUri(String imageUri) {
         ImageUri = imageUri;
@@ -87,6 +110,22 @@ public class Meal {
         Glide.with(view.getContext())
                 .load(imageUrl).apply(new RequestOptions())
                 .into(view);
+    }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(name);
+        parcel.writeString(category);
+        parcel.writeString(description);
+        parcel.writeInt(calories);
+        parcel.writeInt(price);
+        parcel.writeString(ImageUri);
     }
 
     @StringDef

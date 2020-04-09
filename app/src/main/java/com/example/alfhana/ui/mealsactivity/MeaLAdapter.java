@@ -25,9 +25,10 @@ public class MeaLAdapter extends RecyclerView.Adapter<MeaLAdapter.MealViewHolder
     List<Meal> items = new ArrayList<>();
 
     Context context;
+    private OnMealClickListener onMealClickListener;
 
-    public MeaLAdapter() {
-
+    public interface OnMealClickListener{
+        void onClick(Meal meal);
     }
 
     public void setItems(List<Meal> items) {
@@ -35,8 +36,9 @@ public class MeaLAdapter extends RecyclerView.Adapter<MeaLAdapter.MealViewHolder
         notifyDataSetChanged();
     }
 
-    public MeaLAdapter(Context context) {
+    public MeaLAdapter(Context context,OnMealClickListener onMealClickListener) {
         this.context = context;
+        this.onMealClickListener = onMealClickListener;
     }
 
     @NonNull
@@ -61,11 +63,18 @@ public class MeaLAdapter extends RecyclerView.Adapter<MeaLAdapter.MealViewHolder
         return items.size();
     }
 
-    public class MealViewHolder extends RecyclerView.ViewHolder {
+    public class MealViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private MealItemBinding mealItemBinding;
         public MealViewHolder(@NonNull MealItemBinding mealItemBinding) {
             super(mealItemBinding.getRoot());
             this.mealItemBinding = mealItemBinding;
+            mealItemBinding.getRoot().setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            onMealClickListener.onClick(items.get(getAdapterPosition()));
         }
     }
+
 }
