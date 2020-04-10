@@ -4,13 +4,13 @@
     <data>
         <variable
             name="mealFragment"
-            type="com.example.alfhana.ui.mealsactivity.adminfragments.AddMealsFragment" />
+            type="com.example.alfhana.ui.mealsactivity.adminonlyfragments.AddMealsFragment" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.example.alfhana.ui.mealsactivity.adminfragments.AddMealsFragment">
+        tools:context="com.example.alfhana.ui.mealsactivity.adminonlyfragments.AddMealsFragment">
 
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/barrier"

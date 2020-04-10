@@ -1,4 +1,4 @@
-package com.example.alfhana.ui.mealsactivity.ui;
+package com.example.alfhana.ui.mealsactivity.userfragments.mealdetail;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
@@ -11,29 +11,39 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
 import com.example.alfhana.R;
 import com.example.alfhana.data.model.Meal;
+import com.example.alfhana.data.model.Order;
+import com.example.alfhana.database.AppDatabase;
 import com.example.alfhana.databinding.MealDetailFragmentBinding;
 
 public class MealDetailFragment extends Fragment {
-
+    AppDatabase appDatabase;
     private MealDetailViewModel mViewModel;
     MealDetailFragmentBinding mealDetailFragmentBinding;
     public static MealDetailFragment newInstance() {
         return new MealDetailFragment();
     }
-
+    Meal currMeal;
     private static final String TAG = "MealDetailFragment";
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        mealDetailFragmentBinding = DataBindingUtil.inflate(inflater,R.layout.meal_detail_fragment,container,false);
-//        MealDetailFragmentArgs arg = MealDetailFragmentArgs.fromBundle(getArguments());
-//        Meal meal = arg.getMeal();
+        appDatabase = AppDatabase.getInstance(getActivity());
+        mealDetailFragmentBinding = DataBindingUtil.inflate(inflater,
+                R.layout.meal_detail_fragment,container,false);
         Bundle b= getArguments();
-        Meal m = b.getParcelable("meal");
-
-        mealDetailFragmentBinding.setMeal(m);
+        currMeal = b.getParcelable("meal");
+        mealDetailFragmentBinding.btnCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addOrder();
+            }
+        });
+        mealDetailFragmentBinding.setMeal(currMeal);
+        mealDetailFragmentBinding.setMealFragment(this);
         return mealDetailFragmentBinding.getRoot();
     }
 
@@ -41,7 +51,14 @@ public class MealDetailFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = ViewModelProviders.of(this).get(MealDetailViewModel.class);
-        // TODO: Use the ViewModel
+
+    }
+
+    public void addOrder(){
+        Toast.makeText(getActivity(),"Clicked",Toast.LENGTH_SHORT).show();
+        Order order = new Order(currMeal.getId(),currMeal.getName(),currMeal.getCategory(),mealDetailFragmentBinding.numberButton.getNumber()+"",String.valueOf(currMeal.getPrice()));
+        long id  = appDatabase.orderDao().insert(order);
+        Log.i(TAG, "addOrder: " + id);
     }
 
 }

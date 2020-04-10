@@ -2,6 +2,9 @@
 <layout>
     <data>
         <variable
+            name="mealFragment"
+            type="com.example.alfhana.ui.mealsactivity.userfragments.mealdetail.MealDetailFragment" />
+        <variable
             name="meal"
             type="com.example.alfhana.data.model.Meal" />
     </data>
@@ -54,6 +57,7 @@
             android:src="@drawable/ic_shopping_cart_black_24dp"
             app:backgroundTint="@android:color/white"
             app:elevation="6dp"
+            android:onClick="@{() -> mealFragment.addOrder()}"
             app:layout_anchor="@id/appBar_meal_detail"
             app:layout_anchorGravity="bottom|right|end"
             app:pressedTranslationZ="12dp"

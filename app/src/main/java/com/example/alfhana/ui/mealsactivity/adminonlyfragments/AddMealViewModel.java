@@ -1,4 +1,4 @@
-package com.example.alfhana.ui.mealsactivity.adminfragments;
+package com.example.alfhana.ui.mealsactivity.adminonlyfragments;
 
 import android.net.Uri;
 
@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.alfhana.data.model.Meal;
-import com.example.alfhana.data.model.User;
 import com.example.alfhana.data.repository.MealRepository;
 
 public class AddMealViewModel extends ViewModel {

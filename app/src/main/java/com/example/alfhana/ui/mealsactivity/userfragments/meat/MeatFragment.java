@@ -1,4 +1,4 @@
-package com.example.alfhana.ui.mealsactivity.ui.meat;
+package com.example.alfhana.ui.mealsactivity.userfragments.meat;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -12,14 +12,12 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.alfhana.R;
 import com.example.alfhana.data.model.Meal;
 import com.example.alfhana.ui.mealsactivity.MeaLAdapter;
-import com.example.alfhana.ui.mealsactivity.ui.vegetarian.VegetarianViewModel;
 import com.google.firebase.database.DataSnapshot;
 
 import java.util.ArrayList;
@@ -52,7 +50,10 @@ public class MeatFragment extends Fragment implements MeaLAdapter.OnMealClickLis
 
                             Meal meal;
                             for (DataSnapshot child : dataSnapshot.getChildren()) {
+
+
                                 meal = child.getValue(Meal.class);
+                                meal.setId(child.getKey());
                                 Log.i(TAG, "onDataChange fragment: " + meal.getName());
 
                                 meals.add(meal);
@@ -68,7 +69,6 @@ public class MeatFragment extends Fragment implements MeaLAdapter.OnMealClickLis
 
     @Override
     public void onClick(Meal meal) {
-
         Bundle b = new Bundle();
         b.putParcelable("meal",meal);
         NavOptions navOptions = new NavOptions.Builder().build();

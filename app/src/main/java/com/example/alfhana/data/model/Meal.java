@@ -16,6 +16,8 @@ import java.lang.annotation.RetentionPolicy;
 
 public class Meal implements Parcelable {
 
+
+    private String id;
     private String name;
     @Category private String category;
     private String description;
@@ -104,6 +106,13 @@ public class Meal implements Parcelable {
         ImageUri = imageUri;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     @BindingAdapter({"imageUrl"})
     public static void loadImage(ImageView view, String imageUrl) {

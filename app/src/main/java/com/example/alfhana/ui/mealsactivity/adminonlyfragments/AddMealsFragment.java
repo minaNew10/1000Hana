@@ -1,4 +1,4 @@
-package com.example.alfhana.ui.mealsactivity.adminfragments;
+package com.example.alfhana.ui.mealsactivity.adminonlyfragments;
 
 import android.Manifest;
 import android.app.Activity;
@@ -17,7 +17,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.navigation.Navigation;
 
 import android.provider.Settings;
 import android.util.Log;
@@ -29,15 +28,10 @@ import android.widget.Toast;
 
 import com.example.alfhana.R;
 import com.example.alfhana.data.model.Meal;
-import com.example.alfhana.data.model.User;
 import com.example.alfhana.databinding.FragmentAddMealsBinding;
-import com.example.alfhana.ui.loginactivity.signup.SignUpFragmentDirections;
 import com.example.alfhana.utils.ImageUtils;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 
 
 public class AddMealsFragment extends Fragment {

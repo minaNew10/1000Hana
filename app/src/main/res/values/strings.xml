@@ -64,6 +64,8 @@
     <string name="category">Category</string>
     <string name="price">Price</string>
     <string name="calories">Calories</string>
+    <string name="place_order">PLACE ORDER</string>
+    <string name="cart">Cart</string>
     <string-array name="categories">
         <item>Poultry</item>
         <item>Meat</item>

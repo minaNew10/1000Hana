@@ -9,7 +9,7 @@
 
     <fragment
         android:id="@+id/nav_poultry"
-        android:name="com.example.alfhana.ui.mealsactivity.ui.poultry.PoultryFragment"
+        android:name="com.example.alfhana.ui.mealsactivity.userfragments.poultry.PoultryFragment"
         android:label="@string/menu_poultry"
         tools:layout="@layout/fragment_poultry">
         <argument
@@ -29,7 +29,7 @@
     </fragment>
     <fragment
         android:id="@+id/nav_meat"
-        android:name="com.example.alfhana.ui.mealsactivity.ui.meat.MeatFragment"
+        android:name="com.example.alfhana.ui.mealsactivity.userfragments.meat.MeatFragment"
         android:label="@string/menu_meat"
         tools:layout="@layout/fragment_meat" >
         <action
@@ -39,7 +39,7 @@
 
     <fragment
         android:id="@+id/nav_vege"
-        android:name="com.example.alfhana.ui.mealsactivity.ui.vegetarian.VegetarianFragment"
+        android:name="com.example.alfhana.ui.mealsactivity.userfragments.vegetarian.VegetarianFragment"
         android:label="@string/menu_vege"
         tools:layout="@layout/fragment_vegetarian" >
         <action
@@ -49,12 +49,12 @@
 
     <fragment
         android:id="@+id/nav_addMeals"
-        android:name="com.example.alfhana.ui.mealsactivity.adminfragments.AddMealsFragment"
+        android:name="com.example.alfhana.ui.mealsactivity.adminonlyfragments.AddMealsFragment"
         android:label="fragment_add_meals"
         tools:layout="@layout/fragment_add_meals" />
     <fragment
         android:id="@+id/mealDetailFragment"
-        android:name="com.example.alfhana.ui.mealsactivity.ui.MealDetailFragment"
+        android:name="com.example.alfhana.ui.mealsactivity.userfragments.mealdetail.MealDetailFragment"
         android:label="MealDetailFragment">
         <argument
             android:name="meal"
@@ -62,4 +62,8 @@
             app:nullable="true"
             android:defaultValue="@null" />
     </fragment>
+    <fragment
+        android:id="@+id/nav_cart"
+        android:name="com.example.alfhana.ui.mealsactivity.userfragments.cart.CartFragment"
+        android:label="CartFragment" />
 </navigation>

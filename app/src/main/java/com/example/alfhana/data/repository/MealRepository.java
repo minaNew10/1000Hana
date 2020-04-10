@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.alfhana.data.model.Meal;
@@ -15,6 +16,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -51,8 +53,8 @@ public class MealRepository {
         Log.i(TAG, "getMeals: ");
         Query query = databaseReference
                 .child("meals")
-                .child(category)
-                ;
+                .child(category);
+
         final FirebaseQueryLiveData mealsList  = new FirebaseQueryLiveData(query);
         return mealsList;
     }

@@ -1,7 +1,5 @@
-package com.example.alfhana.ui.mealsactivity.ui.vegetarian;
+package com.example.alfhana.ui.mealsactivity.userfragments.vegetarian;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.alfhana.data.model.Meal;

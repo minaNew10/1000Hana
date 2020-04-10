@@ -22,5 +22,9 @@
             android:icon="@drawable/ic_menu_slideshow"
             android:visible="false"
             android:title="@string/menu_add_meal" />
+        <item
+            android:id="@+id/nav_cart"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="@string/cart" />
     </group>
 </menu>
