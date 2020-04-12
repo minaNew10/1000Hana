@@ -87,6 +87,7 @@ public class LoginFragment extends Fragment {
 
 
     public void goToSignUp() {
+        navController.setGraph(R.navigation.nav_graph);
         navController.navigate(R.id.action_loginFragment_to_signUpFragment);
     }
 

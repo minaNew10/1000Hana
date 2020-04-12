@@ -3,6 +3,8 @@
     <string name="app_name_first_part">B</string>
     <string name="app_name_second_part">n</string>
     <string name="app_name_third_part">Appetit</string>
+    <string name="default_info_title">Default Location</string>
+    <string name="default_info_snippet">No places found, because location permission is disabled.</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="user_is_not_registered">It seems that it is your first visit..\n please sign up first</string>
     <string name="login">Let\'s go to the Kitchen</string>
@@ -74,4 +76,9 @@
         <item>Fish</item>
         <item>Vegetarian</item>
     </string-array>
+    <string name="option_get_place">Get place</string>
+    <string name="pick_place">Choose a place</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="your_location">Your Location</string>
+    <string name="add_location">Add Location</string>
 </resources>

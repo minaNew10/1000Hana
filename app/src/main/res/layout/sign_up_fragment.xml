@@ -14,12 +14,6 @@
         app:layout_constraintBottom_toBottomOf="@+id/etxt_phone_signup"
         app:layout_constraintTop_toBottomOf="@+id/etxt_phone_signup">
 
-        <androidx.constraintlayout.widget.Barrier
-            android:id="@+id/barrier"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:barrierDirection="left"
-            tools:layout_editor_absoluteX="411dp" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/mid_guidline"
@@ -42,37 +36,32 @@
             android:orientation="vertical"
             app:layout_constraintGuide_begin="16dp" />
 
-        <com.google.android.material.textview.MaterialTextView
+        <TextView
             android:id="@+id/txtv_name_signup"
-            android:layout_width="wrap_content"
-
-            android:layout_height="wrap_content"
+            style="@style/txtv_Sign_up"
             android:text="@string/name"
             app:layout_constraintBaseline_toBaselineOf="@+id/etxt_name_signup_activity"
-            app:layout_constraintTop_toTopOf="@+id/top_guideline"
-            tools:layout_editor_absoluteX="16dp"></com.google.android.material.textview.MaterialTextView>
+            app:layout_constraintBottom_toBottomOf="@+id/etxt_name_signup_activity"
+            app:layout_constraintStart_toStartOf="@+id/right_guideline"
+            app:layout_constraintTop_toTopOf="@+id/top_guideline"></TextView>
 
         <TextView
             android:id="@+id/txtv_email_signup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/txtv_Sign_up"
             android:text="@string/email"
             app:layout_constraintBaseline_toBaselineOf="@+id/etxt_email_signup"
-            tools:layout_editor_absoluteX="16dp" />
+            app:layout_constraintStart_toStartOf="@+id/right_guideline" />
 
         <TextView
             android:id="@+id/txtv_phone_signup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/txtv_Sign_up"
             android:text="@string/phone"
-            app:layout_constraintBottom_toTopOf="@+id/txtv_address_signup"
-            app:layout_constraintTop_toBottomOf="@+id/txtv_email_signup"
-            tools:layout_editor_absoluteX="16dp" />
+            app:layout_constraintBaseline_toBaselineOf="@+id/etxt_phone_signup"
+            app:layout_constraintStart_toStartOf="@+id/right_guideline" />
 
         <TextView
             android:id="@+id/txtv_address_signup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/txtv_Sign_up"
             android:text="@string/address"
             app:layout_constraintBaseline_toBaselineOf="@+id/etxt_address_signup"
             app:layout_constraintStart_toStartOf="@+id/right_guideline" />
@@ -81,10 +70,11 @@
             android:id="@+id/etxt_name_signup_activity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:ems="10"
             android:inputType="textPersonName"
             app:layout_constraintBottom_toTopOf="@+id/etxt_email_signup"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline2"
             app:layout_constraintStart_toStartOf="@+id/mid_guidline"
             app:layout_constraintTop_toBottomOf="@+id/imgv_user" />
 
@@ -92,20 +82,22 @@
             android:id="@+id/etxt_email_signup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:ems="10"
-            android:inputType="textPersonName"
+            android:inputType="textEmailAddress"
             app:layout_constraintBottom_toTopOf="@+id/etxt_phone_signup"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/mid_guidline"
+            app:layout_constraintEnd_toEndOf="@+id/etxt_name_signup_activity"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="@+id/etxt_name_signup_activity"
             app:layout_constraintTop_toBottomOf="@+id/etxt_name_signup_activity" />
 
         <EditText
             android:id="@+id/etxt_phone_signup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Name"
+            android:inputType="phone"
             app:layout_constraintBottom_toTopOf="@+id/etxt_address_signup"
             app:layout_constraintEnd_toEndOf="@+id/etxt_email_signup"
             app:layout_constraintStart_toStartOf="@+id/etxt_email_signup"
@@ -115,46 +107,43 @@
             android:id="@+id/etxt_address_signup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="188dp"
+            android:layout_marginBottom="8dp"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="Name"
-            app:layout_constraintBottom_toTopOf="@+id/etxt_psswrd"
+            app:layout_constraintBottom_toTopOf="@+id/btn_get_location"
             app:layout_constraintEnd_toEndOf="@+id/etxt_phone_signup"
             app:layout_constraintStart_toStartOf="@+id/etxt_phone_signup"
             app:layout_constraintTop_toBottomOf="@+id/etxt_phone_signup" />
+
 
         <Button
             android:id="@+id/btn_create_account"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp"
+            android:layout_marginTop="32dp"
             android:onClick="@{() -> camera.register()}"
             android:text="@string/create_account"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/mid_guidline"
+            style="@style/btns"
+            app:layout_constraintEnd_toEndOf="@+id/etxt_psswrd"
+            app:layout_constraintHorizontal_bias="0.529"
+            app:layout_constraintStart_toStartOf="@+id/etxt_psswrd"
             app:layout_constraintTop_toBottomOf="@+id/etxt_psswrd" />
-
-
-
-
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/imgv_user"
             android:layout_width="150dp"
             android:layout_height="150dp"
+            android:layout_marginBottom="8dp"
             android:background="@drawable/circular_drawable"
             android:clickable="true"
             android:onClick="@{() -> camera.askPermissions()}"
             android:src="@drawable/icons8_person_64"
             android:visibility="visible"
             app:layout_constraintBottom_toTopOf="@+id/etxt_name_signup_activity"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline2"
             app:layout_constraintStart_toStartOf="@+id/mid_guidline"
             app:layout_constraintTop_toTopOf="@+id/top_guideline"
-            app:layout_constraintVertical_bias="0.43"
-            app:layout_constraintVertical_chainStyle="spread_inside"
+            app:layout_constraintVertical_chainStyle="spread"
             app:srcCompat="@drawable/icons8_person_64" />
 
         <EditText
@@ -163,17 +152,106 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPassword"
+            app:layout_constraintBottom_toTopOf="@+id/btn_create_account"
+            app:layout_constraintEnd_toEndOf="@+id/btn_get_location"
+            app:layout_constraintHorizontal_bias="0.488"
+            app:layout_constraintStart_toStartOf="@+id/btn_get_location"
+            app:layout_constraintTop_toBottomOf="@+id/txtv_location_saved"
+            app:layout_constraintVertical_bias="0.7"
+            app:layout_constraintVertical_chainStyle="spread_inside" />
+
+        <TextView
+            android:id="@+id/txtv_psswrd"
+            style="@style/txtv_Sign_up"
+            android:text="@string/password"
+            app:layout_constraintBaseline_toBaselineOf="@+id/etxt_psswrd"
+            app:layout_constraintStart_toStartOf="@+id/right_guideline" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=":"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/txtv_name_signup"
+            app:layout_constraintEnd_toStartOf="@+id/mid_guidline" />
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=":"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/txtv_email_signup"
+            app:layout_constraintEnd_toStartOf="@+id/mid_guidline" />
+
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=":"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/txtv_phone_signup"
+            app:layout_constraintEnd_toStartOf="@+id/mid_guidline" />
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=":"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/txtv_address_signup"
+            app:layout_constraintEnd_toStartOf="@+id/mid_guidline" />
+
+        <TextView
+            android:id="@+id/textView10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=":"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBaseline_toBaselineOf="@+id/txtv_psswrd"
+            app:layout_constraintEnd_toStartOf="@+id/mid_guidline" />
+
+        <Button
+            android:id="@+id/btn_get_location"
+            style="@style/btns"
+            android:layout_marginBottom="8dp"
+            android:text="@string/add_location"
+            app:layout_constraintBottom_toTopOf="@+id/txtv_location_saved"
             app:layout_constraintEnd_toEndOf="@+id/etxt_address_signup"
+            app:layout_constraintHorizontal_bias="0.494"
             app:layout_constraintStart_toStartOf="@+id/etxt_address_signup"
             app:layout_constraintTop_toBottomOf="@+id/etxt_address_signup" />
 
         <TextView
-            android:id="@+id/txtv_psswrd"
+            android:id="@+id/txtv_location_saved"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/password"
-            app:layout_constraintBaseline_toBaselineOf="@+id/etxt_psswrd"
-            app:layout_constraintStart_toStartOf="@+id/right_guideline" />
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@+id/btn_get_location"
+            app:layout_constraintStart_toStartOf="@+id/btn_get_location"
+            app:layout_constraintTop_toBottomOf="@+id/btn_get_location" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="16dp" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrier2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="txtv_location_saved,btn_get_location"
+            tools:layout_editor_absoluteY="731dp" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -21,10 +21,28 @@
         <item name="android:textSize">@dimen/txtv_menu_item_text_size</item>
         <item name="fontFamily">cursive</item>
     </style>
+    <style name="txtv_Sign_up">
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Large</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="fontFamily">cursive</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <style name="btns">
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Large</item>
+        <item name="android:textColor">@color/colorPrimaryLight</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="fontFamily">cursive</item>
+        <item name="android:background">@drawable/rectangle_drawable</item>
+        <item name="android:padding">@dimen/btn_padding</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 
+    <dimen name="btn_padding">8dp</dimen>
 </resources>
