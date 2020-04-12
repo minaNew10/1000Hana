@@ -11,6 +11,7 @@ android {
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
+        buildConfigField("String", "API_KEY", API_KEY)
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -26,12 +27,17 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.karumi:dexter:6.1.0'
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'de.hdodenhof:circleimageview:3.1.0'
     def glide = "4.8.0"
     implementation "com.github.bumptech.glide:glide:$glide"
     annotationProcessor "com.github.bumptech.glide:compiler:$glide"
 
+    def map = "17.0.0"
+    implementation "com.google.android.gms:play-services-maps:$map"
+    implementation "com.google.android.gms:play-services-location:$map"
+    implementation 'com.google.android.libraries.places:places:2.1.0'
     def lifecycle_version = "2.1.0"
     // ViewModel , LiveData and Room
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
@@ -76,6 +82,7 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-database:4.3.1'
     //Firebase Pagination Library
     implementation 'com.shreyaspatil:FirebaseRecyclerPagination:1.0.1'
+
 
     //to create text drawable images
     implementation 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'

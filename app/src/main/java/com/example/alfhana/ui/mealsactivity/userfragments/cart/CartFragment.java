@@ -1,10 +1,10 @@
 package com.example.alfhana.ui.mealsactivity.userfragments.cart;
 
 import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -45,7 +45,7 @@ public class CartFragment extends Fragment {
         cartFragmentBinding.listCart.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL,false));
          cartAdapter = new CartAdapter();
         cartFragmentBinding.listCart.setAdapter(cartAdapter);
-
+        cartFragmentBinding.setCart(this);
         return cartFragmentBinding.getRoot();
     }
     @Override
@@ -65,5 +65,10 @@ public class CartFragment extends Fragment {
                 cartAdapter.setItems(currOrders);
             }
         });
+    }
+
+    public void startMap(){
+//        Intent intent = new Intent(getActivity(), MapsActivity.class);
+//        startActivityForResult(intent,11);
     }
 }

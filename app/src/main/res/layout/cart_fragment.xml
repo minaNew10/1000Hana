@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
-
+    <data>
+        <variable
+            name="cart"
+            type="com.example.alfhana.ui.mealsactivity.userfragments.cart.CartFragment" />
+    </data>
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -59,7 +63,7 @@
                     android:layout_marginBottom="8dp"
                     android:background="@color/colorAccent"
                     android:shadowColor="@android:color/black"
-
+                    android:onClick="@{() -> cart.startMap()}"
                     android:textColor="@color/colorPrimaryLight" />
             </RelativeLayout>
         </androidx.cardview.widget.CardView>

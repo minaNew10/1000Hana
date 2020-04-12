@@ -102,17 +102,11 @@
 
         <Button
             android:id="@+id/btn_login"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_marginTop="64dp"
             android:alpha="0.5"
-            android:background="@drawable/rectangle_drawable"
-            android:fontFamily="cursive"
+            style="@style/btns"
             android:onClick="@{() -> submit.login()}"
-            android:padding="8dp"
             android:text="@string/login"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="@color/colorPrimaryLight"
             app:layout_constraintEnd_toEndOf="@+id/etxt_layout_psswrd_login"
             app:layout_constraintStart_toStartOf="@+id/etxt_layout_psswrd_login"
             app:layout_constraintTop_toBottomOf="@+id/etxt_layout_psswrd_login" />

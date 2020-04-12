@@ -1,0 +1,24 @@
+<resources>
+    <!--
+    TODO: Before you run your application, you need a Google Maps API key.
+
+    To get one, follow this link, follow the directions and press "Create" at the end:
+
+    https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=BF:56:07:F7:65:BD:49:1A:67:E3:13:79:52:D5:18:04:D7:9C:1A:31%3Bcom.example.alfhana.ui.mealsactivity.userfragments
+
+    You can also add your credentials to an existing key, using these values:
+
+    Package name:
+    com.example.alfhana.ui.mealsactivity.userfragments
+
+    SHA-1 certificate fingerprint:
+    BF:56:07:F7:65:BD:49:1A:67:E3:13:79:52:D5:18:04:D7:9C:1A:31
+
+    Alternatively, follow the directions here:
+    https://developers.google.com/maps/documentation/android/start#get-key
+
+    Once you have your key (it starts with "AIza"), replace the "google_maps_key"
+    string in this file.
+    -->
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyAFPMjHQjX-mKxJ68fugBANqEoIM0MjoEQ</string>
+</resources>

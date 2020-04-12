@@ -16,22 +16,16 @@ public class User implements Parcelable{
     public String phone;
     public String address;
     public String image;
-    //required to prevent error
-    public User() {
-    }
+    LocationHelper locationHelper;
 
-    public User(String displayName, String email) {
-        this.displayName = displayName;
-        this.email = email;
-    }
-
-    public User(String displayName, String email, String phone, String address) {
-        this.displayName = displayName;
+    public User(String name, String email, String phone, String address) {
+        this.displayName = name;
         this.email = email;
         this.phone = phone;
         this.address = address;
-        image =null;
+
     }
+
 
     protected User(Parcel in) {
         displayName = in.readString();
@@ -39,7 +33,9 @@ public class User implements Parcelable{
         phone = in.readString();
         address = in.readString();
         image = in.readString();
+        locationHelper = in.readParcelable(LocationHelper.class.getClassLoader());
     }
+
     public static final Creator<User> CREATOR = new Creator<User>() {
         @Override
         public User createFromParcel(Parcel in) {
@@ -52,6 +48,27 @@ public class User implements Parcelable{
         }
     };
 
+    public LocationHelper getLocationHelper() {
+        return locationHelper;
+    }
+
+    public void setLocationHelper(LocationHelper locationHelper) {
+        this.locationHelper = locationHelper;
+    }
+
+    //required to prevent error
+    public User() {
+    }
+
+
+    public User(String displayName, String email, String phone, String address,LocationHelper locationHelper) {
+        this.displayName = displayName;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+        this.locationHelper = locationHelper;
+        image =null;
+    }
 
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
@@ -99,6 +116,7 @@ public class User implements Parcelable{
         this.image = image;
     }
 
+
     @Override
     public int describeContents() {
         return 0;
@@ -111,5 +129,6 @@ public class User implements Parcelable{
         parcel.writeString(phone);
         parcel.writeString(address);
         parcel.writeString(image);
+        parcel.writeParcelable(locationHelper, i);
     }
 }
