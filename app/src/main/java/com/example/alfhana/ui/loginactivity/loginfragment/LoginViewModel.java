@@ -37,7 +37,6 @@ public class LoginViewModel extends ViewModel {
         FirebaseUser user = firebaseAuth.getCurrentUser();
 
             if (user != null) {
-                Log.i(TAG, "getUser: repo " + user);
                 userMutableLiveData = userRepository.retrieveUserFromDatabase(user.getUid());
             } else {
                 Log.i(TAG, "getUser: repo " + user);

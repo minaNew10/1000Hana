@@ -22,6 +22,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -33,6 +34,7 @@ import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 import com.example.alfhana.R;
+import com.example.alfhana.data.model.LocationHelper;
 import com.example.alfhana.data.model.User;
 import com.example.alfhana.databinding.SignUpFragmentBinding;
 
@@ -59,12 +61,20 @@ public class SignUpFragment extends Fragment {
     Uri mImageUri;
     private String imageFileName;
     MutableLiveData<User> userMutableLiveData = new MutableLiveData<>();
-
+    LocationHelper locationHelper;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         signUpFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.sign_up_fragment, container, false);
-        signUpFragmentBinding.setCamera(this);
+        signUpFragmentBinding.setSignup(this);
+        Bundle b = getArguments();
+        if(b != null){
+            locationHelper =   b.getParcelable("location");
+            if(locationHelper != null) {
+                signUpFragmentBinding.txtvLocationSaved.setVisibility(View.VISIBLE);
+                signUpFragmentBinding.txtvLocationSaved.setText(R.string.location_saved);
+            }
+        }
         return signUpFragmentBinding.getRoot();
     }
 
@@ -277,14 +287,16 @@ public class SignUpFragment extends Fragment {
             }
         });
     }
+    public void goToMaps(){
+        NavHostFragment.findNavController(this).navigate(R.id.action_signUpFragment_to_mapFragment);
+    }
 
     private User createUser() {
         String name = signUpFragmentBinding.etxtNameSignupActivity.getText().toString();
         String email = signUpFragmentBinding.etxtEmailSignup.getText().toString();
         String address = signUpFragmentBinding.etxtAddressSignup.getText().toString();
         String phone = signUpFragmentBinding.etxtPhoneSignup.getText().toString();
-        User user = new User(name,email,phone,address);
-
+        User user = new User(name,email,phone,address,locationHelper);
         return user;
     }
 

@@ -40,7 +40,7 @@
     <string name="home_second">Home Second</string>
     <string name="phone">Phone</string>
     <string name="address">Address</string>
-    <string name="create_account">Create account</string>
+    <string name="create_account">Create Account</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -81,4 +81,6 @@
     <string name="title_activity_maps">Map</string>
     <string name="your_location">Your Location</string>
     <string name="add_location">Add Location</string>
+    <string name="save_location">Save Location</string>
+    <string name="location_saved">Location Saved</string>
 </resources>

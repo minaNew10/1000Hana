@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
     <data>
         <variable
-            name="camera"
+            name="signup"
             type="com.example.alfhana.ui.loginactivity.signup.SignUpFragment" />
     </data>
 
@@ -68,6 +68,7 @@
 
         <EditText
             android:id="@+id/etxt_name_signup_activity"
+            android:tint = "@color/colorPrimaryDark"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
@@ -121,7 +122,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:onClick="@{() -> camera.register()}"
+            android:onClick="@{() -> signup.register()}"
             android:text="@string/create_account"
             style="@style/btns"
             app:layout_constraintEnd_toEndOf="@+id/etxt_psswrd"
@@ -136,8 +137,8 @@
             android:layout_marginBottom="8dp"
             android:background="@drawable/circular_drawable"
             android:clickable="true"
-            android:onClick="@{() -> camera.askPermissions()}"
-            android:src="@drawable/icons8_person_64"
+            android:onClick="@{() -> signup.askPermissions()}"
+            android:src="@drawable/user"
             android:visibility="visible"
             app:layout_constraintBottom_toTopOf="@+id/etxt_name_signup_activity"
             app:layout_constraintEnd_toStartOf="@+id/guideline2"
@@ -222,6 +223,7 @@
             style="@style/btns"
             android:layout_marginBottom="8dp"
             android:text="@string/add_location"
+            android:onClick="@{() -> signup.goToMaps()}"
             app:layout_constraintBottom_toTopOf="@+id/txtv_location_saved"
             app:layout_constraintEnd_toEndOf="@+id/etxt_address_signup"
             app:layout_constraintHorizontal_bias="0.494"

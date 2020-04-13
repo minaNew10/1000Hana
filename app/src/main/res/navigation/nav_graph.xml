@@ -27,11 +27,19 @@
         android:name="com.example.alfhana.ui.loginactivity.signup.SignUpFragment"
         android:label="sign_up_fragment"
         tools:layout="@layout/sign_up_fragment" >
+        <argument
+            android:name="location"
+            app:argType="com.example.alfhana.data.model.LocationHelper"
+            app:nullable="true"
+            android:defaultValue="@null" />
         <action
             android:id="@+id/action_signUpFragment_to_mealsActivity"
             app:destination="@id/mealsActivity"
             app:popUpTo="@id/loginFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_signUpFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
     </fragment>
     <activity
         android:id="@+id/mealsActivity"
@@ -44,5 +52,13 @@
             app:nullable="true"
             android:defaultValue="@null" />
     </activity>
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="com.example.alfhana.ui.loginactivity.signup.MapFragment"
+        android:label="MapFragment" >
+        <action
+            android:id="@+id/action_mapFragment_to_signUpFragment"
+            app:destination="@id/signUpFragment" />
+    </fragment>
 
 </navigation>

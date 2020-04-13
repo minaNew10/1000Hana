@@ -142,7 +142,6 @@ public class UserRepository {
                         if (task.isSuccessful()) {
                             registerationSuccessful.postValue(true);
                         } else {
-                            Toast.makeText(context, context.getString(R.string.registeration_failed), Toast.LENGTH_LONG).show();
                             registerationSuccessful.postValue(false);
                         }
                     }
@@ -151,7 +150,7 @@ public class UserRepository {
                     @Override
                     public void onCanceled() {
                         registerationSuccessful.postValue(false);
-                        Toast.makeText(context, context.getString(R.string.registeration_failed) + " why ", Toast.LENGTH_LONG).show();
+
 
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -159,7 +158,7 @@ public class UserRepository {
             public void onFailure(@NonNull Exception e) {
                 if (e instanceof FirebaseAuthWeakPasswordException) {
                     registerationSuccessful.postValue(false);
-                    Toast.makeText(context, context.getString(R.string.registeration_failed), Toast.LENGTH_LONG).show();
+
                 }
             }
         });
@@ -183,7 +182,7 @@ public class UserRepository {
                 ).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-
+                Log.i(TAG, "onFailure: "+ e.getMessage());
             }
         });
         return mutableLiveData;
