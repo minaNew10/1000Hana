@@ -1,10 +1,11 @@
 package com.example.alfhana.ui.mealsactivity.userfragments.cart;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import android.content.Intent;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,9 +18,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.example.alfhana.R;
 import com.example.alfhana.data.model.Order;
+import com.example.alfhana.data.model.Request;
+import com.example.alfhana.data.model.User;
+import com.example.alfhana.data.repository.UserRepository;
 import com.example.alfhana.databinding.CartFragmentBinding;
 
 import java.util.List;
@@ -30,9 +37,9 @@ import java.util.List;
 public class CartFragment extends Fragment {
     private static final String TAG = "CartFragment";
     private CartViewModel mViewModel;
-    CartFragmentBinding cartFragmentBinding;
-    List<Order> currOrders;
-    CartAdapter cartAdapter;
+    private CartFragmentBinding mCartFragmentBinding;
+    private List<Order> mCurrOrders;
+    private CartAdapter mCartAdapter;
     public static CartFragment newInstance() {
         return new CartFragment();
     }
@@ -40,18 +47,17 @@ public class CartFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-       cartFragmentBinding = DataBindingUtil.inflate(inflater,R.layout.cart_fragment,
+       mCartFragmentBinding = DataBindingUtil.inflate(inflater,R.layout.cart_fragment,
                container,false);
-        cartFragmentBinding.listCart.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL,false));
-         cartAdapter = new CartAdapter();
-        cartFragmentBinding.listCart.setAdapter(cartAdapter);
-        cartFragmentBinding.setCart(this);
-        return cartFragmentBinding.getRoot();
+        mCartFragmentBinding.listCart.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL,false));
+         mCartAdapter = new CartAdapter();
+        mCartFragmentBinding.listCart.setAdapter(mCartAdapter);
+        mCartFragmentBinding.setCart(this);
+        return mCartFragmentBinding.getRoot();
     }
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         setupViewModel();
     }
 
@@ -61,14 +67,60 @@ public class CartFragment extends Fragment {
             @Override
             public void onChanged(List<Order> orders) {
                 Log.i(TAG, "onChanged: "+ orders.size());
-                currOrders = orders;
-                cartAdapter.setItems(currOrders);
+                mCurrOrders = orders;
+                mCartAdapter.setItems(mCurrOrders);
+                mCartFragmentBinding.txtvTotal.setText(calculateTotal());
             }
         });
     }
 
-    public void startMap(){
+    public void placeOrder(){
 //        Intent intent = new Intent(getActivity(), MapsActivity.class);
 //        startActivityForResult(intent,11);
+        User user = UserRepository.getInstance().getUser();
+        Request request = new Request(user.getPhone(),
+                user.getDisplayName(),
+                user.address,
+                calculateTotal(),
+                mCurrOrders
+        );
+        mViewModel.saveRequest(request);
     }
+
+    private String calculateTotal(){
+        int total = 0;
+        for(Order order : mCurrOrders)
+            total+= (Integer.valueOf(order.price)*Integer.valueOf(order.getQuantity()));
+        return String.valueOf(total);
+    }
+
+    private void makeRequest() {
+//        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+//        alertDialog.setTitle("One more step");
+//        alertDialog.setMessage("Enter your address: ");
+//
+//        final EditText edtAddress = new EditText(getActivity());
+//        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+//                LinearLayout.LayoutParams.MATCH_PARENT,
+//                LinearLayout.LayoutParams.MATCH_PARENT
+//        );
+//        edtAddress.setLayoutParams(lp);
+//        alertDialog.setView(edtAddress);
+//        alertDialog.setIcon(R.drawable.ic_shopping_cart_black_24dp);
+//        alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//
+//            }
+//        });
+//        alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                dialog.dismiss();
+//            }
+//        });
+//        alertDialog.show();
+
+    }
+
 }

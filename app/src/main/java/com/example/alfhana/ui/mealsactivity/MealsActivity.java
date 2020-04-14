@@ -36,12 +36,14 @@ public class MealsActivity extends AppCompatActivity {
 
     ActivityMealsBinding activityMealsBinding;
     User user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meals);
         Bundle b = getIntent().getExtras();
         user = b.getParcelable("loggedin_user");
+
         setupViewModel();
 
 

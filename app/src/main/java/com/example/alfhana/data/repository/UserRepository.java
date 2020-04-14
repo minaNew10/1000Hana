@@ -33,13 +33,13 @@ import com.google.firebase.storage.UploadTask;
 public class UserRepository {
     private static final String TAG = "login";
     private static volatile UserRepository instance;
+    private User user;
 
-    Context context;
 
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference = firebaseDatabase.getReference().getRoot();
-    private StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("UsersPhotos/");;
+    private StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("UsersPhotos/");
 
 
 
@@ -52,6 +52,10 @@ public class UserRepository {
             instance = new UserRepository();
         }
         return instance;
+    }
+
+    public User getUser() {
+        return user;
     }
 
     public MutableLiveData<Boolean> login(String email, String password) {
@@ -99,7 +103,7 @@ public class UserRepository {
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         //Log.d(TAG, "onDataChange: "+dataSnapshot.getValue(User.class).toString());
                         if (dataSnapshot.hasChild(id)) {
-                            User user = dataSnapshot.child(id).getValue(User.class);
+                            user = dataSnapshot.child(id).getValue(User.class);
                             Log.i(TAG, "onDataChange: " + user);
                             loggedInUser.postValue(user);
                         }

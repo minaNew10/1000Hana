@@ -83,4 +83,10 @@
     <string name="add_location">Add Location</string>
     <string name="save_location">Save Location</string>
     <string name="location_saved">Location Saved</string>
+    <string name="gps_alert_msg">Your GPS seems to be disabled, do you want to enable it?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="total">Total:</string>
 </resources>
