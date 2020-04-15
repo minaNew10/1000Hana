@@ -4,13 +4,23 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
+import android.widget.Toast;
+
 import com.example.alfhana.R;
 import com.example.alfhana.data.repository.UserRepository;
 import com.example.alfhana.data.model.User;
 import com.example.alfhana.databinding.ActivityMealsBinding;
 import com.example.alfhana.databinding.NavHeaderMealsBinding;
+import com.example.alfhana.jobschedulernotification.NotificationService;
 import com.example.alfhana.ui.loginactivity.ViewModelsFactory;
 
+import com.firebase.jobdispatcher.Constraint;
+import com.firebase.jobdispatcher.FirebaseJobDispatcher;
+import com.firebase.jobdispatcher.GooglePlayDriver;
+import com.firebase.jobdispatcher.Job;
+import com.firebase.jobdispatcher.Lifetime;
+import com.firebase.jobdispatcher.RetryStrategy;
+import com.firebase.jobdispatcher.Trigger;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
@@ -33,9 +43,10 @@ public class MealsActivity extends AppCompatActivity {
     private UserRepository userRepository = UserRepository.getInstance();
     MealsActivityViewModel mMealsActivityViewModel;
     private MutableLiveData<Boolean> isUserAdmin = new MutableLiveData<>();
-
+    private FirebaseJobDispatcher mDispatcher;
     ActivityMealsBinding activityMealsBinding;
     User user;
+    private static final String JOB_TAG = "MyJobService";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +57,9 @@ public class MealsActivity extends AppCompatActivity {
 
         setupViewModel();
 
-
-//        NavController navController = Navigation.findNavController(this,R.id.nav_host_fragment);
+        mDispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(this));
+        scheduleJob();
+        //        NavController navController = Navigation.findNavController(this,R.id.nav_host_fragment);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -70,7 +82,7 @@ public class MealsActivity extends AppCompatActivity {
         isUserAdmin.observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
-                arrangeNavigationViewItems(navigationView,aBoolean);
+                arrangeNavigationViewItems(navigationView, aBoolean);
                 navigationView.setCheckedItem(0);
             }
         });
@@ -78,24 +90,42 @@ public class MealsActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_poultry, R.id.nav_meat, R.id.nav_vege,R.id.nav_addMeals,R.id.nav_cart)
+                R.id.nav_poultry, R.id.nav_meat, R.id.nav_vege, R.id.nav_addMeals, R.id.nav_cart)
                 .setDrawerLayout(drawer)
 
                 .build();
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        navController.setGraph(R.navigation.meals_navigation,b);
+        navController.setGraph(R.navigation.meals_navigation, b);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
     }
-    private void arrangeNavigationViewItems(NavigationView navigationView,boolean isAdmin){
+
+    private void arrangeNavigationViewItems(NavigationView navigationView, boolean isAdmin) {
         Menu menu = navigationView.getMenu();
-        if(isAdmin) {
+        if (isAdmin) {
             menu.findItem(R.id.nav_addMeals).setVisible(true);
             navigationView.setCheckedItem(R.id.nav_poultry);
         }
 
     }
+
+    private void scheduleJob() {
+        Job myJob = mDispatcher.newJobBuilder()
+                .setService(NotificationService.class)
+                .setTag(JOB_TAG)
+                .setRecurring(true)
+                .setTrigger(Trigger.executionWindow(0, 24*60*60))
+                .setLifetime(Lifetime.UNTIL_NEXT_BOOT)
+                .setReplaceCurrent(false)
+                .setConstraints(Constraint.ON_ANY_NETWORK)
+                .setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
+                .build();
+        mDispatcher.mustSchedule(myJob);
+
+        Toast.makeText(this, "not", Toast.LENGTH_LONG).show();
+    }
+
     private void setupViewModel() {
         mMealsActivityViewModel = ViewModelProviders.of(this, new ViewModelsFactory())
                 .get(MealsActivityViewModel.class);
@@ -119,7 +149,7 @@ public class MealsActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        switch (id){
+        switch (id) {
             case R.id.action_logout:
                 userRepository.logOut();
                 finish();

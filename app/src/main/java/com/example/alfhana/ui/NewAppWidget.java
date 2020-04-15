@@ -25,11 +25,21 @@ import java.util.List;
  * Implementation of App Widget functionality.
  */
 public class NewAppWidget extends AppWidgetProvider {
+   static List<Request> one;
     static void updateAppWidget(final Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
 
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.new_app_widget);
+        final RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.new_app_widget);
+//        AppExecutors.getInstance().mainThread().execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                one = RequestRepository.getInstance().getRequestsList(context);
+//                if(one != null && one.size() < 1) {
+//                    views.setTextViewText(R.id.appwidget_text, one.get(0).getName());
+//                }
+//            }
+//        });
 
         CharSequence widgetText = context.getString(R.string.appwidget_text);
 

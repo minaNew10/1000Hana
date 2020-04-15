@@ -82,7 +82,7 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-database:4.3.1'
     //Firebase Pagination Library
     implementation 'com.shreyaspatil:FirebaseRecyclerPagination:1.0.1'
-
+    implementation 'com.firebase:firebase-jobdispatcher:0.8.5'
 
     //to create text drawable images
     implementation 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
