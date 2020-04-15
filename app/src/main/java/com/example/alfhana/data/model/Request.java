@@ -3,15 +3,20 @@ package com.example.alfhana.data.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import java.util.List;
 
-
+@Entity(tableName = "request")
 public class Request implements Parcelable {
-    private String phone;
-    private String Uid;
-    private String address;
-    private String total;
-    private List<Order> foods;
+    @PrimaryKey(autoGenerate = true)
+    public long orderId;
+    public String phone;
+    public String name;
+    public String address;
+    public String total;
+    public List<Order> foods;
 
 
     public Request() {
@@ -19,7 +24,7 @@ public class Request implements Parcelable {
 
     public Request(String phone, String name, String address, String total, List<Order> foods) {
         this.phone = phone;
-        this.Uid = name;
+        this.name = name;
         this.address = address;
         this.total = total;
         this.foods = foods;
@@ -27,7 +32,7 @@ public class Request implements Parcelable {
 
     protected Request(Parcel in) {
         phone = in.readString();
-        Uid = in.readString();
+        name = in.readString();
         address = in.readString();
         total = in.readString();
     }
@@ -52,12 +57,12 @@ public class Request implements Parcelable {
         this.phone = phone;
     }
 
-    public String getUid() {
-        return Uid;
+    public String getName() {
+        return name;
     }
 
-    public void setUid(String uid) {
-        this.Uid = uid;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getAddress() {
@@ -84,6 +89,14 @@ public class Request implements Parcelable {
         this.foods = foods;
     }
 
+    public long getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(long orderId) {
+        this.orderId = orderId;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -92,7 +105,7 @@ public class Request implements Parcelable {
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(phone);
-        parcel.writeString(Uid);
+        parcel.writeString(name);
         parcel.writeString(address);
         parcel.writeString(total);
     }

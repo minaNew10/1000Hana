@@ -16,11 +16,14 @@ public interface OrderDao {
     @Insert
     long insert(Order order);
 
-    @Delete
-    void delete(Order order);
+    @Query("DELETE FROM `order`")
+    void deleteAll();
 
     @Query("SELECT * FROM 'order'")
-    LiveData<List<Order>> getAllOrders();
+    LiveData<List<Order>> getAllOrdersLiveData();
+
+    @Query("SELECT * FROM 'order'")
+    List<Order> getAllOrdersInList();
 
     @Query("DELETE FROM '" + "order" + "' WHERE "+ "OrderId"  + " = :id")
     int deleteById(long id);

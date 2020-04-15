@@ -7,10 +7,13 @@ import androidx.room.DatabaseConfiguration;
 import androidx.room.InvalidationTracker;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
 import androidx.sqlite.db.SupportSQLiteOpenHelper;
 import com.example.alfhana.data.model.Order;
+import com.example.alfhana.data.model.Request;
 
-@Database(entities = {Order.class}, version = 1, exportSchema = false)
+@Database(entities = {Order.class, Request.class}, version = 2, exportSchema = false)
+@TypeConverters(DataConverter.class)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static final String LOG_TAG = AppDatabase.class.getSimpleName();
@@ -23,7 +26,6 @@ public abstract class AppDatabase extends RoomDatabase {
             synchronized (LOCK) {
                 sInstance = Room.databaseBuilder(context.getApplicationContext(),
                         AppDatabase.class, AppDatabase.DATABASE_NAME)
-                        .allowMainThreadQueries()
                         .build();
             }
         }
@@ -31,6 +33,7 @@ public abstract class AppDatabase extends RoomDatabase {
     }
 
     public abstract OrderDao orderDao();
+    public abstract RequestDao requestDao();
 
 
     @NonNull

@@ -8,21 +8,31 @@ import android.content.Intent;
 import android.net.Uri;
 import android.widget.RemoteViews;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+
 import com.example.alfhana.R;
+import com.example.alfhana.data.model.Order;
+import com.example.alfhana.data.model.Request;
+import com.example.alfhana.data.repository.RequestRepository;
+import com.example.alfhana.database.AppDatabase;
+import com.example.alfhana.utils.AppExecutors;
+
+import java.util.List;
 
 
 /**
  * Implementation of App Widget functionality.
  */
 public class NewAppWidget extends AppWidgetProvider {
-//
-    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
+    static void updateAppWidget(final Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
-        CharSequence widgetText = context.getString(R.string.appwidget_text);
-        // Construct the RemoteViews object
+
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.new_app_widget);
-        views.setTextViewText(R.id.appwidget_text, widgetText);
+
+        CharSequence widgetText = context.getString(R.string.appwidget_text);
+
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://google.com"));
         // In widget we are not allowing to use intents as usually. We have to use PendingIntent instead of 'startActivity'
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
@@ -48,6 +58,11 @@ public class NewAppWidget extends AppWidgetProvider {
     @Override
     public void onDisabled(Context context) {
         // Enter relevant functionality for when the last widget is disabled
+    }
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        super.onReceive(context, intent);
     }
 }
 

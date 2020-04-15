@@ -1,11 +1,10 @@
 package com.example.alfhana.ui.mealsactivity.userfragments.cart;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -18,9 +17,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.example.alfhana.R;
 import com.example.alfhana.data.model.Order;
@@ -75,16 +71,24 @@ public class CartFragment extends Fragment {
     }
 
     public void placeOrder(){
-//        Intent intent = new Intent(getActivity(), MapsActivity.class);
-//        startActivityForResult(intent,11);
         User user = UserRepository.getInstance().getUser();
-        Request request = new Request(user.getPhone(),
+        final Request request = new Request(user.getPhone(),
                 user.getDisplayName(),
                 user.address,
                 calculateTotal(),
                 mCurrOrders
         );
-        mViewModel.saveRequest(request);
+        LiveData<Long> idLive = mViewModel.saveRequestInDatabase(getActivity(),request);
+
+        idLive.observe(getActivity(), new Observer<Long>() {
+            @Override
+            public void onChanged(Long aLong) {
+                request.setOrderId(aLong);
+                mViewModel.saveRequestToServer(request);
+            }
+        });
+
+        mViewModel.delOrders();
     }
 
     private String calculateTotal(){

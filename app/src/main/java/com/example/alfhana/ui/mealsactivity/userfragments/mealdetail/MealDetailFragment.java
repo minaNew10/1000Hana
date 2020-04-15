@@ -35,7 +35,7 @@ public class MealDetailFragment extends Fragment {
         mealDetailFragmentBinding = DataBindingUtil.inflate(inflater,
                 R.layout.meal_detail_fragment,container,false);
         Bundle b= getArguments();
-        currMeal = b.getParcelable("meal");
+        currMeal = b.getParcelable(getString(R.string.meal_key));
         mealDetailFragmentBinding.btnCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -55,10 +55,8 @@ public class MealDetailFragment extends Fragment {
     }
 
     public void addOrder(){
-        Toast.makeText(getActivity(),"Clicked",Toast.LENGTH_SHORT).show();
         Order order = new Order(currMeal.getId(),currMeal.getName(),currMeal.getCategory(),mealDetailFragmentBinding.numberButton.getNumber()+"",String.valueOf(currMeal.getPrice()));
-        long id  = appDatabase.orderDao().insert(order);
-        Log.i(TAG, "addOrder: " + id);
+        mViewModel.insertOrder(getActivity(),order);
     }
 
 }

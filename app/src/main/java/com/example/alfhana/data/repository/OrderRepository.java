@@ -3,10 +3,10 @@ package com.example.alfhana.data.repository;
 import android.content.Context;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 
 import com.example.alfhana.data.model.Order;
 import com.example.alfhana.database.AppDatabase;
+import com.example.alfhana.utils.AppExecutors;
 
 import java.util.List;
 
@@ -24,12 +24,34 @@ public class OrderRepository {
         return instance;
     }
 
-    public void addOrder(Context context,Order order){
+    public void addOrder(Context context,final Order order){
         appDatabase = AppDatabase.getInstance(context);
-        appDatabase.orderDao().insert(order);
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+            appDatabase.orderDao().insert(order);
+            }
+        });
     }
     public LiveData<List<Order>> getOrders(Context context){
         appDatabase = AppDatabase.getInstance(context);
-        return appDatabase.orderDao().getAllOrders();
+        return appDatabase.orderDao().getAllOrdersLiveData();
+    }
+
+    public void delOrder(final Order order){
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                appDatabase.orderDao().deleteById(order.getOrderId());
+            }
+        });
+    }
+    public void delAllOrders(){
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                appDatabase.orderDao().deleteAll();
+            }
+        });
     }
 }
