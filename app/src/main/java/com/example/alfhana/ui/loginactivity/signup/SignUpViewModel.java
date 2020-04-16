@@ -1,18 +1,23 @@
 package com.example.alfhana.ui.loginactivity.signup;
 
 import android.net.Uri;
+import android.util.Patterns;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.alfhana.R;
 import com.example.alfhana.data.repository.UserRepository;
 import com.example.alfhana.data.model.User;
+
 
 public class SignUpViewModel extends ViewModel {
     private UserRepository userRepository = UserRepository.getInstance();
     private MutableLiveData<Boolean> isRegistered;
     private MutableLiveData<Boolean> isSaved;
     private MutableLiveData<String> storedUri;
+    private Uri userImageUri;
+    private MutableLiveData<SignUpFormState> signUpFormStateMutableLiveData = new MutableLiveData<>();
     public SignUpViewModel() {
 
     }
@@ -30,5 +35,54 @@ public class SignUpViewModel extends ViewModel {
     public MutableLiveData<String> storeImage(String imageFileName, Uri mImageUri) {
         storedUri = userRepository.storeImage(imageFileName,mImageUri);
         return storedUri;
+    }
+
+
+
+    public void signUpDataChanged(String name, String password,String email) {
+        if (!isEmailValid(email)) {
+            signUpFormStateMutableLiveData.setValue(new SignUpFormState( null, null,R.string.invalid_email));
+        } else if (!isPasswordValid(password)) {
+            signUpFormStateMutableLiveData.setValue(new SignUpFormState(null, R.string.invalid_password,null));
+        } else if (!isUserNameValid(name)) {
+            signUpFormStateMutableLiveData.setValue(new SignUpFormState(R.string.user_name_err,null,null));
+        } else {
+            signUpFormStateMutableLiveData.setValue(new SignUpFormState(true));
+        }
+    }
+
+    private boolean isUserNameValid(String name) {
+        if(name.isEmpty())
+            return false;
+        return true;
+    }
+
+    // A placeholder username validation check
+    private boolean isEmailValid(String email) {
+        if (email == null) {
+            return false;
+        }
+        if (!email.isEmpty()) {
+            return Patterns.EMAIL_ADDRESS.matcher(email).matches();
+        } else {
+            return !email.trim().isEmpty();
+        }
+    }
+
+    // A placeholder password validation check
+    private boolean isPasswordValid(String password) {
+        return password != null && password.trim().length() > 5;
+    }
+
+    public MutableLiveData<SignUpFormState> getSignUpFormState() {
+        return signUpFormStateMutableLiveData;
+    }
+
+    public void setImageUri(Uri mImageUri) {
+        this.userImageUri = mImageUri;
+    }
+
+    public Uri getUserImageUri() {
+        return userImageUri;
     }
 }

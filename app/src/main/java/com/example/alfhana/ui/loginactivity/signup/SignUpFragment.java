@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import androidx.core.app.ActivityCompat;
@@ -27,6 +26,8 @@ import androidx.navigation.fragment.NavHostFragment;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,9 +39,6 @@ import com.example.alfhana.data.model.LocationHelper;
 import com.example.alfhana.data.model.User;
 import com.example.alfhana.databinding.SignUpFragmentBinding;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.StorageReference;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -53,36 +51,56 @@ public class SignUpFragment extends Fragment {
     public static final int RC_GALLERY = 107;
     private static final int RC_PERMESIONS = 101;
     public static final int RC_CHOOSER_INTENT = 102;
-    private SignUpViewModel mViewModel;
+    private SignUpViewModel mSignUpViewModel;
     private final String[] REQUIRED_PERMISSIONS = new String[]{"android.permission.CAMERA", "android.permission.READ_EXTERNAL_STORAGE"};
-    MutableLiveData<Boolean> registerationSuccessful;
-    SignUpFragmentBinding signUpFragmentBinding;
-    private String currentPhotoPath;
+    MutableLiveData<Boolean> mRegisterationSuccessfulMutableLivedata;
+    SignUpFragmentBinding mSignUpFragmentBinding;
+    private String mCurrentPhotoPath;
     Uri mImageUri;
-    private String imageFileName;
-    MutableLiveData<User> userMutableLiveData = new MutableLiveData<>();
-    LocationHelper locationHelper;
+    private String mImageFileName;
+    MutableLiveData<User> mUserMutableLiveData = new MutableLiveData<>();
+    LocationHelper mLocationHelper;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        signUpFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.sign_up_fragment, container, false);
-        signUpFragmentBinding.setSignup(this);
+        mSignUpFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.sign_up_fragment, container, false);
+        mSignUpFragmentBinding.setSignup(this);
         Bundle b = getArguments();
         if(b != null){
-            locationHelper =   b.getParcelable("location");
-            if(locationHelper != null) {
-                signUpFragmentBinding.txtvLocationSaved.setVisibility(View.VISIBLE);
-                signUpFragmentBinding.txtvLocationSaved.setText(R.string.location_saved);
+            mLocationHelper =   b.getParcelable("location");
+            if(mLocationHelper != null) {
+                mSignUpFragmentBinding.txtvLocationSaved.setVisibility(View.VISIBLE);
+                mSignUpFragmentBinding.txtvLocationSaved.setText(R.string.location_saved);
             }
         }
-        return signUpFragmentBinding.getRoot();
+        TextWatcher afterTextChangedListener = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // ignore
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // ignore
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                mSignUpViewModel.signUpDataChanged(mSignUpFragmentBinding.etxtNameSignupActivity.getText().toString().trim(),
+                        mSignUpFragmentBinding.etxtPsswrd.getText().toString().trim(),mSignUpFragmentBinding.etxtEmailSignup.getText().toString().trim());
+            }
+        };
+        mSignUpFragmentBinding.etxtPsswrd.addTextChangedListener(afterTextChangedListener);
+        mSignUpFragmentBinding.etxtEmailSignup.addTextChangedListener(afterTextChangedListener);
+        mSignUpFragmentBinding.etxtNameSignupActivity.addTextChangedListener(afterTextChangedListener);
+        return mSignUpFragmentBinding.getRoot();
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = ViewModelProviders.of(this).get(SignUpViewModel.class);
-        userMutableLiveData.observe(getViewLifecycleOwner(), new Observer<User>() {
+        mSignUpViewModel = ViewModelProviders.of(this).get(SignUpViewModel.class);
+        mUserMutableLiveData.observe(getViewLifecycleOwner(), new Observer<User>() {
             @Override
             public void onChanged(User user) {
                 SignUpFragmentDirections.ActionSignUpFragmentToMealsActivity action =
@@ -90,7 +108,38 @@ public class SignUpFragment extends Fragment {
                 action.setLoggedinUser(user);
                 Navigation.findNavController(getView()).navigate(action);
             }
-        });        // TODO: Use the ViewModel
+        });
+        mSignUpViewModel.getSignUpFormState().observe(getViewLifecycleOwner(), new Observer<SignUpFormState>() {
+            @Override
+            public void onChanged(SignUpFormState signUpFormState) {
+                if(signUpFormState == null)
+                    return;
+                if(signUpFormState.isDataValid()){
+                    mSignUpFragmentBinding.btnCreateAccount.setEnabled(true);
+                    mSignUpFragmentBinding.btnCreateAccount.setAlpha(1);
+                    mSignUpFragmentBinding.btnCreateAccount.setElevation(4f);
+                }
+                if(signUpFormState.getUsernameError() != null){
+                    mSignUpFragmentBinding.btnCreateAccount.setEnabled(false);
+                    mSignUpFragmentBinding.btnCreateAccount.setAlpha(0.5f);
+                    mSignUpFragmentBinding.etxtNameSignupActivity.setError(getString(signUpFormState.getUsernameError()));
+                }
+                if(signUpFormState.getEmailError() != null){
+                    mSignUpFragmentBinding.btnCreateAccount.setEnabled(false);
+                    mSignUpFragmentBinding.btnCreateAccount.setAlpha(0.5f);
+                    mSignUpFragmentBinding.etxtEmailSignup.setError(getString(signUpFormState.getEmailError()));
+                }
+                if(signUpFormState.getPasswordError() != null){
+                    mSignUpFragmentBinding.btnCreateAccount.setEnabled(false);
+                    mSignUpFragmentBinding.btnCreateAccount.setAlpha(0.5f);
+                    mSignUpFragmentBinding.etxtPsswrd.setError(getString(signUpFormState.getPasswordError()));
+                }
+            }
+        });
+        Uri imageUri = mSignUpViewModel.getUserImageUri();
+        if(imageUri != null){
+            mSignUpFragmentBinding.imgvUser.setImageURI(imageUri);
+        }
     }
 
     //when the user clicks on the userImage
@@ -119,30 +168,31 @@ public class SignUpFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == RC_CAMERA_INTENT) {
-                File f = new File(currentPhotoPath);
+                File f = new File(mCurrentPhotoPath);
                 mImageUri = Uri.fromFile(f);
-                signUpFragmentBinding.imgvUser.setImageURI(mImageUri);
+                mSignUpFragmentBinding.imgvUser.setImageURI(mImageUri);
                 Log.d("tag", "ABsolute Url of Image is " + Uri.fromFile(f));
             }
             if (requestCode == RC_GALLERY) {
                 mImageUri = data.getData();
                 String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                imageFileName = "JPEG_" + timeStamp + "." + getFileExt(mImageUri);
-                Log.d("tag", "onActivityResult: Gallery Image Uri:  " + imageFileName);
-                signUpFragmentBinding.imgvUser.setImageURI(mImageUri);
+                mImageFileName = "JPEG_" + timeStamp + "." + getFileExt(mImageUri);
+                Log.d("tag", "onActivityResult: Gallery Image Uri:  " + mImageFileName);
+                mSignUpFragmentBinding.imgvUser.setImageURI(mImageUri);
             }
             if (requestCode == RC_CHOOSER_INTENT) {
                 if(data != null) {
                     mImageUri = data.getData();
                     String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                    imageFileName = "JPEG_" + timeStamp + "." + getFileExt(mImageUri);
-                    Log.d("tag", "onActivityResult: Gallery Image Uri:  " + imageFileName);
+                    mImageFileName = "JPEG_" + timeStamp + "." + getFileExt(mImageUri);
+                    Log.d("tag", "onActivityResult: Gallery Image Uri:  " + mImageFileName);
                 }else {
-                    File f = new File(currentPhotoPath);
+                    File f = new File(mCurrentPhotoPath);
                     mImageUri = Uri.fromFile(f);
                     Log.d("tag", "ABsolute Url of Image is " + Uri.fromFile(f));
                 }
-                signUpFragmentBinding.imgvUser.setImageURI(mImageUri);
+                mSignUpViewModel.setImageUri(mImageUri);
+                mSignUpFragmentBinding.imgvUser.setImageURI(mSignUpViewModel.getUserImageUri());
             }
         }
     }
@@ -204,15 +254,15 @@ public class SignUpFragment extends Fragment {
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        imageFileName = "JPEG_" + timeStamp + "_";
+        mImageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = this.getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
-                imageFileName,  /* prefix */
+                mImageFileName,  /* prefix */
                 ".jpg",         /* suffix */
                 storageDir      /* directory */
         );
         // Save a file: path for use with ACTION_VIEW intents
-        currentPhotoPath = image.getAbsolutePath();
+        mCurrentPhotoPath = image.getAbsolutePath();
 //        mImageUri = Uri.fromFile(image);
         return image;
     }
@@ -265,18 +315,19 @@ public class SignUpFragment extends Fragment {
         startActivityForResult(chooserIntent, RC_CHOOSER_INTENT);
     }
     public void register(){
-        registerationSuccessful = mViewModel.register(signUpFragmentBinding.etxtEmailSignup.getText().toString().trim(),
-                signUpFragmentBinding.etxtPsswrd.getText().toString().trim());
-        registerationSuccessful.observe(this, new Observer<Boolean>() {
+        mSignUpFragmentBinding.btnCreateAccount.setEnabled(false);
+        mRegisterationSuccessfulMutableLivedata = mSignUpViewModel.register(mSignUpFragmentBinding.etxtEmailSignup.getText().toString().trim(),
+                mSignUpFragmentBinding.etxtPsswrd.getText().toString().trim());
+        mRegisterationSuccessfulMutableLivedata.observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
                 if(aBoolean){
-                     mViewModel.storeImage(imageFileName,mImageUri).observe(getViewLifecycleOwner(), new Observer<String>() {
+                     mSignUpViewModel.storeImage(mImageFileName,mImageUri).observe(getViewLifecycleOwner(), new Observer<String>() {
                          @Override
                          public void onChanged(String s) {
                              User user = createUser();
                              user.setImage(s);
-                             mViewModel.saveUser(user);
+                             mSignUpViewModel.saveUser(user);
                              SignUpFragmentDirections.ActionSignUpFragmentToMealsActivity action =
                                      SignUpFragmentDirections.actionSignUpFragmentToMealsActivity();
                              action.setLoggedinUser(user);
@@ -292,11 +343,11 @@ public class SignUpFragment extends Fragment {
     }
 
     private User createUser() {
-        String name = signUpFragmentBinding.etxtNameSignupActivity.getText().toString();
-        String email = signUpFragmentBinding.etxtEmailSignup.getText().toString();
-        String address = signUpFragmentBinding.etxtAddressSignup.getText().toString();
-        String phone = signUpFragmentBinding.etxtPhoneSignup.getText().toString();
-        User user = new User(name,email,phone,address,locationHelper);
+        String name = mSignUpFragmentBinding.etxtNameSignupActivity.getText().toString();
+        String email = mSignUpFragmentBinding.etxtEmailSignup.getText().toString();
+        String address = mSignUpFragmentBinding.etxtAddressSignup.getText().toString();
+        String phone = mSignUpFragmentBinding.etxtPhoneSignup.getText().toString();
+        User user = new User(name,email,phone,address, mLocationHelper);
         return user;
     }
 
