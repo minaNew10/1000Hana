@@ -1,6 +1,7 @@
 package com.example.alfhana.ui.mealsactivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
@@ -52,7 +53,9 @@ public class MealsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meals);
+        Log.i(TAG, "onCreate: ");
         Bundle b = getIntent().getExtras();
+        Log.i(TAG, "onCreate: " + b.getParcelable("loggedin_user"));
         user = b.getParcelable("loggedin_user");
 
         setupViewModel();

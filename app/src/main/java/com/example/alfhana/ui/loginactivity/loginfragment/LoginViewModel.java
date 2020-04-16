@@ -78,4 +78,8 @@ public class LoginViewModel extends ViewModel {
     private boolean isPasswordValid(String password) {
         return password != null && password.trim().length() > 5;
     }
+
+    public MutableLiveData<String> getErrLoginMsg() {
+        return userRepository.getErrMsgLogin();
+    }
 }

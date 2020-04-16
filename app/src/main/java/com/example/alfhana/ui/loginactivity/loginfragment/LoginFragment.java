@@ -2,6 +2,7 @@ package com.example.alfhana.ui.loginactivity.loginfragment;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -20,35 +21,37 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.example.alfhana.R;
 import com.example.alfhana.data.model.User;
 import com.example.alfhana.databinding.FragmentLoginBinding;
 import com.example.alfhana.ui.loginactivity.ViewModelsFactory;
+import com.google.firebase.auth.FirebaseAuth;
 
 
-public class LoginFragment extends Fragment {
+public class LoginFragment extends Fragment
+        implements FirebaseAuth.AuthStateListener {
 
     private static final String TAG = "login";
     LoginViewModel mLoginViewModel;
-    FragmentLoginBinding loginBinding;
-    MutableLiveData<Boolean> loginSuccessful;
-    MutableLiveData<User> userMutableLiveData = new MutableLiveData<>();
-    NavController navController;
+    FragmentLoginBinding mLoginBinding;
+    MutableLiveData<Boolean> mLoginSuccessfulMutableLiveData;
+    MutableLiveData<User> mUserMutableLiveData = new MutableLiveData<>();
+    NavController mNavController;
     User mUser;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        navController = NavHostFragment.findNavController(LoginFragment.this);
-
+        mNavController = NavHostFragment.findNavController(LoginFragment.this);
 
         // Inflate the layout for this fragment
-        loginBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_login, container, false);
-        loginBinding.btnLogin.setEnabled(true);
-        View v = loginBinding.getRoot();
-        loginBinding.setSubmit(this);
+        mLoginBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_login, container, false);
+        mLoginBinding.btnLogin.setEnabled(true);
+        View v = mLoginBinding.getRoot();
+        mLoginBinding.setSubmit(this);
 
         TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override
@@ -63,12 +66,12 @@ public class LoginFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                mLoginViewModel.loginDataChanged(loginBinding.etxtEmailLogin.getText().toString().trim(),
-                        loginBinding.etxtPsswrdLogin.getText().toString().trim());
+                mLoginViewModel.loginDataChanged(mLoginBinding.etxtEmailLogin.getText().toString().trim(),
+                        mLoginBinding.etxtPsswrdLogin.getText().toString().trim());
             }
         };
-        loginBinding.etxtEmailLogin.addTextChangedListener(afterTextChangedListener);
-        loginBinding.etxtPsswrdLogin.addTextChangedListener(afterTextChangedListener);
+        mLoginBinding.etxtEmailLogin.addTextChangedListener(afterTextChangedListener);
+        mLoginBinding.etxtPsswrdLogin.addTextChangedListener(afterTextChangedListener);
         return v;
     }
 
@@ -78,17 +81,9 @@ public class LoginFragment extends Fragment {
         setupViewModel();
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-
-
-    }
-
-
     public void goToSignUp() {
-        navController.setGraph(R.navigation.nav_graph);
-        navController.navigate(R.id.action_loginFragment_to_signUpFragment);
+        mNavController.setGraph(R.navigation.nav_graph);
+        mNavController.navigate(R.id.action_loginFragment_to_signUpFragment);
     }
 
     private void setupViewModel() {
@@ -100,26 +95,30 @@ public class LoginFragment extends Fragment {
                 if (loginFormState == null)
                     return;
                 if (loginFormState.isDataValid()) {
-                    loginBinding.btnLogin.setEnabled(true);
-                    loginBinding.btnLogin.setAlpha(1);
-                    loginBinding.btnLogin.setElevation(4f);
+                    mLoginBinding.btnLogin.setEnabled(true);
+                    mLoginBinding.btnLogin.setAlpha(1);
+                    mLoginBinding.btnLogin.setElevation(4f);
                 }
 
                 if (loginFormState.getUsernameError() != null) {
-                    loginBinding.etxtEmailLogin.setError(getString(loginFormState.getUsernameError()));
+                    mLoginBinding.btnLogin.setEnabled(false);
+                    mLoginBinding.btnLogin.setAlpha(0.5f);
+                    mLoginBinding.etxtEmailLogin.setError(getString(loginFormState.getUsernameError()));
                 }
                 if (loginFormState.getPasswordError() != null) {
+                    mLoginBinding.btnLogin.setEnabled(false);
+                    mLoginBinding.btnLogin.setAlpha(0.5f);
                     Integer pssWrdErr = loginFormState.getPasswordError();
                     getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-                    loginBinding.etxtPsswrdLogin.setError(getString(pssWrdErr));
+                    mLoginBinding.etxtPsswrdLogin.setError(getString(pssWrdErr));
 
                 }
 
             }
         });
 
-
-        userMutableLiveData.observe(getViewLifecycleOwner(), new Observer<User>() {
+        mLoginViewModel.getUserMutableLiveData();
+        mUserMutableLiveData.observe(getViewLifecycleOwner(), new Observer<User>() {
             @Override
             public void onChanged(User user) {
                 Log.i(TAG, "onChanged: " + user);
@@ -127,8 +126,10 @@ public class LoginFragment extends Fragment {
 //                    LoginFragmentDirections.ActionLoginFragmentToMealsActivity action = LoginFragmentDirections.actionLoginFragmentToMealsActivity();
 //                    action.setLoggedinUser(user);
 //                    Navigation.findNavController(getView()).navigate(action);
+                    mLoginBinding.progressBarLogin.setVisibility(View.INVISIBLE);
+                    mUser = user;
                     Bundle b = new Bundle();
-                    b.putParcelable("loggedin_user",user);
+                    b.putParcelable(getString(R.string.user_key),user);
                     NavOptions navOptions = new NavOptions.Builder().setPopUpTo(R.id.nav_graph,true).build();
                     Navigation.findNavController(getView()).navigate(R.id.mealsActivity,b,navOptions);
                 }
@@ -139,27 +140,64 @@ public class LoginFragment extends Fragment {
     }
 
     public void login() {
-        loginSuccessful =
-                mLoginViewModel.login(loginBinding.etxtEmailLogin.getEditableText().toString().trim(),
-                        loginBinding.etxtLayoutPsswrdLogin.getEditText().getText().toString());
+        mLoginBinding.btnLogin.setEnabled(false);
+        mLoginBinding.progressBarLogin.setVisibility(View.VISIBLE);
+        mLoginSuccessfulMutableLiveData =
+                mLoginViewModel.login(mLoginBinding.etxtEmailLogin.getEditableText().toString().trim(),
+                        mLoginBinding.etxtLayoutPsswrdLogin.getEditText().getText().toString());
 
-        loginSuccessful.observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+        mLoginSuccessfulMutableLiveData.observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
-                Log.i(TAG, "onChanged: " + aBoolean);
+
                 if (aBoolean) {
                     mLoginViewModel.getUserMutableLiveData().observe(getViewLifecycleOwner(), new Observer<User>() {
                         @Override
                         public void onChanged(User user) {
-                            Log.i(TAG, "onChanged: nested"+ user);
-                            userMutableLiveData.setValue(user);
+                            mUserMutableLiveData.setValue(user);
                         }
                     });
 
+                }else {
+                    mLoginBinding.progressBarLogin.setVisibility(View.INVISIBLE);
+                    mLoginViewModel.getErrLoginMsg().observe(getViewLifecycleOwner(), new Observer<String>() {
+                        @Override
+                        public void onChanged(String s) {
+                            Log.i(TAG, "onChanged: " + s);
+                            Toast.makeText(getActivity(),s,Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
             }
         });
 
+
+    }
+
+    @Override
+    public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+        mLoginBinding.btnLogin.setEnabled(isSignedIn());
+
+    }
+
+    private boolean isSignedIn() {
+        return FirebaseAuth.getInstance().getCurrentUser() != null;
+    }
+    @Override
+    public void onStart() {
+        super.onStart();
+        FirebaseAuth.getInstance().addAuthStateListener(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        FirebaseAuth.getInstance().removeAuthStateListener(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
 
     }
 }

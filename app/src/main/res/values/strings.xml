@@ -97,4 +97,5 @@
     <string name="meal_image">image of meal</string>
     <string name="app_logo">Application logo</string>
     <string name="add_to_cart">add meal to cart</string>
+    <string name="user_key" translatable="false">loggedin_user</string>
 </resources>

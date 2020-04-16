@@ -40,7 +40,7 @@ public class UserRepository {
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference = firebaseDatabase.getReference().getRoot();
     private StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("UsersPhotos/");
-
+    MutableLiveData<String> loginErrMsg;
 
 
     private UserRepository() {
@@ -58,7 +58,7 @@ public class UserRepository {
         return user;
     }
 
-    public MutableLiveData<Boolean> login(String email, String password) {
+    public  MutableLiveData<Boolean> login(String email, String password) {
        final MutableLiveData<Boolean> isLoginSuccessful = new MutableLiveData<>();
         // handle login
         firebaseAuth.signInWithEmailAndPassword(email,
@@ -83,9 +83,12 @@ public class UserRepository {
             public void onFailure(@NonNull Exception e) {
                 Log.i(TAG, "onFailure: repo" + e.getMessage());
                 isLoginSuccessful.setValue(false);
+                loginErrMsg = new MutableLiveData<>();
+                loginErrMsg.setValue(e.getMessage());
+
             }
         });
-        Log.i(TAG, "login: ");
+
         return isLoginSuccessful;
     }
 
@@ -216,5 +219,9 @@ public class UserRepository {
 
     public void logOut(){
         firebaseAuth.signOut();
+    }
+
+    public MutableLiveData<String> getErrMsgLogin() {
+        return loginErrMsg;
     }
 }
