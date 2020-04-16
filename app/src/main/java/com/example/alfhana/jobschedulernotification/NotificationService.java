@@ -31,7 +31,6 @@ public class NotificationService extends JobService {
     }
 
     private void sendNotification(String messageBody) {
-        Log.d("TEST","Notification: " + messageBody);
 
         Intent intent = new Intent(this, MealsActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

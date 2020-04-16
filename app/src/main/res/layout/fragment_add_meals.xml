@@ -101,6 +101,7 @@
             android:id="@+id/spinner_cat_save_meal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+
             android:ems="10"
             android:inputType="textPersonName"
             android:text="Name"
@@ -139,15 +140,14 @@
             android:layout_height="150dp"
             android:clickable="true"
             android:onClick="@{() -> mealFragment.askPermissions()}"
-            android:src="@drawable/icons8_person_64"
             android:visibility="visible"
+            android:contentDescription="@string/meal_image"
             app:layout_constraintBottom_toTopOf="@+id/etxt_name_add_meal_fragment"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/mid_guidline"
             app:layout_constraintTop_toTopOf="@+id/top_guideline"
             app:layout_constraintVertical_bias="0.43"
-            app:layout_constraintVertical_chainStyle="spread_inside"
-            app:srcCompat="@drawable/icons8_person_64" />
+            app:layout_constraintVertical_chainStyle="spread_inside" />
 
         <EditText
             android:id="@+id/etxt_price_add_meal_fragmetn"

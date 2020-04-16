@@ -122,7 +122,6 @@ public class MealsActivity extends AppCompatActivity {
                 .setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
                 .build();
         mDispatcher.mustSchedule(myJob);
-
         Toast.makeText(this, "not", Toast.LENGTH_LONG).show();
     }
 

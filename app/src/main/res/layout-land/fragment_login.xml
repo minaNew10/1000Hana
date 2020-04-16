@@ -114,6 +114,7 @@
                 android:alpha="0.5"
                 android:background="@drawable/rectangle_drawable"
                 android:fontFamily="cursive"
+                android:contentDescription="@string/login"
                 android:onClick="@{() -> submit.login()}"
                 android:padding="8dp"
                 android:text="@string/login"
@@ -169,6 +170,7 @@
 
             <ImageView
                 android:id="@+id/imageView3"
+                android:contentDescription="@string/app_logo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="44dp"
