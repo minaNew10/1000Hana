@@ -63,6 +63,7 @@ public class SignUpFragment extends Fragment {
     private String mImageFileName;
     MutableLiveData<User> mUserMutableLiveData = new MutableLiveData<>();
     LocationHelper mLocationHelper;
+    Toast register;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -357,11 +358,17 @@ public class SignUpFragment extends Fragment {
     }
     public void register(){
         mSignUpFragmentBinding.btnCreateAccount.setEnabled(false);
-        mRegisterationSuccessfulMutableLivedata = mSignUpViewModel.register(mSignUpFragmentBinding.etxtEmailSignup.getText().toString().trim(),
-                mSignUpFragmentBinding.etxtPsswrd.getText().toString().trim());
+        mSignUpFragmentBinding.progressBarSignup.setVisibility(View.VISIBLE);
+        register = Toast.makeText(getActivity(),getResources().getText(R.string.registering),Toast.LENGTH_SHORT);
+        register.show();
+        String email = mSignUpFragmentBinding.etxtEmailSignup.getText().toString().trim();
+        String psswrd = mSignUpFragmentBinding.etxtPsswrd.getText().toString().trim();
+        mRegisterationSuccessfulMutableLivedata = mSignUpViewModel.register(email,
+                psswrd);
         mRegisterationSuccessfulMutableLivedata.observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
+                register.cancel();
                 if(aBoolean){
                      mSignUpViewModel.storeImage(mImageFileName,mImageUri).observe(getViewLifecycleOwner(), new Observer<String>() {
                          @Override
@@ -369,12 +376,24 @@ public class SignUpFragment extends Fragment {
                              User user = createUser();
                              user.setImage(s);
                              mSignUpViewModel.saveUser(user);
+                             mSignUpFragmentBinding.progressBarSignup.setVisibility(View.INVISIBLE);
+                             register = Toast.makeText(getActivity(),getResources().getString(R.string.registeration_successful),Toast.LENGTH_LONG);
+                             register.show();
                              SignUpFragmentDirections.ActionSignUpFragmentToMealsActivity action =
                                      SignUpFragmentDirections.actionSignUpFragmentToMealsActivity();
                              action.setLoggedinUser(user);
                              Navigation.findNavController(getView()).navigate(action);
                          }
                      });
+                }else {
+                    mSignUpFragmentBinding.progressBarSignup.setVisibility(View.INVISIBLE);
+                    mSignUpViewModel.getErrRegisterMsg().observe(getViewLifecycleOwner(), new Observer<String>() {
+                        @Override
+                        public void onChanged(String s) {
+                            register = Toast.makeText(getActivity(),s,Toast.LENGTH_LONG);
+                            register.show();
+                        }
+                    });
                 }
             }
         });

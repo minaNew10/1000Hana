@@ -41,6 +41,7 @@ public class UserRepository {
     private DatabaseReference databaseReference = firebaseDatabase.getReference().getRoot();
     private StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("UsersPhotos/");
     MutableLiveData<String> loginErrMsg;
+    MutableLiveData<String> registerErrMsg;
 
 
     private UserRepository() {
@@ -163,10 +164,9 @@ public class UserRepository {
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                if (e instanceof FirebaseAuthWeakPasswordException) {
-                    registerationSuccessful.postValue(false);
-
-                }
+                registerationSuccessful.postValue(false);
+                registerErrMsg = new MutableLiveData<>();
+                registerErrMsg.postValue(e.getMessage());
             }
         });
         return registerationSuccessful;
@@ -223,5 +223,9 @@ public class UserRepository {
 
     public MutableLiveData<String> getErrMsgLogin() {
         return loginErrMsg;
+    }
+
+    public MutableLiveData<String> getRegisterErrMsg() {
+        return registerErrMsg;
     }
 }

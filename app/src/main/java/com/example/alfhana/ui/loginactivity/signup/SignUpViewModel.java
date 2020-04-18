@@ -103,4 +103,8 @@ public class SignUpViewModel extends ViewModel {
     public void setPsswrd(String psswrd) {
         this.psswrd.setValue(psswrd);
     }
+
+    public MutableLiveData<String> getErrRegisterMsg() {
+        return userRepository.getRegisterErrMsg();
+    }
 }
