@@ -58,9 +58,7 @@ dependencies {
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
 
-    def parceler = "1.1.12"
-    implementation "org.parceler:parceler-api:$parceler"
-    annotationProcessor "org.parceler:parceler:$parceler"
+
     implementation 'com.google.android.material:material:1.1.0'
 
 
@@ -71,17 +69,6 @@ dependencies {
     def material_version = "1.1.0"
     implementation "com.google.android.material:material:$material_version"
 
-    def dagger = "2.25.3"
-    implementation "com.google.dagger:dagger:$dagger"
-    annotationProcessor "com.google.dagger:dagger-compiler:$dagger"
-
-
-    def paging_version = "2.1.1"
-    implementation "androidx.paging:paging-runtime:$paging_version"
-    // alternatively - without Android dependencies for testing
-    testImplementation "androidx.paging:paging-common:$paging_version"
-    // RxJava support
-    implementation "androidx.paging:paging-rxjava2:$paging_version"
     implementation 'com.cepheuen.elegant-number-button:lib:1.0.2'
     implementation "androidx.annotation:annotation:1.1.0"
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'

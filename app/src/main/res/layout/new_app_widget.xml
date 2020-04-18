@@ -4,34 +4,15 @@
     android:padding="@dimen/widget_margin"
     android:background="@drawable/widget_background"
     android:orientation="vertical" >
-
-    <LinearLayout
-        android:background="@drawable/rectangle_drawable"
-        style="@style/widget_views"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
         <TextView
-            android:id="@+id/id_label"
+            android:id="@+id/txtv_widget_orders"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             style="@style/widget_text" />
 
         <TextView
-            android:id="@+id/id_value"
+            android:id="@+id/txtv_widget_total"
+            style="@style/widget_text"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="."
-            style="@style/widget_text" />
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/appwidget_text"
-        style="@style/widget_views"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        android:background="@drawable/rectangle_drawable"/>
+            android:layout_height="wrap_content" />
 </LinearLayout>

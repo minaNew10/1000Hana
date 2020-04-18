@@ -5,6 +5,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -84,11 +86,27 @@ public class CartFragment extends Fragment {
             @Override
             public void onChanged(Long aLong) {
                 request.setOrderId(aLong);
+                extractRequestForWidget(request);
                 mViewModel.saveRequestToServer(request);
             }
         });
 
         mViewModel.delOrders();
+    }
+
+    private void extractRequestForWidget(Request request) {
+        StringBuilder sb = new StringBuilder();
+        List<Order> orders = request.getOrders();
+        for (int i = 0; i < orders.size() -1 ; i++) {
+            Order order = orders.get(i);
+            sb.append(order.productName + ", ");
+        }
+        sb.append(orders.get(orders.size()-1).productName + ".");
+        SharedPreferences sharedPref = getActivity().getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(getString(R.string.key_orders_shared_pref),sb.toString());
+        editor.putString(getString(R.string.key_total_shared_pref),request.getTotal() + " L.E.");
+        editor.commit();
     }
 
     private String calculateTotal(){

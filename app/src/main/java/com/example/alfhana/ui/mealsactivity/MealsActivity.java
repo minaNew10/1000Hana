@@ -65,14 +65,7 @@ public class MealsActivity extends AppCompatActivity {
         //        NavController navController = Navigation.findNavController(this,R.id.nav_host_fragment);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
 
@@ -125,7 +118,6 @@ public class MealsActivity extends AppCompatActivity {
                 .setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
                 .build();
         mDispatcher.mustSchedule(myJob);
-        Toast.makeText(this, "not", Toast.LENGTH_LONG).show();
     }
 
     private void setupViewModel() {

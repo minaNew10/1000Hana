@@ -16,18 +16,18 @@ public class Request implements Parcelable {
     public String name;
     public String address;
     public String total;
-    public List<Order> foods;
+    public List<Order> orders;
 
 
     public Request() {
     }
 
-    public Request(String phone, String name, String address, String total, List<Order> foods) {
+    public Request(String phone, String name, String address, String total, List<Order> orders) {
         this.phone = phone;
         this.name = name;
         this.address = address;
         this.total = total;
-        this.foods = foods;
+        this.orders = orders;
     }
 
     protected Request(Parcel in) {
@@ -81,12 +81,12 @@ public class Request implements Parcelable {
         this.total = total;
     }
 
-    public List<Order> getFoods() {
-        return foods;
+    public List<Order> getOrders() {
+        return orders;
     }
 
-    public void setFoods(List<Order> foods) {
-        this.foods = foods;
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
     }
 
     public long getOrderId() {

@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.widget.RemoteViews;
 
@@ -31,25 +32,12 @@ public class NewAppWidget extends AppWidgetProvider {
 
 
         final RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.new_app_widget);
-//        AppExecutors.getInstance().mainThread().execute(new Runnable() {
-//            @Override
-//            public void run() {
-//                one = RequestRepository.getInstance().getRequestsList(context);
-//                if(one != null && one.size() < 1) {
-//                    views.setTextViewText(R.id.appwidget_text, one.get(0).getName());
-//                }
-//            }
-//        });
-
-        CharSequence widgetText = context.getString(R.string.appwidget_text);
-
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://google.com"));
-        // In widget we are not allowing to use intents as usually. We have to use PendingIntent instead of 'startActivity'
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-        // Here the basic operations the remote view can do.
-        views.setOnClickPendingIntent(R.id.appwidget_text, pendingIntent);
-        // Instruct the widget manager to update the widget
-        appWidgetManager.updateAppWidget(appWidgetId, views);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getResources().getString(R.string.shared_pref),context.MODE_PRIVATE);
+        String request = sharedPreferences.getString(context.getResources().getString(R.string.key_orders_shared_pref),"NO Orders");
+        String total = sharedPreferences.getString(context.getResources().getString(R.string.key_total_shared_pref),"");
+        views.setTextViewText(R.id.txtv_widget_orders,request);
+        views.setTextViewText(R.id.txtv_widget_total,total);
+        appWidgetManager.updateAppWidget(appWidgetId,views);
     }
 //    This is called to update the App Widget at intervals defined by the updatePeriodMillis attribute.
     @Override
