@@ -56,6 +56,9 @@ public class SignUpFragment extends Fragment {
     MutableLiveData<Boolean> mRegisterationSuccessfulMutableLivedata;
     SignUpFragmentBinding mSignUpFragmentBinding;
     private String mCurrentPhotoPath;
+    private MutableLiveData<User> mUserInput;
+    private MutableLiveData<String> psswrd;
+    private static final String TAG = "SignUpFragment";
     Uri mImageUri;
     private String mImageFileName;
     MutableLiveData<User> mUserMutableLiveData = new MutableLiveData<>();
@@ -99,7 +102,7 @@ public class SignUpFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mSignUpViewModel = ViewModelProviders.of(this).get(SignUpViewModel.class);
+        mSignUpViewModel = ViewModelProviders.of(getActivity()).get(SignUpViewModel.class);
         mUserMutableLiveData.observe(getViewLifecycleOwner(), new Observer<User>() {
             @Override
             public void onChanged(User user) {
@@ -136,10 +139,47 @@ public class SignUpFragment extends Fragment {
                 }
             }
         });
+
         Uri imageUri = mSignUpViewModel.getUserImageUri();
         if(imageUri != null){
             mSignUpFragmentBinding.imgvUser.setImageURI(imageUri);
         }
+
+        mUserInput = mSignUpViewModel.getUserInput();
+        mUserInput.observe(getViewLifecycleOwner(), new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                String name = user.getDisplayName();
+                if(!name.isEmpty())
+                    mSignUpFragmentBinding.etxtNameSignupActivity.setText(name);
+                String email = user.getEmail();
+                if(!email.isEmpty())
+                    mSignUpFragmentBinding.etxtEmailSignup.setText(email);
+                String address = user.getAddress();
+                if(!address.isEmpty())
+                    mSignUpFragmentBinding.etxtAddressSignup.setText(address);
+                String phone = user.getPhone();
+                if(!phone.isEmpty())
+                    mSignUpFragmentBinding.etxtPhoneSignup.setText(phone);
+            }
+        });
+        psswrd = mSignUpViewModel.getPsswrd();
+        psswrd.observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                if(!s.isEmpty())
+                    mSignUpFragmentBinding.etxtPsswrd.setText(s);
+            }
+        });
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        User user = createUser();
+        Log.i(TAG, "onPause: " + user.getDisplayName());
+        mSignUpViewModel.setUserInput(user);
+        mSignUpViewModel.setPsswrd(mSignUpFragmentBinding.etxtPsswrd.getText().toString());
     }
 
     //when the user clicks on the userImage

@@ -16,10 +16,13 @@ public class SignUpViewModel extends ViewModel {
     private MutableLiveData<Boolean> isRegistered;
     private MutableLiveData<Boolean> isSaved;
     private MutableLiveData<String> storedUri;
+    private MutableLiveData<User> userInput;
+    private MutableLiveData<String> psswrd;
     private Uri userImageUri;
     private MutableLiveData<SignUpFormState> signUpFormStateMutableLiveData = new MutableLiveData<>();
     public SignUpViewModel() {
-
+        userInput = new MutableLiveData<>();
+        psswrd = new MutableLiveData<>();
     }
 
     public MutableLiveData<Boolean> register(String name,String psswrd) {
@@ -84,5 +87,20 @@ public class SignUpViewModel extends ViewModel {
 
     public Uri getUserImageUri() {
         return userImageUri;
+    }
+
+    public MutableLiveData<User> getUserInput() {
+        return userInput;
+    }
+    public void setUserInput(User user){
+        userInput.setValue(user);
+    }
+
+    public MutableLiveData<String> getPsswrd() {
+        return psswrd;
+    }
+
+    public void setPsswrd(String psswrd) {
+        this.psswrd.setValue(psswrd);
     }
 }
