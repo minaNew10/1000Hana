@@ -55,7 +55,7 @@ public class SignUpViewModel extends ViewModel {
     }
 
     private boolean isUserNameValid(String name) {
-        if(name.isEmpty())
+        if(name.length() < 4)
             return false;
         return true;
     }

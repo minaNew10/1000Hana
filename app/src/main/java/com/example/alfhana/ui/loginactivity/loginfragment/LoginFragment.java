@@ -40,7 +40,7 @@ public class LoginFragment extends Fragment
     MutableLiveData<User> mUserMutableLiveData = new MutableLiveData<>();
     NavController mNavController;
     User mUser;
-
+    TextWatcher afterTextChangedListener;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -53,7 +53,7 @@ public class LoginFragment extends Fragment
         View v = mLoginBinding.getRoot();
         mLoginBinding.setSubmit(this);
 
-        TextWatcher afterTextChangedListener = new TextWatcher() {
+        afterTextChangedListener = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 // ignore
@@ -66,8 +66,9 @@ public class LoginFragment extends Fragment
 
             @Override
             public void afterTextChanged(Editable s) {
-                mLoginViewModel.loginDataChanged(mLoginBinding.etxtEmailLogin.getText().toString().trim(),
-                        mLoginBinding.etxtPsswrdLogin.getText().toString().trim());
+                String email = mLoginBinding.etxtEmailLogin.getText().toString().trim();
+                String psswrd = mLoginBinding.etxtPsswrdLogin.getText().toString().trim();
+                mLoginViewModel.loginDataChanged(email,psswrd);
             }
         };
         mLoginBinding.etxtEmailLogin.addTextChangedListener(afterTextChangedListener);
@@ -79,6 +80,12 @@ public class LoginFragment extends Fragment
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setupViewModel();
+    }
+
+    @Override
+    public void onDestroyView() {
+
+        super.onDestroyView();
     }
 
     public void goToSignUp() {

@@ -70,7 +70,7 @@ public class SignUpFragment extends Fragment {
         mSignUpFragmentBinding.setSignup(this);
         Bundle b = getArguments();
         if(b != null){
-            mLocationHelper =   b.getParcelable("location");
+            mLocationHelper =   b.getParcelable(getString(R.string.key_location));
             if(mLocationHelper != null) {
                 mSignUpFragmentBinding.txtvLocationSaved.setVisibility(View.VISIBLE);
                 mSignUpFragmentBinding.txtvLocationSaved.setText(R.string.location_saved);
@@ -188,7 +188,7 @@ public class SignUpFragment extends Fragment {
         if (allPermissionsGranted()) {
             createChooserIntent();
         } else {
-            ActivityCompat.requestPermissions(getActivity(), REQUIRED_PERMISSIONS, RC_PERMESIONS);
+            requestPermissions( REQUIRED_PERMISSIONS, RC_PERMESIONS);
         }
     }
 
@@ -246,47 +246,48 @@ public class SignUpFragment extends Fragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == RC_PERMESIONS) {
-            for (int i = 0, len = permissions.length; i < len; i++) {
-                String permission = permissions[i];
-                if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
-                    // user rejected the permission
-                    boolean showRationale = shouldShowRequestPermissionRationale(permission);
-                    if (!showRationale) {
-                        // user also CHECKED "never ask again"
-                        // you can either enable some fall back,
-                        // disable features of your app
-                        // or open another dialog explaining
-                        // again the permission and directing to
-                        // the app setting
-                        AlertDialog show = new AlertDialog.Builder(getActivity())
-                                .setTitle(getString(R.string.permission_camera_denied_rationale))
-                                .setMessage(getString(R.string.permission_denied_message))
-                                .setPositiveButton(getString(R.string.enable), new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                                        Uri uri = Uri.fromParts("package", getActivity().getPackageName(), null);
-                                        intent.setData(uri);
-                                        startActivityForResult(intent, RC_PERMISSIONSETTINGS);
-                                    }
-                                }).show();
-                    } else if (Manifest.permission.CAMERA.equals(permission)) {
-//                        showRationale(permission, R.string.permission_denied_contacts);
-                        // user did NOT check "never ask again"
-                        // this is a good place to explain the user
-                        // why you need the permission and ask if he wants
-                        // to accept it (the rationale)
-                        Toast.makeText(getActivity(), getString(R.string.permission_camera_denied_rationale), Toast.LENGTH_LONG).show();
 
-                    }
-//                    else if ( /* possibly check more permissions...*/) {
+        if (requestCode == RC_PERMESIONS) {
+            Log.i(TAG, "onRequestPermissionsResult: "  );
+
+                if (grantResults[0] == PackageManager.PERMISSION_DENIED && grantResults[1] == PackageManager.PERMISSION_DENIED) {
+//                    // user rejected the permission
+//                    boolean showRationale = shouldShowRequestPermissionRationale(permission);
+//                    if (!showRationale) {
+//                        // user also CHECKED "never ask again"
+//                        // you can either enable some fall back,
+//                        // disable features of your app
+//                        // or open another dialog explaining
+//                        // again the permission and directing to
+//                        // the app setting
+//                        AlertDialog show = new AlertDialog.Builder(getActivity())
+//                                .setTitle(getString(R.string.permission_camera_denied_rationale))
+//                                .setMessage(getString(R.string.permission_denied_message))
+//                                .setPositiveButton(getString(R.string.enable), new DialogInterface.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(DialogInterface dialogInterface, int i) {
+//                                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+//                                        Uri uri = Uri.fromParts("package", getActivity().getPackageName(), null);
+//                                        intent.setData(uri);
+//                                        startActivityForResult(intent, RC_PERMISSIONSETTINGS);
+//                                    }
+//                                }).show();
+//                    } else if (Manifest.permission.CAMERA.equals(permission)) {
+////                        showRationale(permission, R.string.permission_denied_contacts);
+//                        // user did NOT check "never ask again"
+//                        // this is a good place to explain the user
+//                        // why you need the permission and ask if he wants
+//                        // to accept it (the rationale)
+//                        Toast.makeText(getActivity(), getString(R.string.permission_camera_denied_rationale), Toast.LENGTH_LONG).show();
+//
 //                    }
-                } else {
-                    dispatchTakePictureIntent();
+////                    else if ( /* possibly check more permissions...*/) {
+////                    }
+                }
+                else {
+                    createChooserIntent();
                 }
 
-            }
         }
 
     }

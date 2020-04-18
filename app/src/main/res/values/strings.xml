@@ -98,5 +98,6 @@
     <string name="app_logo">Application logo</string>
     <string name="add_to_cart">add meal to cart</string>
     <string name="user_key" translatable="false">loggedin_user</string>
-    <string name="user_name_err">User Name Should not be empty</string>
+    <string name="user_name_err">User Name Should not be less than 4 Chars</string>
+    <string name="key_location" translatable="false">location</string>
 </resources>
