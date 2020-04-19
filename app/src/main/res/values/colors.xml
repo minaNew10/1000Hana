@@ -5,4 +5,8 @@
     <color name="colorPrimaryLight">#fffde7</color>
     <color name="colorAccent">#f44336</color>
     <color name="overlaybackground">#BDBDBD</color>
+    <color name="cart_one">#F57F17</color>
+    <color name="cart_dark">#F57F17</color>
+    <color name="cart_light">#FFE529</color>
+    <color name="cart_circle">#FFB229</color>
 </resources>

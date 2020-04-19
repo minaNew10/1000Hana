@@ -32,6 +32,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -53,10 +54,10 @@ public class MealsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meals);
-        Log.i(TAG, "onCreate: ");
+
         Bundle b = getIntent().getExtras();
-        Log.i(TAG, "onCreate: " + b.getParcelable("loggedin_user"));
-        user = b.getParcelable("loggedin_user");
+
+        user = b.getParcelable(getString(R.string.user_key));
 
         setupViewModel();
 
@@ -146,10 +147,8 @@ public class MealsActivity extends AppCompatActivity {
         switch (id) {
             case R.id.action_logout:
                 userRepository.logOut();
-                finish();
+                this.finishAffinity();
                 break;
-
-
         }
         return super.onOptionsItemSelected(item);
     }

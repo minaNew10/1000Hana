@@ -54,7 +54,7 @@
             android:id="@+id/btn_cart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_shopping_cart_black_24dp"
+            android:src="@drawable/add_to_cart"
             app:backgroundTint="@android:color/white"
             app:elevation="6dp"
             android:contentDescription="@string/add_to_cart"
@@ -132,20 +132,22 @@
                             android:layout_marginStart="8dp"
                             android:layout_marginTop="8dp"
                             android:layout_marginBottom="18dp"
+                            app:backGroundColor="@color/colorPrimaryDark"
                             app:finalNumber="20"
                             app:initialNumber="1"
-                            app:textSize="12sp">
+                            app:textSize="8sp">
 
                         </com.cepheuen.elegantnumberbutton.view.ElegantNumberButton>
                     </LinearLayout>
 
                 </androidx.cardview.widget.CardView>
 
-                <androidx.cardview.widget.CardView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:elevation="5dp"
-                    app:cardUseCompatPadding="true">
+
+                    >
 
                     <TextView
                         android:id="@+id/txtv_Meal_description"
@@ -157,7 +159,7 @@
                         android:text="@{meal.description}"
                         android:textColor="@android:color/black"
                         android:textSize="14sp" />
-                </androidx.cardview.widget.CardView>
+                </LinearLayout>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimaryLight"
     tools:context=".ui.mealsactivity.userfragments.poultry.PoultryFragment">
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_poultry"

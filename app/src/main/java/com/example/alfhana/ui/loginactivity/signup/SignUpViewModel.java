@@ -1,6 +1,7 @@
 package com.example.alfhana.ui.loginactivity.signup;
 
 import android.net.Uri;
+import android.util.Log;
 import android.util.Patterns;
 
 import androidx.lifecycle.MutableLiveData;
@@ -19,6 +20,7 @@ public class SignUpViewModel extends ViewModel {
     private MutableLiveData<User> userInput;
     private MutableLiveData<String> psswrd;
     private Uri userImageUri;
+    private String imageFileName;
     private MutableLiveData<SignUpFormState> signUpFormStateMutableLiveData = new MutableLiveData<>();
     public SignUpViewModel() {
         userInput = new MutableLiveData<>();
@@ -84,9 +86,16 @@ public class SignUpViewModel extends ViewModel {
     public void setImageUri(Uri mImageUri) {
         this.userImageUri = mImageUri;
     }
+    public void setImageFileName(String imageFileName) {
+        this.imageFileName = imageFileName;
+    }
 
     public Uri getUserImageUri() {
         return userImageUri;
+    }
+
+    public String getImageFileName() {
+        return imageFileName;
     }
 
     public MutableLiveData<User> getUserInput() {

@@ -20,6 +20,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -81,15 +82,18 @@ public class SignUpFragment extends Fragment {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 // ignore
+                Log.i("formState", "beforeTextChanged: ");
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 // ignore
+                Log.i("formState", "onTextChanged: ");
             }
 
             @Override
             public void afterTextChanged(Editable s) {
+                Log.i("formState", "afterTextChanged: " );
                 mSignUpViewModel.signUpDataChanged(mSignUpFragmentBinding.etxtNameSignupActivity.getText().toString().trim(),
                         mSignUpFragmentBinding.etxtPsswrd.getText().toString().trim(),mSignUpFragmentBinding.etxtEmailSignup.getText().toString().trim());
             }
@@ -101,7 +105,7 @@ public class SignUpFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    public void onActivityCreated(@Nullable final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mSignUpViewModel = ViewModelProviders.of(getActivity()).get(SignUpViewModel.class);
         mUserMutableLiveData.observe(getViewLifecycleOwner(), new Observer<User>() {
@@ -113,27 +117,35 @@ public class SignUpFragment extends Fragment {
                 Navigation.findNavController(getView()).navigate(action);
             }
         });
+
         mSignUpViewModel.getSignUpFormState().observe(getViewLifecycleOwner(), new Observer<SignUpFormState>() {
             @Override
             public void onChanged(SignUpFormState signUpFormState) {
-                if(signUpFormState == null)
+                Log.i("formState", "onChanged: " + signUpFormState);
+                if(signUpFormState == null){
+                    Log.i("formState", "onChanged: signFormState = null");
                     return;
+                }
                 if(signUpFormState.isDataValid()){
+                    Log.i("formState", "onChanged: isDataValid");
                     mSignUpFragmentBinding.btnCreateAccount.setEnabled(true);
                     mSignUpFragmentBinding.btnCreateAccount.setAlpha(1);
                     mSignUpFragmentBinding.btnCreateAccount.setElevation(4f);
                 }
                 if(signUpFormState.getUsernameError() != null){
+                    Log.i("formState", "getUsernameError ");
                     mSignUpFragmentBinding.btnCreateAccount.setEnabled(false);
                     mSignUpFragmentBinding.btnCreateAccount.setAlpha(0.5f);
                     mSignUpFragmentBinding.etxtNameSignupActivity.setError(getString(signUpFormState.getUsernameError()));
                 }
                 if(signUpFormState.getEmailError() != null){
+                    Log.i("formState", "getEmailError ");
                     mSignUpFragmentBinding.btnCreateAccount.setEnabled(false);
                     mSignUpFragmentBinding.btnCreateAccount.setAlpha(0.5f);
                     mSignUpFragmentBinding.etxtEmailSignup.setError(getString(signUpFormState.getEmailError()));
                 }
                 if(signUpFormState.getPasswordError() != null){
+                    Log.i("formState", "getpasswordError ");
                     mSignUpFragmentBinding.btnCreateAccount.setEnabled(false);
                     mSignUpFragmentBinding.btnCreateAccount.setAlpha(0.5f);
                     mSignUpFragmentBinding.etxtPsswrd.setError(getString(signUpFormState.getPasswordError()));
@@ -172,6 +184,8 @@ public class SignUpFragment extends Fragment {
                     mSignUpFragmentBinding.etxtPsswrd.setText(s);
             }
         });
+        mImageUri = mSignUpViewModel.getUserImageUri();
+        mImageFileName = mSignUpViewModel.getImageFileName();
     }
 
     @Override
@@ -208,19 +222,6 @@ public class SignUpFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == RC_CAMERA_INTENT) {
-                File f = new File(mCurrentPhotoPath);
-                mImageUri = Uri.fromFile(f);
-                mSignUpFragmentBinding.imgvUser.setImageURI(mImageUri);
-                Log.d("tag", "ABsolute Url of Image is " + Uri.fromFile(f));
-            }
-            if (requestCode == RC_GALLERY) {
-                mImageUri = data.getData();
-                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                mImageFileName = "JPEG_" + timeStamp + "." + getFileExt(mImageUri);
-                Log.d("tag", "onActivityResult: Gallery Image Uri:  " + mImageFileName);
-                mSignUpFragmentBinding.imgvUser.setImageURI(mImageUri);
-            }
             if (requestCode == RC_CHOOSER_INTENT) {
                 if(data != null) {
                     mImageUri = data.getData();
@@ -230,9 +231,11 @@ public class SignUpFragment extends Fragment {
                 }else {
                     File f = new File(mCurrentPhotoPath);
                     mImageUri = Uri.fromFile(f);
-                    Log.d("tag", "ABsolute Url of Image is " + Uri.fromFile(f));
+                    Log.d("uri", "in onActivity result else " + mImageUri);
                 }
+                Log.d("uri", "in onActivity result setImageUri " + mImageUri);
                 mSignUpViewModel.setImageUri(mImageUri);
+                mSignUpViewModel.setImageFileName(mImageFileName);
                 mSignUpFragmentBinding.imgvUser.setImageURI(mSignUpViewModel.getUserImageUri());
             }
         }
@@ -357,6 +360,7 @@ public class SignUpFragment extends Fragment {
         startActivityForResult(chooserIntent, RC_CHOOSER_INTENT);
     }
     public void register(){
+        Log.i("uri", "register: "+ mImageUri);
         mSignUpFragmentBinding.btnCreateAccount.setEnabled(false);
         mSignUpFragmentBinding.progressBarSignup.setVisibility(View.VISIBLE);
         register = Toast.makeText(getActivity(),getResources().getText(R.string.registering),Toast.LENGTH_SHORT);
@@ -370,6 +374,7 @@ public class SignUpFragment extends Fragment {
             public void onChanged(Boolean aBoolean) {
                 register.cancel();
                 if(aBoolean){
+                    Log.i("uri", "onChanged: " + mImageUri);
                      mSignUpViewModel.storeImage(mImageFileName,mImageUri).observe(getViewLifecycleOwner(), new Observer<String>() {
                          @Override
                          public void onChanged(String s) {
@@ -379,10 +384,15 @@ public class SignUpFragment extends Fragment {
                              mSignUpFragmentBinding.progressBarSignup.setVisibility(View.INVISIBLE);
                              register = Toast.makeText(getActivity(),getResources().getString(R.string.registeration_successful),Toast.LENGTH_LONG);
                              register.show();
-                             SignUpFragmentDirections.ActionSignUpFragmentToMealsActivity action =
-                                     SignUpFragmentDirections.actionSignUpFragmentToMealsActivity();
-                             action.setLoggedinUser(user);
-                             Navigation.findNavController(getView()).navigate(action);
+//                             SignUpFragmentDirections.ActionSignUpFragmentToMealsActivity action =
+//                                     SignUpFragmentDirections.actionSignUpFragmentToMealsActivity();
+//                             action.setLoggedinUser(user);
+//                             Navigation.findNavController(getView()).navigate(action);
+                             Bundle b = new Bundle();
+                             b.putParcelable(getString(R.string.user_key),user);
+                             NavOptions navOptions = new NavOptions.Builder().setPopUpTo(R.id.nav_graph,true).build();
+                             Navigation.findNavController(getView()).navigate(R.id.mealsActivity,b,navOptions);
+
                          }
                      });
                 }else {

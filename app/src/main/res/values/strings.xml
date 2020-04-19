@@ -100,7 +100,7 @@
     <string name="user_key" translatable="false">loggedin_user</string>
     <string name="user_name_err">User Name Should not be less than 4 Chars</string>
     <string name="key_location" translatable="false">location</string>
-    <string name="registering">Regestering</string>
+    <string name="registering">Registering... please wait</string>
     <string name="shared_pref">shared pref</string>
     <string name="key_orders_shared_pref">key orders for widget</string>
     <string name="key_total_shared_pref">total price</string>
