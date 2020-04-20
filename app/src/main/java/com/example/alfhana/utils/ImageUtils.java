@@ -1,5 +1,6 @@
 package com.example.alfhana.utils;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -21,6 +22,8 @@ import static com.example.alfhana.ui.loginactivity.signup.SignUpFragment.RC_CHOO
 
 //I'm using these methods in more than one class
 public class ImageUtils {
+    public static final String YYYY_M_MDD_H_HMMSS = "yyyyMMdd_HHmmss";
+    public static final String COM_EXAMPLE_ALFHANA_ANDROID_FILEPROVIDER = "com.example.alfhana.android.fileprovider";
     Activity activity;
     Uri imageUri;
     private String imageFileName;
@@ -37,7 +40,7 @@ public class ImageUtils {
 
     }
 
-    private final String[] REQUIRED_PERMISSIONS = new String[]{"android.permission.CAMERA", "android.permission.READ_EXTERNAL_STORAGE"};
+    private final String[] REQUIRED_PERMISSIONS = new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE};
 
 
     public boolean allPermissionsGranted() {
@@ -53,14 +56,14 @@ public class ImageUtils {
 
 
     private String createImageFileName(){
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
+        String timeStamp = new SimpleDateFormat(YYYY_M_MDD_H_HMMSS).format(new Date());
+        String imageFileName = activity.getString(R.string.jpeg) + timeStamp + "_";
         return imageFileName;
     }
 
     public String createImageFilenameWithExtention(){
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        imageFileName = "JPEG_" + timeStamp + "." + getFileExt();
+        String timeStamp = new SimpleDateFormat(YYYY_M_MDD_H_HMMSS).format(new Date());
+        imageFileName =activity.getResources().getString(R.string.jpeg) + timeStamp + "." + getFileExt();
         return imageFileName;
     }
 
@@ -81,7 +84,7 @@ public class ImageUtils {
             // Continue only if the File was successfully created
             if (photoFile != null) {
                 Uri photoURI = FileProvider.getUriForFile(activity,
-                        "com.example.alfhana.android.fileprovider",
+                        COM_EXAMPLE_ALFHANA_ANDROID_FILEPROVIDER,
                         photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{takePictureIntent});
@@ -147,7 +150,7 @@ public class ImageUtils {
             // Continue only if the File was successfully created
             if (photoFile != null) {
                 Uri photoURI = FileProvider.getUriForFile(activity,
-                        "com.example.alfhana.android.fileprovider",
+                        COM_EXAMPLE_ALFHANA_ANDROID_FILEPROVIDER,
                         photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 activity.startActivityForResult(takePictureIntent, RC_CAMERA_INTENT);

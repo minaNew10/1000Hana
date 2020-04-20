@@ -31,7 +31,6 @@ import java.util.List;
 
 public class MealRepository {
     private static volatile MealRepository instance;
-    private static final String TAG = "MealRepository";
 
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference = firebaseDatabase.getReference().getRoot();
@@ -50,7 +49,7 @@ public class MealRepository {
         return instance;
     }
     public FirebaseQueryLiveData getMeals(@Meal.Category String category){
-        Log.i(TAG, "getMeals: ");
+
         Query query = databaseReference
                 .child("meals")
                 .child(category);
@@ -59,7 +58,7 @@ public class MealRepository {
         return mealsList;
     }
     public void getMeals2(@Meal.Category String category){
-        Log.i(TAG, "getMeals: ");
+
 //        final MutableLiveData<List<Meal>> mealsList  = new MutableLiveData<>();
         databaseReference
                 .child("meals")
@@ -68,7 +67,7 @@ public class MealRepository {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
-                            Log.i(TAG, "onDataChange: " + dataSnapshot1.getValue());
+
                         }
                     }
 

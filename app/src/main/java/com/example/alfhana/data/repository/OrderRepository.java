@@ -13,7 +13,7 @@ import java.util.List;
 public class OrderRepository {
     private static AppDatabase appDatabase;
     private static volatile OrderRepository instance;
-    private static final String TAG = "MealRepository";
+
     private OrderRepository(){
 
     }

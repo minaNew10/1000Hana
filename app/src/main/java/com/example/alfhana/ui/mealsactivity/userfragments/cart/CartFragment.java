@@ -33,7 +33,7 @@ import java.util.List;
 
 
 public class CartFragment extends Fragment {
-    private static final String TAG = "CartFragment";
+
     private CartViewModel mViewModel;
     private CartFragmentBinding mCartFragmentBinding;
     private List<Order> mCurrOrders;
@@ -64,7 +64,7 @@ public class CartFragment extends Fragment {
         mViewModel.getOrders(getActivity()).observe(getViewLifecycleOwner(), new Observer<List<Order>>() {
             @Override
             public void onChanged(List<Order> orders) {
-                Log.i(TAG, "onChanged: "+ orders.size());
+
                 mCurrOrders = orders;
                 mCartAdapter.setItems(mCurrOrders);
                 mCartFragmentBinding.txtvTotal.setText(calculateTotal());
@@ -105,7 +105,7 @@ public class CartFragment extends Fragment {
         SharedPreferences sharedPref = getActivity().getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(getString(R.string.key_orders_shared_pref),sb.toString());
-        editor.putString(getString(R.string.key_total_shared_pref),request.getTotal() + " L.E.");
+        editor.putString(getString(R.string.key_total_shared_pref),request.getTotal() + getString(R.string.pound));
         editor.commit();
     }
 

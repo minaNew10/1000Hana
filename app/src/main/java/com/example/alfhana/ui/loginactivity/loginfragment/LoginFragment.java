@@ -33,7 +33,6 @@ import com.google.firebase.auth.FirebaseAuth;
 public class LoginFragment extends Fragment
         implements FirebaseAuth.AuthStateListener {
 
-    private static final String TAG = "login";
     LoginViewModel mLoginViewModel;
     FragmentLoginBinding mLoginBinding;
     MutableLiveData<Boolean> mLoginSuccessfulMutableLiveData;
@@ -128,7 +127,7 @@ public class LoginFragment extends Fragment
         mUserMutableLiveData.observe(getViewLifecycleOwner(), new Observer<User>() {
             @Override
             public void onChanged(User user) {
-                Log.i(TAG, "onChanged: " + user);
+
                 if (user != null) {
 //                    LoginFragmentDirections.ActionLoginFragmentToMealsActivity action = LoginFragmentDirections.actionLoginFragmentToMealsActivity();
 //                    action.setLoggedinUser(user);
@@ -170,7 +169,7 @@ public class LoginFragment extends Fragment
                     mLoginViewModel.getErrLoginMsg().observe(getViewLifecycleOwner(), new Observer<String>() {
                         @Override
                         public void onChanged(String s) {
-                            Log.i(TAG, "onChanged: " + s);
+
                             Toast.makeText(getActivity(),s,Toast.LENGTH_SHORT).show();
                         }
                     });

@@ -53,13 +53,13 @@ public class SignUpFragment extends Fragment {
     private static final int RC_PERMESIONS = 101;
     public static final int RC_CHOOSER_INTENT = 102;
     private SignUpViewModel mSignUpViewModel;
-    private final String[] REQUIRED_PERMISSIONS = new String[]{"android.permission.CAMERA", "android.permission.READ_EXTERNAL_STORAGE"};
+    private final String[] REQUIRED_PERMISSIONS = new String[]{Manifest.permission.CAMERA,Manifest.permission.READ_EXTERNAL_STORAGE};
     MutableLiveData<Boolean> mRegisterationSuccessfulMutableLivedata;
     SignUpFragmentBinding mSignUpFragmentBinding;
     private String mCurrentPhotoPath;
     private MutableLiveData<User> mUserInput;
     private MutableLiveData<String> psswrd;
-    private static final String TAG = "SignUpFragment";
+
     Uri mImageUri;
     private String mImageFileName;
     MutableLiveData<User> mUserMutableLiveData = new MutableLiveData<>();
@@ -81,19 +81,17 @@ public class SignUpFragment extends Fragment {
         TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // ignore
-                Log.i("formState", "beforeTextChanged: ");
+
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // ignore
-                Log.i("formState", "onTextChanged: ");
+
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                Log.i("formState", "afterTextChanged: " );
+
                 mSignUpViewModel.signUpDataChanged(mSignUpFragmentBinding.etxtNameSignupActivity.getText().toString().trim(),
                         mSignUpFragmentBinding.etxtPsswrd.getText().toString().trim(),mSignUpFragmentBinding.etxtEmailSignup.getText().toString().trim());
             }
@@ -121,31 +119,31 @@ public class SignUpFragment extends Fragment {
         mSignUpViewModel.getSignUpFormState().observe(getViewLifecycleOwner(), new Observer<SignUpFormState>() {
             @Override
             public void onChanged(SignUpFormState signUpFormState) {
-                Log.i("formState", "onChanged: " + signUpFormState);
+
                 if(signUpFormState == null){
-                    Log.i("formState", "onChanged: signFormState = null");
+
                     return;
                 }
                 if(signUpFormState.isDataValid()){
-                    Log.i("formState", "onChanged: isDataValid");
+
                     mSignUpFragmentBinding.btnCreateAccount.setEnabled(true);
                     mSignUpFragmentBinding.btnCreateAccount.setAlpha(1);
                     mSignUpFragmentBinding.btnCreateAccount.setElevation(4f);
                 }
                 if(signUpFormState.getUsernameError() != null){
-                    Log.i("formState", "getUsernameError ");
+
                     mSignUpFragmentBinding.btnCreateAccount.setEnabled(false);
                     mSignUpFragmentBinding.btnCreateAccount.setAlpha(0.5f);
                     mSignUpFragmentBinding.etxtNameSignupActivity.setError(getString(signUpFormState.getUsernameError()));
                 }
                 if(signUpFormState.getEmailError() != null){
-                    Log.i("formState", "getEmailError ");
+
                     mSignUpFragmentBinding.btnCreateAccount.setEnabled(false);
                     mSignUpFragmentBinding.btnCreateAccount.setAlpha(0.5f);
                     mSignUpFragmentBinding.etxtEmailSignup.setError(getString(signUpFormState.getEmailError()));
                 }
                 if(signUpFormState.getPasswordError() != null){
-                    Log.i("formState", "getpasswordError ");
+
                     mSignUpFragmentBinding.btnCreateAccount.setEnabled(false);
                     mSignUpFragmentBinding.btnCreateAccount.setAlpha(0.5f);
                     mSignUpFragmentBinding.etxtPsswrd.setError(getString(signUpFormState.getPasswordError()));
@@ -192,7 +190,7 @@ public class SignUpFragment extends Fragment {
     public void onPause() {
         super.onPause();
         User user = createUser();
-        Log.i(TAG, "onPause: " + user.getDisplayName());
+
         mSignUpViewModel.setUserInput(user);
         mSignUpViewModel.setPsswrd(mSignUpFragmentBinding.etxtPsswrd.getText().toString());
     }
@@ -227,13 +225,13 @@ public class SignUpFragment extends Fragment {
                     mImageUri = data.getData();
                     String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                     mImageFileName = "JPEG_" + timeStamp + "." + getFileExt(mImageUri);
-                    Log.d("tag", "onActivityResult: Gallery Image Uri:  " + mImageFileName);
+
                 }else {
                     File f = new File(mCurrentPhotoPath);
                     mImageUri = Uri.fromFile(f);
-                    Log.d("uri", "in onActivity result else " + mImageUri);
+
                 }
-                Log.d("uri", "in onActivity result setImageUri " + mImageUri);
+
                 mSignUpViewModel.setImageUri(mImageUri);
                 mSignUpViewModel.setImageFileName(mImageFileName);
                 mSignUpFragmentBinding.imgvUser.setImageURI(mSignUpViewModel.getUserImageUri());
@@ -252,7 +250,7 @@ public class SignUpFragment extends Fragment {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (requestCode == RC_PERMESIONS) {
-            Log.i(TAG, "onRequestPermissionsResult: "  );
+
 
                 if (grantResults[0] == PackageManager.PERMISSION_DENIED && grantResults[1] == PackageManager.PERMISSION_DENIED) {
 //                    // user rejected the permission
@@ -360,7 +358,7 @@ public class SignUpFragment extends Fragment {
         startActivityForResult(chooserIntent, RC_CHOOSER_INTENT);
     }
     public void register(){
-        Log.i("uri", "register: "+ mImageUri);
+
         mSignUpFragmentBinding.btnCreateAccount.setEnabled(false);
         mSignUpFragmentBinding.progressBarSignup.setVisibility(View.VISIBLE);
         register = Toast.makeText(getActivity(),getResources().getText(R.string.registering),Toast.LENGTH_SHORT);

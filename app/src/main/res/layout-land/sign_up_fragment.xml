@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="camera"
             type="com.example.alfhana.ui.loginactivity.signup.SignUpFragment" />
@@ -57,7 +56,7 @@
                 app:layout_constraintBaseline_toBaselineOf="@+id/etxt_name_signup_activity"
                 app:layout_constraintBottom_toBottomOf="@+id/etxt_name_signup_activity"
                 app:layout_constraintStart_toStartOf="@+id/right_guideline"
-                app:layout_constraintTop_toTopOf="@+id/top_guideline"></TextView>
+                app:layout_constraintTop_toTopOf="@+id/top_guideline"/>
 
             <TextView
                 android:id="@+id/txtv_email_signup"

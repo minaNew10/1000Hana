@@ -16,7 +16,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class LoginViewModel extends ViewModel {
     private MutableLiveData<User> userMutableLiveData;
     MutableLiveData<Boolean> loginResult;
-    private static final String TAG = "login";
+
     private UserRepository userRepository = UserRepository.getInstance();
     private MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
@@ -39,7 +39,7 @@ public class LoginViewModel extends ViewModel {
             if (user != null) {
                 userMutableLiveData = userRepository.retrieveUserFromDatabase(user.getUid());
             } else {
-                Log.i(TAG, "getUser: repo " + user);
+
                 userMutableLiveData = new MutableLiveData<>();
                 userMutableLiveData.postValue(null);
             }

@@ -38,6 +38,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.net.PlacesClient;
 
+import static android.provider.SettingsSlicesContract.KEY_LOCATION;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -62,10 +64,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     // location retrieved by the Fused Location Provider.
     private Location mLastKnownLocation;
     // Keys for storing activity state.
-    private static final String KEY_CAMERA_POSITION = "camera_position";
-    private static final String KEY_LOCATION = "location";
 
-    private static final String TAG = "MapFragment";
+
+
     private SupportMapFragment mapFragment;
     public MapFragment() {
         // Required empty public constructor
@@ -75,11 +76,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.i(TAG, "onCreate: ");
         // Retrieve location and camera position from saved instance state.
         if (savedInstanceState != null) {
-            mLastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
-            mCameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
+            mLastKnownLocation = savedInstanceState.getParcelable(getString(R.string.key_location));
+            mCameraPosition = savedInstanceState.getParcelable(getString(R.string.key_camera_position));
         }
 
         // Inflate the layout for this fragment
@@ -101,7 +101,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         // Build the map.
          mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.map);
-        Log.i(TAG, "onCreateView: "+ mapFragment);
+
 
         mapFragment.getMapAsync(this);
         return   rootView;
@@ -216,7 +216,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 getLocationPermission();
             }
         } catch (SecurityException e)  {
-            Log.e("Exception: %s", e.getMessage());
+
         }
     }
     /**
@@ -247,8 +247,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                         latLng, DEFAULT_ZOOM));
                             }
                         } else {
-                            Log.d(TAG, "Current location is null. Using defaults.");
-                            Log.e(TAG, "Exception: %s", task.getException());
+
                             mMap.moveCamera(CameraUpdateFactory
                                     .newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
                             mMap.getUiSettings().setMyLocationButtonEnabled(false);
@@ -257,7 +256,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 });
             }
         } catch (SecurityException e)  {
-            Log.e("Exception: %s", e.getMessage());
+
         }
     }
     private void buildAlertMessageNoGps() {
@@ -280,8 +279,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         if (mMap != null) {
-            outState.putParcelable(KEY_CAMERA_POSITION, mMap.getCameraPosition());
-            outState.putParcelable(KEY_LOCATION, mLastKnownLocation);
+            outState.putParcelable(getString(R.string.key_camera_position), mMap.getCameraPosition());
+            outState.putParcelable(getString(R.string.key_location), mLastKnownLocation);
             super.onSaveInstanceState(outState);
         }
     }

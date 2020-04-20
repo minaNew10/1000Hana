@@ -27,7 +27,7 @@ import java.util.ArrayList;
 
 public class PoultryFragment extends Fragment implements MeaLAdapter.OnMealClickListener{
     MeaLAdapter mAdapter;
-    private static final String TAG = "MealRepository";
+
     PoultryViewModel mViewModel;
     RecyclerView mRecyclerView;
     RecyclerView.LayoutManager mLayoutManager;
@@ -70,7 +70,7 @@ public class PoultryFragment extends Fragment implements MeaLAdapter.OnMealClick
                             Meal meal;
                             for (DataSnapshot child : dataSnapshot.getChildren()) {
                                 meal = child.getValue(Meal.class);
-                                Log.i(TAG, "onDataChange fragment: " + meal.getName());
+
 
                                 meals.add(meal);
                             }
@@ -90,7 +90,7 @@ public class PoultryFragment extends Fragment implements MeaLAdapter.OnMealClick
     @Override
     public void onClick(Meal meal) {
         Bundle b = new Bundle();
-        b.putParcelable("meal",meal);
+        b.putParcelable(getString(R.string.key_meal),meal);
         NavOptions navOptions = new NavOptions.Builder().build();
         Navigation.findNavController(getView()).navigate(R.id.mealDetailFragment,b,navOptions);
 

@@ -27,7 +27,7 @@ public class MealDetailFragment extends Fragment {
         return new MealDetailFragment();
     }
     Meal currMeal;
-    private static final String TAG = "MealDetailFragment";
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {

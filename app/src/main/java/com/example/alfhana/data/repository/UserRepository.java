@@ -31,7 +31,7 @@ import com.google.firebase.storage.UploadTask;
 
 
 public class UserRepository {
-    private static final String TAG = "login";
+
     private static volatile UserRepository instance;
     private User user;
 
@@ -67,7 +67,7 @@ public class UserRepository {
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.i(TAG, "onComplete: repo" + task.isSuccessful());
+
                         if (task.isSuccessful()) {
                             isLoginSuccessful.setValue(true);
                         }
@@ -76,13 +76,12 @@ public class UserRepository {
                 .addOnCanceledListener(new OnCanceledListener() {
                     @Override
                     public void onCanceled() {
-                        Log.i(TAG, "onCanceled: repo");
+
                         isLoginSuccessful.setValue(false);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.i(TAG, "onFailure: repo" + e.getMessage());
                 isLoginSuccessful.setValue(false);
                 loginErrMsg = new MutableLiveData<>();
                 loginErrMsg.setValue(e.getMessage());
@@ -108,14 +107,13 @@ public class UserRepository {
                         //Log.d(TAG, "onDataChange: "+dataSnapshot.getValue(User.class).toString());
                         if (dataSnapshot.hasChild(id)) {
                             user = dataSnapshot.child(id).getValue(User.class);
-                            Log.i(TAG, "onDataChange: " + user);
+
                             loggedInUser.postValue(user);
                         }
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-                        Log.i(TAG, "onCancelled: ");
                             loggedInUser.postValue(null);
                     }
                 });
@@ -189,7 +187,7 @@ public class UserRepository {
                 ).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.i(TAG, "onFailure: "+ e.getMessage());
+
             }
         });
         return mutableLiveData;

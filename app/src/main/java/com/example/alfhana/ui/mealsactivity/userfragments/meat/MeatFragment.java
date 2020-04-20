@@ -54,7 +54,6 @@ public class MeatFragment extends Fragment implements MeaLAdapter.OnMealClickLis
 
                                 meal = child.getValue(Meal.class);
                                 meal.setId(child.getKey());
-                                Log.i(TAG, "onDataChange fragment: " + meal.getName());
 
                                 meals.add(meal);
                             }
@@ -70,7 +69,7 @@ public class MeatFragment extends Fragment implements MeaLAdapter.OnMealClickLis
     @Override
     public void onClick(Meal meal) {
         Bundle b = new Bundle();
-        b.putParcelable("meal",meal);
+        b.putParcelable(getString(R.string.key_meal),meal);
         NavOptions navOptions = new NavOptions.Builder().build();
         Navigation.findNavController(getView()).navigate(R.id.mealDetailFragment,b,navOptions);
     }

@@ -33,7 +33,7 @@ public class NewAppWidget extends AppWidgetProvider {
 
         final RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.new_app_widget);
         SharedPreferences sharedPreferences = context.getSharedPreferences(context.getResources().getString(R.string.shared_pref),context.MODE_PRIVATE);
-        String request = sharedPreferences.getString(context.getResources().getString(R.string.key_orders_shared_pref),"NO Orders");
+        String request = sharedPreferences.getString(context.getResources().getString(R.string.key_orders_shared_pref),context.getResources().getString(R.string.no_orders));
         String total = sharedPreferences.getString(context.getResources().getString(R.string.key_total_shared_pref),"");
         views.setTextViewText(R.id.txtv_widget_orders,request);
         views.setTextViewText(R.id.txtv_widget_total,total);

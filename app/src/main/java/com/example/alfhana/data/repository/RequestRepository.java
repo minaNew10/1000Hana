@@ -20,7 +20,7 @@ import java.util.List;
 
 public class RequestRepository {
     private static volatile RequestRepository instance;
-    private static final String TAG = "MealRepository";
+
     List<Request> list = new ArrayList<>();
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference = firebaseDatabase.getReference().getRoot();
@@ -55,7 +55,7 @@ public class RequestRepository {
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.i(TAG, "onFailure: "+ e.getMessage());
+
                 saveRequestErr.postValue(e.getMessage());
             }
         });

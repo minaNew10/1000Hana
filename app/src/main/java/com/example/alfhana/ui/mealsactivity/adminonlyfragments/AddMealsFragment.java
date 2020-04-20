@@ -41,12 +41,12 @@ public class AddMealsFragment extends Fragment {
     private static final int RC_PERMESIONS = 101;
     public static final int RC_CHOOSER_INTENT = 102;
     private AddMealViewModel mViewModel;
-    private final String[] REQUIRED_PERMISSIONS = new String[]{"android.permission.CAMERA", "android.permission.READ_EXTERNAL_STORAGE"};
+    private final String[] REQUIRED_PERMISSIONS = new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE};
     MutableLiveData<Boolean> saveSuccessful;
     FragmentAddMealsBinding fragmentAddMealsBinding;
     ImageUtils imageUtils;
     private String imageFileName;
-    private static final String TAG = "Add";
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -72,7 +72,6 @@ public class AddMealsFragment extends Fragment {
     public void askPermissions() {
 
         if (imageUtils.allPermissionsGranted()) {
-            Log.i(TAG, "askPermissions: ");
             Intent intent = imageUtils.createChooserIntent();
             startActivityForResult(intent,RC_CHOOSER_INTENT);
         } else {
@@ -83,31 +82,31 @@ public class AddMealsFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.i(TAG, "onActivityResult: "+ Activity.RESULT_OK);
+
         if (resultCode == Activity.RESULT_OK) {
-            Log.i(TAG, "onActivityResult: ");
+
             if (requestCode == RC_CAMERA_INTENT) {
                 File f = new File(imageUtils.getCurrentPhotoPath());
                 imageUtils.setImageUri(Uri.fromFile(f));
                 fragmentAddMealsBinding.imgvMeal.setImageURI(imageUtils.getImageUri());
-                Log.d(TAG, "ABsolute Url of Image is " + Uri.fromFile(f));
+
             }
             if (requestCode == RC_GALLERY) {
                 imageUtils.setImageUri(data.getData());
                 imageUtils.createImageFilenameWithExtention();
-                 Log.d(TAG, "onActivityResult: Gallery Image Uri:  " + imageFileName);
+
                 fragmentAddMealsBinding.imgvMeal.setImageURI(imageUtils.getImageUri());
             }
             if (requestCode == RC_CHOOSER_INTENT) {
-                Log.i(TAG, "onActivityResult: chooserIntent" );
+
                 if(data != null) {
                     imageUtils.setImageUri(data.getData());
                     imageUtils.createImageFilenameWithExtention();
-                    Log.d(TAG, "onActivityResult: Gallery Image Uri:  " + imageUtils.getImageUri());
+
                 }else {
                     File f = new File(imageUtils.getCurrentPhotoPath());
                     imageUtils.setImageUri(Uri.fromFile(f));
-                    Log.d(TAG, "Absolute Url of Image is " + Uri.fromFile(f));
+
                 }
                 fragmentAddMealsBinding.imgvMeal.setImageURI(imageUtils.getImageUri());
             }
@@ -179,7 +178,7 @@ public class AddMealsFragment extends Fragment {
                     @Override
                     public void onChanged(Boolean aBoolean) {
                         if(aBoolean){
-                            Toast.makeText(getActivity(),"success",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), R.string.save_meal_success,Toast.LENGTH_SHORT).show();
                         }
                     }
 

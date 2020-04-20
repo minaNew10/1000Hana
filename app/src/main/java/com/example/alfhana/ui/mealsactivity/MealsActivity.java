@@ -40,7 +40,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 public class MealsActivity extends AppCompatActivity {
-    private static final String TAG = "MealsActivity";
+
     private AppBarConfiguration mAppBarConfiguration;
     private UserRepository userRepository = UserRepository.getInstance();
     MealsActivityViewModel mMealsActivityViewModel;

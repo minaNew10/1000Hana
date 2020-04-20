@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
         <variable
             name="mealFragment"
@@ -8,7 +8,7 @@
             name="meal"
             type="com.example.alfhana.data.model.Meal" />
     </data>
-    <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/coordinator_layout"
         android:layout_width="match_parent"
@@ -110,7 +110,8 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                app:srcCompat="@drawable/ic_attach_money_black_24dp" />
+                                app:srcCompat="@drawable/ic_attach_money_black_24dp"
+                                android:contentDescription="@string/meal_image_content_description" />
 
                             <TextView
                                 android:id="@+id/txtv_Meal_price"
