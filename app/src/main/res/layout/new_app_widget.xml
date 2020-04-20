@@ -1,18 +1,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/widget_margin"
     android:background="@drawable/widget_background"
-    android:orientation="vertical" >
-        <TextView
-            android:id="@+id/txtv_widget_orders"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/widget_text" />
+    android:orientation="vertical"
+    android:padding="@dimen/widget_margin">
 
-        <TextView
-            android:id="@+id/txtv_widget_total"
-            style="@style/widget_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+    <TextView
+        style="@style/widget_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:text="@string/widget_title"/>
+
+    <TextView
+        android:id="@+id/txtv_widget_orders"
+        style="@style/widget_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp" />
+
+    <TextView
+        android:id="@+id/txtv_widget_total"
+        style="@style/widget_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp" />
 </LinearLayout>

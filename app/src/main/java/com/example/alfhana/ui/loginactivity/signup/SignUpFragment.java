@@ -375,26 +375,42 @@ public class SignUpFragment extends Fragment {
                 register.cancel();
                 if(aBoolean){
                     Log.i("uri", "onChanged: " + mImageUri);
-                     mSignUpViewModel.storeImage(mImageFileName,mImageUri).observe(getViewLifecycleOwner(), new Observer<String>() {
-                         @Override
-                         public void onChanged(String s) {
-                             User user = createUser();
-                             user.setImage(s);
-                             mSignUpViewModel.saveUser(user);
-                             mSignUpFragmentBinding.progressBarSignup.setVisibility(View.INVISIBLE);
-                             register = Toast.makeText(getActivity(),getResources().getString(R.string.registeration_successful),Toast.LENGTH_LONG);
-                             register.show();
+                    final User user = createUser();
+                    if (mImageUri != null) {
+
+                        mSignUpViewModel.storeImage(mImageFileName, mImageUri).observe(getViewLifecycleOwner(), new Observer<String>() {
+                            @Override
+                            public void onChanged(String s) {
+                                user.setImage(s);
+                                mSignUpViewModel.saveUser(user);
+                                mSignUpFragmentBinding.progressBarSignup.setVisibility(View.INVISIBLE);
+                                register = Toast.makeText(getActivity(), getResources().getString(R.string.registeration_successful), Toast.LENGTH_LONG);
+                                register.show();
 //                             SignUpFragmentDirections.ActionSignUpFragmentToMealsActivity action =
 //                                     SignUpFragmentDirections.actionSignUpFragmentToMealsActivity();
 //                             action.setLoggedinUser(user);
 //                             Navigation.findNavController(getView()).navigate(action);
-                             Bundle b = new Bundle();
-                             b.putParcelable(getString(R.string.user_key),user);
-                             NavOptions navOptions = new NavOptions.Builder().setPopUpTo(R.id.nav_graph,true).build();
-                             Navigation.findNavController(getView()).navigate(R.id.mealsActivity,b,navOptions);
+                                Bundle b = new Bundle();
+                                b.putParcelable(getString(R.string.user_key), user);
+                                NavOptions navOptions = new NavOptions.Builder().setPopUpTo(R.id.nav_graph, true).build();
+                                Navigation.findNavController(getView()).navigate(R.id.mealsActivity, b, navOptions);
 
-                         }
-                     });
+                            }
+                        });
+                    }else{
+                        mSignUpViewModel.saveUser(user);
+                        mSignUpFragmentBinding.progressBarSignup.setVisibility(View.INVISIBLE);
+                        register = Toast.makeText(getActivity(), getResources().getString(R.string.registeration_successful), Toast.LENGTH_LONG);
+                        register.show();
+//                             SignUpFragmentDirections.ActionSignUpFragmentToMealsActivity action =
+//                                     SignUpFragmentDirections.actionSignUpFragmentToMealsActivity();
+//                             action.setLoggedinUser(user);
+//                             Navigation.findNavController(getView()).navigate(action);
+                        Bundle b = new Bundle();
+                        b.putParcelable(getString(R.string.user_key), user);
+                        NavOptions navOptions = new NavOptions.Builder().setPopUpTo(R.id.nav_graph, true).build();
+                        Navigation.findNavController(getView()).navigate(R.id.mealsActivity, b, navOptions);
+                    }
                 }else {
                     mSignUpFragmentBinding.progressBarSignup.setVisibility(View.INVISIBLE);
                     mSignUpViewModel.getErrRegisterMsg().observe(getViewLifecycleOwner(), new Observer<String>() {
